@@ -35,7 +35,7 @@ Note that the first account you create in any Vulcan app automatically belongs t
 
 const Step = () => (
   <StepWrapper title={Step.title} text={text} after={after}>
-    {/* <Schema/> */}
+    { <Schema/> }
   </StepWrapper>
 );
 

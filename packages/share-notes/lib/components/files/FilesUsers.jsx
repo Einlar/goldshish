@@ -1,11 +1,10 @@
 import React from 'react';
 import { Components, useCurrentUser } from 'meteor/vulcan:core';
 
-// Uncomment Components.AccountsLoginForm on #Step12:
-const MoviesUsers = () => {
+const FilesUsers = () => {
   const { currentUser } = useCurrentUser();
   return (
-    <div className="movies-users">
+    <div className="files-users">
       <div>
         {currentUser && (
           <p>
@@ -18,4 +17,4 @@ const MoviesUsers = () => {
   );
 };
 
-export default MoviesUsers;
+export default FilesUsers;

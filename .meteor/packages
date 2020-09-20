@@ -14,11 +14,12 @@ accounts-password@1.6.0
 
 ############ Your Packages ############
 
-getting-started
+#getting-started
 
-# example-simple
-# example-forms
-# example-forum
+share-notes
+#example-simple
+#example-forms
+#example-forum
 
 # Uncomment to generate an admin area on /backoffice available to users of role "admin"
 # vulcan:backoffice

@@ -53,8 +53,8 @@ const query = gql`
 const Step = () => {
   const item = {};
   // uncomment the hook on #Step7
-  // const { data } = useQuery(query);
-  // item.queries = get(data, '__type.fields');
+  const { data } = useQuery(query);
+  item.queries = get(data, '__type.fields');
   return (
     <StepWrapper title={Step.title} text={text} after={after} check={() => !!item.queries}>
       <Queries queries={item.queries} />

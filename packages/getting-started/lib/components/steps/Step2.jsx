@@ -21,14 +21,14 @@ In Vulcan any registered component can be accessed as \`<Components.ComponentNam
 const Step = () => (
   <StepWrapper title={Step.title} text={text} after={after} check={({ children }) => !!children}>
     
-    {/* 
+    { 
     <Components.ModalTrigger
       title="Welcome to Vulcan"
       component={<Components.Button style={{ marginBottom: 20 }}>Click Me!</Components.Button>}
     >
       <div>Hello World!</div>
     </Components.ModalTrigger> 
-    */}
+    }
 
   </StepWrapper>
 );

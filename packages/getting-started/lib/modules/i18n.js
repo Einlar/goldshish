@@ -13,6 +13,6 @@ registerLocale({
 });
 
 // uncomment on #Step19
-// addStrings('en', {
-//   'datatable.new': 'New Movie',
-// });
+addStrings('en', {
+  'datatable.new': 'New Movie',
+});

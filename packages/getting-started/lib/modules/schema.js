@@ -20,11 +20,11 @@ const schema = {
     optional: true,
     canRead: ['guests'],
     // Uncomment on #Step10:
-    // relation: {
-    //   fieldName: 'user',
-    //   typeName: 'User',
-    //   kind: 'hasOne'
-    // }
+    relation: {
+      fieldName: 'user',
+      typeName: 'User',
+      kind: 'hasOne'
+    }
   },
 
   name: {
@@ -36,7 +36,7 @@ const schema = {
     canUpdate: ['members'],
     searchable: true,
     // Uncomment on #Step19
-    // intl: true, 
+    intl: true, 
   },
 
   review: {

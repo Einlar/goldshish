@@ -13,7 +13,7 @@ const Layout = ({ children }) => (
       <Nav />
     </div>
     <div className="main-content">{children}</div>
-    <MoviesApp />
+    <MoviesApp2 />
   </div>
 );
 
