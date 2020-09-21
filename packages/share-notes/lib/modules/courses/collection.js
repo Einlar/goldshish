@@ -1,9 +1,9 @@
 import { createCollection } from 'meteor/vulcan:core';
 import schema from './schema.js';
 
-const Files = createCollection({
-    collectionName: 'Files',
-    typeName: 'File',
+const Courses = createCollection({
+    collectionName: 'Courses',
+    typeName: 'Course',
     schema, 
     //Use default resolvers/mutations
     permissions: {
@@ -19,4 +19,4 @@ const Files = createCollection({
     },
 });
 
-export default Files;
+export default Courses;

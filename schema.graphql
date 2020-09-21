@@ -164,6 +164,10 @@ directive @intl on FIELD_DEFINITION
   }
 
 
+  # A file upload.
+  scalar File
+
+
 # A user object
 type User {
   _id: String 
@@ -347,8 +351,8 @@ input UserSelectorUniqueInput {
 }
 
 
-# Type for Files
-type File {
+# Type for Courses
+type Course {
   _id: String 
   createdAt: Date 
   userId: String 
@@ -360,21 +364,21 @@ type File {
 }
 
 
-input DeleteFileInput{
-  filter: FileFilterInput
+input DeleteCourseInput{
+  filter: CourseFilterInput
   id: String
 }
 
-input SingleFileInput {
+input SingleCourseInput {
   # filtering
-  filter: FileFilterInput
-  sort: FileSortInput
+  filter: CourseFilterInput
+  sort: CourseSortInput
   search: String
   id: String
 
   # backwards-compatibility
   "Deprecated (use 'filter/id' fields instead)."
-  selector: FileSelectorUniqueInput
+  selector: CourseSelectorUniqueInput
 
   # options (backwards-compatibility)
   # Whether to enable caching for this query
@@ -385,11 +389,11 @@ input SingleFileInput {
   contextName: String
 }
 
-input MultiFileInput {
+input MultiCourseInput {
 
   # filtering
-  filter: FileFilterInput
-  sort: FileSortInput
+  filter: CourseFilterInput
+  sort: CourseSortInput
   search: String
   offset: Int
   limit: Int
@@ -409,55 +413,55 @@ input MultiFileInput {
   
 }
 
-type SingleFileOutput{
-  result: File
+type SingleCourseOutput{
+  result: Course
 }
 
-type  MultiFileOutput{
-  results: [File]
+type  MultiCourseOutput{
+  results: [Course]
   totalCount: Int
 }
 
-type FileMutationOutput{
-  data: File
+type CourseMutationOutput{
+  data: Course
 }
 
-input CreateFileInput {
-  data: CreateFileDataInput!
+input CreateCourseInput {
+  data: CreateCourseDataInput!
   # An identifier to name the mutation's execution context
   contextName: String
 }
 
-input CreateFileDataInput {
+input CreateCourseDataInput {
   title: String 
   content: String 
 }
 
-input UpdateFileInput{
-  filter: FileFilterInput
+input UpdateCourseInput{
+  filter: CourseFilterInput
   id: String
-  data: UpdateFileDataInput!
+  data: UpdateCourseDataInput!
   # An identifier to name the mutation's execution context
   contextName: String
 }
 
-input UpsertFileInput{
-  filter: FileFilterInput
+input UpsertCourseInput{
+  filter: CourseFilterInput
   id: String
-  data: UpdateFileDataInput!
+  data: UpdateCourseDataInput!
   # An identifier to name the mutation's execution context
   contextName: String
 }
 
-input UpdateFileDataInput {
+input UpdateCourseDataInput {
   title: String 
   content: String 
 }
 
-input FileFilterInput {
-  _and: [FileFilterInput]
-  _not: FileFilterInput
-  _or: [FileFilterInput]
+input CourseFilterInput {
+  _and: [CourseFilterInput]
+  _not: CourseFilterInput
+  _or: [CourseFilterInput]
 
 
   _id: String_Selector
@@ -468,7 +472,7 @@ input FileFilterInput {
   content: String_Selector
 }
 
-input FileSortInput {
+input CourseSortInput {
   _id: SortOptions
   createdAt: SortOptions
   userId: SortOptions
@@ -477,13 +481,13 @@ input FileSortInput {
   content: SortOptions
 }
 
-input FileSelectorInput {
-  _and: [FileSelectorInput]
-  _or: [FileSelectorInput]
+input CourseSelectorInput {
+  _and: [CourseSelectorInput]
+  _or: [CourseSelectorInput]
 
 }
 
-input FileSelectorUniqueInput {
+input CourseSelectorUniqueInput {
   _id: String
   documentId: String # OpenCRUD backwards compatibility
   slug: String
@@ -504,11 +508,11 @@ type Query {
   # A list of User documents matching a set of query terms
   users(input: MultiUserInput):  MultiUserOutput
   
-  # A single File document fetched by ID or slug
-  file(input: SingleFileInput!): SingleFileOutput
+  # A single Course document fetched by ID or slug
+  course(input: SingleCourseInput!): SingleCourseOutput
   
-  # A list of File documents matching a set of query terms
-  files(input: MultiFileInput):  MultiFileOutput
+  # A list of Course documents matching a set of query terms
+  courses(input: MultiCourseInput):  MultiCourseOutput
   
 }
   
@@ -562,37 +566,37 @@ type Mutation {
   selector: UserSelectorUniqueInput
 ) : UserMutationOutput
 
-  # Mutation for creating new File documents
-  createFile(
-  input: CreateFileInput,
+  # Mutation for creating new Course documents
+  createCourse(
+  input: CreateCourseInput,
   "Deprecated (use 'input' field instead)."
-  data: CreateFileDataInput
-) : FileMutationOutput
+  data: CreateCourseDataInput
+) : CourseMutationOutput
 
-  # Mutation for updating a File document
-  updateFile(
-  input: UpdateFileInput,
+  # Mutation for updating a Course document
+  updateCourse(
+  input: UpdateCourseInput,
   "Deprecated (use 'input' field instead)."
-  selector: FileSelectorUniqueInput,
+  selector: CourseSelectorUniqueInput,
   "Deprecated (use 'input' field instead)."
-  data: UpdateFileDataInput 
-) : FileMutationOutput
+  data: UpdateCourseDataInput 
+) : CourseMutationOutput
 
-  # Mutation for upserting a File document
-  upsertFile(
-  input: UpsertFileInput,
+  # Mutation for upserting a Course document
+  upsertCourse(
+  input: UpsertCourseInput,
   "Deprecated (use 'input' field instead)."
-  selector: FileSelectorUniqueInput,
+  selector: CourseSelectorUniqueInput,
   "Deprecated (use 'input' field instead)."
-  data: UpdateFileDataInput
-) : FileMutationOutput
+  data: UpdateCourseDataInput
+) : CourseMutationOutput
 
-  # Mutation for deleting a File document
-  deleteFile(
-  input: DeleteFileInput,
+  # Mutation for deleting a Course document
+  deleteCourse(
+  input: DeleteCourseInput,
   "Deprecated (use 'input' field instead)."
-  selector: FileSelectorUniqueInput
-) : FileMutationOutput
+  selector: CourseSelectorUniqueInput
+) : CourseMutationOutput
 
 }
 

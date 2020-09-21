@@ -1,7 +1,7 @@
 import { registerFragment } from 'meteor/vulcan:core';
 
 registerFragment(`
-    fragment FilesPage on File {
+    fragment CoursesPage on Course {
         _id
         title
         content

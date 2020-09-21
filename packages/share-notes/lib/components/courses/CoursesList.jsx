@@ -3,21 +3,21 @@ import { Helmet } from 'react-helmet';
 import { Components, useMulti2, registerComponent, useCurrentUser } from 'meteor/vulcan:core';
 import { Link } from 'react-router-dom';
 
-import FilesUsers from './FilesUsers.jsx';
-import FilesNew from './FilesNew.jsx';
+import CoursesUsers from './CoursesUsers.jsx';
+import CoursesNew from './CoursesNew.jsx';
 
 //Add the components
-import Files from '../../modules/files/collection.js';
+import Courses from '../../modules/courses/collection.js';
 
-const FilesList = () => {
-    const { results = [], data, loading } = useMulti2({ collection: Files });
+const CoursesList = () => {
+    const { results = [], data, loading } = useMulti2({ collection: Courses });
     return (
-        <div className="files">
+        <div className="courses">
 
             { loading ? (<Components.Loading />) : (
-                <div className="files-list">
-                { results.map(file =>
-                     <Link to={`/course/${file.slug}`} key="{file._id}"><h2>{file.title}</h2></Link>
+                <div className="courses-list">
+                { results.map(course =>
+                     <Link to={`/course/${course.slug}`} key="{course._id}"><h2>{course.title}</h2></Link>
                     )
                 }
                 </div>
@@ -27,7 +27,7 @@ const FilesList = () => {
     );
 };
 
-registerComponent({ name: 'FilesList', component: FilesList });
+registerComponent({ name: 'CoursesList', component: CoursesList });
 
 // const options = {
 //     collection: Files,

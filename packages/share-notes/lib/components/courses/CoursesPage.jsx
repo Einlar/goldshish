@@ -1,17 +1,17 @@
 import { Components, registerComponent, useSingle2 } from 'meteor/vulcan:core';
 import get from 'lodash/get';
 import React from 'react';
-import Files from '../../modules/files/collection.js';
+import Courses from '../../modules/courses/collection.js';
 import { Link, useParams } from 'react-router-dom';
 
-const FilesPage = () => {
+const CoursesPage = () => {
     const { slug } = useParams();
 
     //Why is this named document and not result!? And also it is not in the docs!
     const {document, loading, error} = useSingle2({
-        collection: Files,
+        collection: Courses,
         input: { filter: {slug: {_eq: slug} } },
-        fragmentName: 'FilesPage',
+        fragmentName: 'CoursesPage',
         //fragmentName, input, pollInterval, queryOptions
     });
 
@@ -25,6 +25,6 @@ const FilesPage = () => {
     )
 };
 
-registerComponent('FilesPage', FilesPage);
+registerComponent('CoursesPage', CoursesPage);
 
-export default FilesPage;
+export default CoursesPage;

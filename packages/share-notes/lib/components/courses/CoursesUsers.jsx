@@ -1,10 +1,10 @@
 import React from 'react';
 import { Components, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
 
-const FilesUsers = () => {
+const CoursesUsers = () => {
   const { currentUser } = useCurrentUser();
   return (
-    <div className="files-users">
+    <div className="courses-users">
       <div>
         {currentUser && (
           <p>
@@ -17,6 +17,6 @@ const FilesUsers = () => {
   );
 };
 
-registerComponent({ name: 'FilesUsers', component: FilesUsers });
+registerComponent({ name: 'CoursesUsers', component: CoursesUsers });
 
-export default FilesUsers;
+export default CoursesUsers;

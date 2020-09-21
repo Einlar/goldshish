@@ -2,7 +2,7 @@ import React from 'react';
 import { replaceComponent } from 'meteor/vulcan:core';
 
 import Nav from './Nav.jsx';
-import FilesUsers from '../files/FilesUsers.jsx';
+import CoursesUsers from '../courses/CoursesUsers.jsx';
 import { Helmet } from 'react-helmet';
 
 //Add Nav-bar, logo, footer...
