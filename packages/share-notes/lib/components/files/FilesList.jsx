@@ -13,12 +13,11 @@ const FilesList = () => {
     const { results = [], data, loading } = useMulti2({ collection: Files });
     return (
         <div className="files">
-            <FilesNew />
 
             { loading ? (<Components.Loading />) : (
                 <div className="files-list">
                 { results.map(file =>
-                     <Link to={`/${file.slug}`}><h2 key="{file._id}">{file.title}</h2></Link>
+                     <Link to={`/course/${file.slug}`} key="{file._id}"><h2>{file.title}</h2></Link>
                     )
                 }
                 </div>

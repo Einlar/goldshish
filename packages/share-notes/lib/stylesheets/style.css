@@ -1,3 +1,12 @@
 .datacard-label{
   width: 120px;
 }
+
+a.nav-item {
+  padding: 10px;
+  
+}
+
+a.nav-item:hover {
+  color: red;
+}

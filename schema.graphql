@@ -163,20 +163,6 @@ directive @intl on FIELD_DEFINITION
     email: String
   }
 
-type EmailResponse {
-  from: String
-  to: String
-  subject: String
-  success: JSON
-  error: String
-}
-
-type Step {
-  step: Int
-  completed: Boolean
-  progress: [Boolean]
-  title: String
-}
 
 # A user object
 type User {
@@ -214,7 +200,7 @@ input SingleUserInput {
   id: String
 
   # backwards-compatibility
-  # Deprecated (use 'filter/id' fields instead).
+  "Deprecated (use 'filter/id' fields instead)."
   selector: UserSelectorUniqueInput
 
   # options (backwards-compatibility)
@@ -237,7 +223,7 @@ input MultiUserInput {
 
   # backwards-compatibility
   # A JSON object that contains the query terms used to fetch data
-  # Deprecated (use 'filter/id' fields instead).
+  "Deprecated (use 'filter/id' fields instead)."
   terms: JSON
 
   # options (backwards-compatibility)
@@ -247,7 +233,7 @@ input MultiUserInput {
   enableTotal: Boolean
   # An identifier to name the query's execution context
   contextName: String
-
+  
 }
 
 type SingleUserOutput{
@@ -361,6 +347,150 @@ input UserSelectorUniqueInput {
 }
 
 
+# Type for Files
+type File {
+  _id: String 
+  createdAt: Date 
+  userId: String 
+  user: User 
+  title: String 
+  slug: String 
+  content: String 
+  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
+}
+
+
+input DeleteFileInput{
+  filter: FileFilterInput
+  id: String
+}
+
+input SingleFileInput {
+  # filtering
+  filter: FileFilterInput
+  sort: FileSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: FileSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiFileInput {
+
+  # filtering
+  filter: FileFilterInput
+  sort: FileSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleFileOutput{
+  result: File
+}
+
+type  MultiFileOutput{
+  results: [File]
+  totalCount: Int
+}
+
+type FileMutationOutput{
+  data: File
+}
+
+input CreateFileInput {
+  data: CreateFileDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateFileDataInput {
+  title: String 
+  content: String 
+}
+
+input UpdateFileInput{
+  filter: FileFilterInput
+  id: String
+  data: UpdateFileDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertFileInput{
+  filter: FileFilterInput
+  id: String
+  data: UpdateFileDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateFileDataInput {
+  title: String 
+  content: String 
+}
+
+input FileFilterInput {
+  _and: [FileFilterInput]
+  _not: FileFilterInput
+  _or: [FileFilterInput]
+
+
+  _id: String_Selector
+  createdAt: Date_Selector
+  userId: String_Selector
+  title: String_Selector
+  slug: String_Selector
+  content: String_Selector
+}
+
+input FileSortInput {
+  _id: SortOptions
+  createdAt: SortOptions
+  userId: SortOptions
+  title: SortOptions
+  slug: SortOptions
+  content: SortOptions
+}
+
+input FileSelectorInput {
+  _and: [FileSelectorInput]
+  _or: [FileSelectorInput]
+
+}
+
+input FileSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
 
 
 type Query {
@@ -368,17 +498,17 @@ type Query {
   
   currentUser: User
   
-  schemaContents: String
-  
-  moviesCount: Int
-  
-  steps: [Step]
-  
   # A single User document fetched by ID or slug
   user(input: SingleUserInput!): SingleUserOutput
   
   # A list of User documents matching a set of query terms
   users(input: MultiUserInput):  MultiUserOutput
+  
+  # A single File document fetched by ID or slug
+  file(input: SingleFileInput!): SingleFileOutput
+  
+  # A list of File documents matching a set of query terms
+  files(input: MultiFileInput):  MultiFileOutput
   
 }
   
@@ -400,39 +530,69 @@ type Mutation {
 
   verifyEmail(input: VerifyEmailInput): VerifyEmailResult
 
-  testEmail(emailName: String) : EmailResponse
-
   # Mutation for creating new User documents
   createUser(
   input: CreateUserInput,
-  # Deprecated (use 'input' field instead).
+  "Deprecated (use 'input' field instead)."
   data: CreateUserDataInput
 ) : UserMutationOutput
 
   # Mutation for updating a User document
   updateUser(
   input: UpdateUserInput,
-  # Deprecated (use 'input' field instead).
+  "Deprecated (use 'input' field instead)."
   selector: UserSelectorUniqueInput,
-  # Deprecated (use 'input' field instead).
-  data: UpdateUserDataInput
+  "Deprecated (use 'input' field instead)."
+  data: UpdateUserDataInput 
 ) : UserMutationOutput
 
   # Mutation for upserting a User document
   upsertUser(
   input: UpsertUserInput,
-  # Deprecated (use 'input' field instead).
+  "Deprecated (use 'input' field instead)."
   selector: UserSelectorUniqueInput,
-  # Deprecated (use 'input' field instead).
+  "Deprecated (use 'input' field instead)."
   data: UpdateUserDataInput
 ) : UserMutationOutput
 
   # Mutation for deleting a User document
   deleteUser(
   input: DeleteUserInput,
-  # Deprecated (use 'input' field instead).
+  "Deprecated (use 'input' field instead)."
   selector: UserSelectorUniqueInput
 ) : UserMutationOutput
+
+  # Mutation for creating new File documents
+  createFile(
+  input: CreateFileInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateFileDataInput
+) : FileMutationOutput
+
+  # Mutation for updating a File document
+  updateFile(
+  input: UpdateFileInput,
+  "Deprecated (use 'input' field instead)."
+  selector: FileSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateFileDataInput 
+) : FileMutationOutput
+
+  # Mutation for upserting a File document
+  upsertFile(
+  input: UpsertFileInput,
+  "Deprecated (use 'input' field instead)."
+  selector: FileSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateFileDataInput
+) : FileMutationOutput
+
+  # Mutation for deleting a File document
+  deleteFile(
+  input: DeleteFileInput,
+  "Deprecated (use 'input' field instead)."
+  selector: FileSelectorUniqueInput
+) : FileMutationOutput
 
 }
 

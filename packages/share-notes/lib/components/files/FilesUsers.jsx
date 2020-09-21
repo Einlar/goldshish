@@ -1,5 +1,5 @@
 import React from 'react';
-import { Components, useCurrentUser } from 'meteor/vulcan:core';
+import { Components, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
 
 const FilesUsers = () => {
   const { currentUser } = useCurrentUser();
@@ -16,5 +16,7 @@ const FilesUsers = () => {
     </div>
   );
 };
+
+registerComponent({ name: 'FilesUsers', component: FilesUsers });
 
 export default FilesUsers;

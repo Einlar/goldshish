@@ -15,10 +15,9 @@ const FilesPage = () => {
         //fragmentName, input, pollInterval, queryOptions
     });
 
-    return (
+    return ( //Find a way to manage errors here, redirecting to 404 page
             loading ? (<Components.Loading />) : (
             <div>
-                Here showing: { slug }
                 <h2>{document.title}</h2>
                 <div className="content">{document.content}</div>
             </div>
