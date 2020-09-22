@@ -1,9 +1,10 @@
 import React from 'react';
-import { Components, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
+import { Components, getFragment, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
 
 import Courses from '../../modules/courses/collection.js';
 import Users from 'meteor/vulcan:users';
 import { Link, useHistory } from 'react-router-dom';
+
 
 const CoursesNew = () => {
     const history = useHistory(); //This is necessary for redirecting!
@@ -12,11 +13,16 @@ const CoursesNew = () => {
     return (
         <div className="share-note">
             { Users.canCreate({ collection: Courses, user: currentUser }) ?
-            <Components.SmartForm collection={Courses} 
+            ( <Components.SmartForm collection={Courses}
             successCallback = {() => {
                 history.push(`/`);
-            }} /> : <div>Please <Link to="/log-in?redirect=/share">Log-in</Link> to submit a note.</div> 
+            }} />
+            )
+            : <div>Please <Link to="/log-in?redirect=/share">Log-in</Link> to submit a note.</div> 
             }
+            <div className="upload-note">
+                <Components.FilesUpload/>
+            </div>
         </div>
     );
 };
