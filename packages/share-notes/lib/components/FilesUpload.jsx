@@ -13,6 +13,7 @@ import UploadedFiles from '../modules/uploadedFiles/collection';
 
 const awsSettings = getSetting('aws');
 
+//Main component
 const FilesUpload = ({currentUser, documentId, collectionName}) => {
   const [s3Policy, setS3Policy] = useState({});
   const S3_BUCKET_URL = awsSettings.awsS3BucketUrl;
@@ -30,9 +31,11 @@ const FilesUpload = ({currentUser, documentId, collectionName}) => {
     });
   }, []);
 
+  //inserts the file in the database //! How to register the URL?
   const [addUploadedFile, {data, loading}] = useCreate2(
     ({collection: UploadedFiles, collectionName: 'UploadedFiles'}));
 
+  //Retrieve parameters for xHttp request for uploading to s3 bucket
   const getUploadParams = ({file, meta}) => {
     const fields = {
       'key': `${currentUser._id}/\${filename}`,
@@ -49,6 +52,7 @@ const FilesUpload = ({currentUser, documentId, collectionName}) => {
     return {url: S3_BUCKET_URL, method: 'POST', fields: fields, headers: headers, meta: {}};
   };
 
+  //Maps data into the addUploadedFile function
   const createUploadedFile = (meta) => {
     const {name, size, type, duration, videoHeight, videoWidth} = meta;
     addUploadedFile({
@@ -66,11 +70,19 @@ const FilesUpload = ({currentUser, documentId, collectionName}) => {
     });
   };
 
+  //Gets called whenever the status of uploaded files changes
   const handleChangeStatus = ({meta}, status) => {
+    console.log(status, meta);
     if (status === 'done') {
       createUploadedFile(meta);
     }
   };
+
+  //Handles submit
+  const handleSubmit = (files, allFiles) => {
+    console.log(files.map(f => f.meta)); //files that have finished uploading
+    allFiles.forEach(f => f.remove()); //Remove the others
+  }
 
   return (
     <div>
