@@ -13,16 +13,17 @@ const CoursesNew = () => {
     return (
         <div className="share-note">
             { Users.canCreate({ collection: Courses, user: currentUser }) ?
-            ( <Components.SmartForm collection={Courses}
+            ( <div><Components.SmartForm collection={Courses}
+            mutationFragment={getFragment('CoursesPage')}
             successCallback = {() => {
                 history.push(`/`);
-            }} />
+            }} /></div>
             )
             : <div>Please <Link to="/log-in?redirect=/share">Log-in</Link> to submit a note.</div> 
             }
-            <div className="upload-note">
+            {/* <div className="upload-note">
                 <Components.FilesUpload/>
-            </div>
+        </div> */}
         </div>
     );
 };

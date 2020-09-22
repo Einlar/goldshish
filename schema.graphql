@@ -164,6 +164,31 @@ directive @intl on FIELD_DEFINITION
   }
 
 
+  type FSFile {
+    _id: String
+    name: String!
+    extension: String
+    extensionWithDot: String
+    url(version: String = "original"): String
+    meta: JSON
+    type: String
+    mime: String
+    size: Int
+    userId: String
+    user: User
+    isVideo: Boolean
+    isAudio: Boolean
+    isImage: Boolean
+    isText: Boolean
+    isJSON: Boolean
+    isPDF: Boolean
+  }
+
+
+  # A file upload.
+  scalar File
+
+
 # A user object
 type User {
   _id: String 
@@ -549,6 +574,8 @@ type Course {
   title: String 
   slug: String 
   content: String 
+  noteId: JSON 
+  noteUrl: FSFile 
   createdAtFormatted(format: String = "YYYY/MM/DD"): String 
 }
 
@@ -624,6 +651,7 @@ input CreateCourseInput {
 input CreateCourseDataInput {
   title: String 
   content: String 
+  noteId: JSON 
 }
 
 input UpdateCourseInput{
@@ -645,6 +673,7 @@ input UpsertCourseInput{
 input UpdateCourseDataInput {
   title: String 
   content: String 
+  noteId: JSON 
 }
 
 input CourseFilterInput {
@@ -659,6 +688,7 @@ input CourseFilterInput {
   title: String_Selector
   slug: String_Selector
   content: String_Selector
+
 }
 
 input CourseSortInput {
@@ -668,6 +698,7 @@ input CourseSortInput {
   title: SortOptions
   slug: SortOptions
   content: SortOptions
+  noteId: SortOptions
 }
 
 input CourseSelectorInput {
@@ -728,8 +759,6 @@ type Mutation {
   sendVerificationEmail(input: AuthEmailInput): Boolean
 
   verifyEmail(input: VerifyEmailInput): VerifyEmailResult
-
-  policyAndSignatureMutation : JSON
 
   # Mutation for creating new User documents
   createUser(

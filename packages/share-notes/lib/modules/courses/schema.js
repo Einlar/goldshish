@@ -1,11 +1,14 @@
 import { Utils } from "meteor/vulcan:core";
+import { Components } from 'meteor/vulcan:lib';
 
-// import once from 'lodash/once';
-// import isString from 'lodash/isString';
-// import { curryFileCheck } from 'meteor/origenstudio:files-helpers';
-// import { generateFieldSchema, Image } from '../../../../vulcan-files'; //meteor/origenstudio:vulcan-files
+import once from 'lodash/once';
+import isString from 'lodash/isString';
+import { curryFileCheck } from 'meteor/origenstudio:files-helpers';
+import { generateFieldSchema, Image } from 'meteor/vulcan-files'; //meteor/origenstudio:vulcan-files
 
-// import NoteFiles from './fsCollection';
+import NoteFiles from './fsCollection';
+
+//import UploadInput from 'meteor/vulcan-files';
 
 
 const schema = {
@@ -63,7 +66,7 @@ const schema = {
         canUpdate: ['members']
     },
 
-     // custom properties
+    //  custom properties
     //  ...generateFieldSchema({
     //   fieldName: 'fileId',
     //   fieldSchema: {
@@ -71,46 +74,49 @@ const schema = {
     //   },
     //   resolverName: 'file',
     //  }),
-  // ...generateFieldSchema({
-  //   FSCollection: NoteFiles,
-  //   fieldName: 'noteId',
-  //   fieldSchema: {
-  //     label: 'Note URL',
-  //     form: {
-  //       fileCheck: once(() => curryFileCheck({
-  //         maxSize: 5 * 1024 * 1024, // 5Mbytes
-  //         fileTypeRegExp:  /png|jpg|jpeg/i,
-  //       })),
-  //       FileRender: once(() => Image),
-  //       previewFromValue: once(() => (value, index, props) => {
-  //         if (isString(value)) {
-  //           // is stored value
-  //           return {
-  //             // retrieve url from resolved field
-  //             url: props.document.noteUrl,
-  //             // we do not have the name of the file here, so we'll set
-  //             // from the body of the document (this is optional)
-  //             name: props.currentValues.body || props.document.body,
-  //           };
-  //         } else {
-  //           // is an uploaded file, do nothing and preview will be retrieved
-  //           // by `previewFromFile` prop
-  //         }
-  //       }),
-  //     },
-  //   },
-  //   resolverName: 'noteUrl',
-  //   // only resolve field on the server, where PicsFiles is defined
-  //   resolver: NoteFiles
-  //     ? async ({ noteId }) => {
-  //         if (!noteId) {
-  //           return null;
-  //         }
-  //         const noteFile = await NoteFiles.loader.load(noteId);
-  //         return noteFile ? NoteFiles.link(noteFile) : null;
-  //       }
-  //     : null,
-  // }),
+  ...generateFieldSchema({
+    FSCollection: NoteFiles,
+    fieldName: 'noteId',
+    fieldSchema: {
+      label: 'Note URL',
+      canRead: ['guests'],
+      canCreate: ['members'],
+      canUpdate: ['members'],
+      form: {
+        fileCheck: once(() => curryFileCheck({
+          maxSize: 5 * 1024 * 1024, // 5Mbytes
+          fileTypeRegExp:  /png|jpg|jpeg/i,
+        })),
+        FileRender: once(() => Image),
+        previewFromValue: once(() => (value, index, props) => {
+          if (isString(value)) {
+            // is stored value
+            return {
+              // retrieve url from resolved field
+              url: props.document.noteUrl,
+              // we do not have the name of the file here, so we'll set
+              // from the body of the document (this is optional)
+              name: props.currentValues.body || props.document.body,
+            };
+          } else {
+            // is an uploaded file, do nothing and preview will be retrieved
+            // by `previewFromFile` prop
+          }
+        }),
+      },
+    },
+    resolverName: 'noteUrl',
+    // only resolve field on the server, where NoteFiles is defined
+    resolver: NoteFiles
+      ? async ({ noteId }) => {
+          if (!noteId) {
+            return null; //null
+          }
+          const noteFile = await NoteFiles.loader.load(noteId);
+          return noteFile ? NoteFiles.link(noteFile) : null;
+        }
+      : null,
+  }),
 };
 
 export default schema;

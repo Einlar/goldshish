@@ -11,7 +11,7 @@ const CoursesPage = () => {
     const {document, loading, error} = useSingle2({
         collection: Courses,
         input: { filter: {slug: {_eq: slug} } },
-        fragmentName: 'CoursesPage',
+        //fragmentName: 'CoursesNotes',
         //fragmentName, input, pollInterval, queryOptions
     });
 
@@ -19,7 +19,7 @@ const CoursesPage = () => {
             loading ? (<Components.Loading />) : (
             <div>
                 <h2>{document.title}</h2>
-                <div className="content">{document.content}<img src={document.noteUrl}/></div>
+            <div className="content">{document.content}</div>
             </div>
         ) 
     )
