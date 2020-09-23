@@ -1,7 +1,7 @@
-import { Components, registerComponent, useSingle2 } from 'meteor/vulcan:core';
+import { Components, registerComponent, useSingle2 } from '../../modules/folders/node_modules/meteor/vulcan:core';
 import get from 'lodash/get';
 import React, { useState } from 'react';
-import Courses from '../../modules/courses/collection.js';
+import Courses from '../../modules/noteitems/collection.js';
 import { Link, useParams } from 'react-router-dom';
 
 

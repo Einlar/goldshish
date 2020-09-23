@@ -1,9 +1,9 @@
 import { createCollection } from 'meteor/vulcan:core';
 import schema from './schema.js';
 
-const Courses = createCollection({
-    collectionName: 'Courses',
-    typeName: 'Course',
+const Notes = createCollection({
+    collectionName: 'Notes',
+    typeName: 'Note',
     schema,
     permissions: {
         canRead: ['guests'],
@@ -13,9 +13,9 @@ const Courses = createCollection({
     },
     defaultInput: {
         orderBy: {
-            slug: 'asc',
+            date: 'desc',
         },
     }
 });
 
-export default Courses;
+export default Notes;

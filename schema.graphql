@@ -375,15 +375,9 @@ input UserSelectorUniqueInput {
 # Type for Courses
 type Course {
   _id: String 
-  createdAt: Date 
-  userId: String 
-  user: User 
-  title: String 
+  courseName: String 
   slug: String 
-  content: String 
-  noteId: JSON 
-  noteUrl: FSFile 
-  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
+  description: String 
 }
 
 
@@ -456,9 +450,8 @@ input CreateCourseInput {
 }
 
 input CreateCourseDataInput {
-  title: String 
-  content: String 
-  noteId: JSON 
+  courseName: String 
+  description: String 
 }
 
 input UpdateCourseInput{
@@ -478,9 +471,8 @@ input UpsertCourseInput{
 }
 
 input UpdateCourseDataInput {
-  title: String 
-  content: String 
-  noteId: JSON 
+  courseName: String 
+  description: String 
 }
 
 input CourseFilterInput {
@@ -490,22 +482,16 @@ input CourseFilterInput {
 
 
   _id: String_Selector
-  createdAt: Date_Selector
-  userId: String_Selector
-  title: String_Selector
+  courseName: String_Selector
   slug: String_Selector
-  content: String_Selector
-
+  description: String_Selector
 }
 
 input CourseSortInput {
   _id: SortOptions
-  createdAt: SortOptions
-  userId: SortOptions
-  title: SortOptions
+  courseName: SortOptions
   slug: SortOptions
-  content: SortOptions
-  noteId: SortOptions
+  description: SortOptions
 }
 
 input CourseSelectorInput {
@@ -515,6 +501,611 @@ input CourseSelectorInput {
 }
 
 input CourseSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
+# Type for Professors
+type Professor {
+  _id: String 
+  professorName: String 
+  courseId: String 
+  courseName: Course 
+}
+
+
+input DeleteProfessorInput{
+  filter: ProfessorFilterInput
+  id: String
+}
+
+input SingleProfessorInput {
+  # filtering
+  filter: ProfessorFilterInput
+  sort: ProfessorSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: ProfessorSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiProfessorInput {
+
+  # filtering
+  filter: ProfessorFilterInput
+  sort: ProfessorSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleProfessorOutput{
+  result: Professor
+}
+
+type  MultiProfessorOutput{
+  results: [Professor]
+  totalCount: Int
+}
+
+type ProfessorMutationOutput{
+  data: Professor
+}
+
+input CreateProfessorInput {
+  data: CreateProfessorDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateProfessorDataInput {
+  professorName: String 
+  courseId: String 
+}
+
+input UpdateProfessorInput{
+  filter: ProfessorFilterInput
+  id: String
+  data: UpdateProfessorDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertProfessorInput{
+  filter: ProfessorFilterInput
+  id: String
+  data: UpdateProfessorDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateProfessorDataInput {
+  professorName: String 
+  courseId: String 
+}
+
+input ProfessorFilterInput {
+  _and: [ProfessorFilterInput]
+  _not: ProfessorFilterInput
+  _or: [ProfessorFilterInput]
+
+
+  _id: String_Selector
+  professorName: String_Selector
+  courseId: String_Selector
+}
+
+input ProfessorSortInput {
+  _id: SortOptions
+  professorName: SortOptions
+  courseId: SortOptions
+}
+
+input ProfessorSelectorInput {
+  _and: [ProfessorSelectorInput]
+  _or: [ProfessorSelectorInput]
+
+}
+
+input ProfessorSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
+# Type for Folders
+type Folder {
+  _id: String 
+  folderName: String 
+  slug: String 
+  description: String 
+  courseId: String 
+  course: Course 
+  starred: Boolean 
+}
+
+
+input DeleteFolderInput{
+  filter: FolderFilterInput
+  id: String
+}
+
+input SingleFolderInput {
+  # filtering
+  filter: FolderFilterInput
+  sort: FolderSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: FolderSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiFolderInput {
+
+  # filtering
+  filter: FolderFilterInput
+  sort: FolderSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleFolderOutput{
+  result: Folder
+}
+
+type  MultiFolderOutput{
+  results: [Folder]
+  totalCount: Int
+}
+
+type FolderMutationOutput{
+  data: Folder
+}
+
+input CreateFolderInput {
+  data: CreateFolderDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateFolderDataInput {
+  folderName: String 
+  description: String 
+  starred: Boolean 
+}
+
+input UpdateFolderInput{
+  filter: FolderFilterInput
+  id: String
+  data: UpdateFolderDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertFolderInput{
+  filter: FolderFilterInput
+  id: String
+  data: UpdateFolderDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateFolderDataInput {
+  folderName: String 
+  description: String 
+  starred: Boolean 
+}
+
+input FolderFilterInput {
+  _and: [FolderFilterInput]
+  _not: FolderFilterInput
+  _or: [FolderFilterInput]
+
+
+  _id: String_Selector
+  folderName: String_Selector
+  slug: String_Selector
+  description: String_Selector
+  courseId: String_Selector
+  starred: Boolean_Selector
+}
+
+input FolderSortInput {
+  _id: SortOptions
+  folderName: SortOptions
+  slug: SortOptions
+  description: SortOptions
+  courseId: SortOptions
+  starred: SortOptions
+}
+
+input FolderSelectorInput {
+  _and: [FolderSelectorInput]
+  _or: [FolderSelectorInput]
+
+}
+
+input FolderSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
+# Type for NoteItems
+type NoteItem {
+  _id: String 
+  createdAt: Date 
+  userId: String 
+  user: User 
+  version: String 
+  slug: String 
+  description: String 
+  noteId: JSON 
+  noteUrl: FSFile 
+  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
+}
+
+
+input DeleteNoteItemInput{
+  filter: NoteItemFilterInput
+  id: String
+}
+
+input SingleNoteItemInput {
+  # filtering
+  filter: NoteItemFilterInput
+  sort: NoteItemSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: NoteItemSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiNoteItemInput {
+
+  # filtering
+  filter: NoteItemFilterInput
+  sort: NoteItemSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleNoteItemOutput{
+  result: NoteItem
+}
+
+type  MultiNoteItemOutput{
+  results: [NoteItem]
+  totalCount: Int
+}
+
+type NoteItemMutationOutput{
+  data: NoteItem
+}
+
+input CreateNoteItemInput {
+  data: CreateNoteItemDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateNoteItemDataInput {
+  version: String 
+  description: String 
+  noteId: JSON 
+}
+
+input UpdateNoteItemInput{
+  filter: NoteItemFilterInput
+  id: String
+  data: UpdateNoteItemDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertNoteItemInput{
+  filter: NoteItemFilterInput
+  id: String
+  data: UpdateNoteItemDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateNoteItemDataInput {
+  version: String 
+  description: String 
+  noteId: JSON 
+}
+
+input NoteItemFilterInput {
+  _and: [NoteItemFilterInput]
+  _not: NoteItemFilterInput
+  _or: [NoteItemFilterInput]
+
+
+  _id: String_Selector
+  createdAt: Date_Selector
+  userId: String_Selector
+  version: String_Selector
+  slug: String_Selector
+  description: String_Selector
+
+}
+
+input NoteItemSortInput {
+  _id: SortOptions
+  createdAt: SortOptions
+  userId: SortOptions
+  version: SortOptions
+  slug: SortOptions
+  description: SortOptions
+  noteId: SortOptions
+}
+
+input NoteItemSelectorInput {
+  _and: [NoteItemSelectorInput]
+  _or: [NoteItemSelectorInput]
+
+}
+
+input NoteItemSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
+# Type for Notes
+type Note {
+  _id: String 
+  noteName: String 
+  slug: String 
+  description: String 
+  courseId: String 
+  course: Course 
+  folderId: String 
+  folder: Folder 
+  professorId: String 
+  professor: Professor 
+  latest_verId: String 
+  latest_ver: NoteItem 
+  starred: Boolean 
+  years: Float 
+  date: Date 
+  dateFormatted(format: String = "YYYY/MM/DD"): String 
+}
+
+
+input DeleteNoteInput{
+  filter: NoteFilterInput
+  id: String
+}
+
+input SingleNoteInput {
+  # filtering
+  filter: NoteFilterInput
+  sort: NoteSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: NoteSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiNoteInput {
+
+  # filtering
+  filter: NoteFilterInput
+  sort: NoteSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleNoteOutput{
+  result: Note
+}
+
+type  MultiNoteOutput{
+  results: [Note]
+  totalCount: Int
+}
+
+type NoteMutationOutput{
+  data: Note
+}
+
+input CreateNoteInput {
+  data: CreateNoteDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateNoteDataInput {
+  noteName: String 
+  description: String 
+  courseId: String 
+  folderId: String 
+  professorId: String 
+  latest_verId: String 
+  starred: Boolean 
+  years: Float 
+  date: Date 
+}
+
+input UpdateNoteInput{
+  filter: NoteFilterInput
+  id: String
+  data: UpdateNoteDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertNoteInput{
+  filter: NoteFilterInput
+  id: String
+  data: UpdateNoteDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateNoteDataInput {
+  noteName: String 
+  description: String 
+  courseId: String 
+  folderId: String 
+  professorId: String 
+  latest_verId: String 
+  starred: Boolean 
+  years: Float 
+  date: Date 
+}
+
+input NoteFilterInput {
+  _and: [NoteFilterInput]
+  _not: NoteFilterInput
+  _or: [NoteFilterInput]
+
+
+  _id: String_Selector
+  noteName: String_Selector
+  slug: String_Selector
+  description: String_Selector
+  courseId: String_Selector
+  folderId: String_Selector
+  professorId: String_Selector
+  latest_verId: String_Selector
+  starred: Boolean_Selector
+  years: Float_Selector
+  date: Date_Selector
+}
+
+input NoteSortInput {
+  _id: SortOptions
+  noteName: SortOptions
+  slug: SortOptions
+  description: SortOptions
+  courseId: SortOptions
+  folderId: SortOptions
+  professorId: SortOptions
+  latest_verId: SortOptions
+  starred: SortOptions
+  years: SortOptions
+  date: SortOptions
+}
+
+input NoteSelectorInput {
+  _and: [NoteSelectorInput]
+  _or: [NoteSelectorInput]
+
+}
+
+input NoteSelectorUniqueInput {
   _id: String
   documentId: String # OpenCRUD backwards compatibility
   slug: String
@@ -540,6 +1131,30 @@ type Query {
   
   # A list of Course documents matching a set of query terms
   courses(input: MultiCourseInput):  MultiCourseOutput
+  
+  # A single Professor document fetched by ID or slug
+  professor(input: SingleProfessorInput!): SingleProfessorOutput
+  
+  # A list of Professor documents matching a set of query terms
+  professors(input: MultiProfessorInput):  MultiProfessorOutput
+  
+  # A single Folder document fetched by ID or slug
+  folder(input: SingleFolderInput!): SingleFolderOutput
+  
+  # A list of Folder documents matching a set of query terms
+  folders(input: MultiFolderInput):  MultiFolderOutput
+  
+  # A single NoteItem document fetched by ID or slug
+  noteItem(input: SingleNoteItemInput!): SingleNoteItemOutput
+  
+  # A list of NoteItem documents matching a set of query terms
+  noteItems(input: MultiNoteItemInput):  MultiNoteItemOutput
+  
+  # A single Note document fetched by ID or slug
+  note(input: SingleNoteInput!): SingleNoteOutput
+  
+  # A list of Note documents matching a set of query terms
+  notes(input: MultiNoteInput):  MultiNoteOutput
   
 }
   
@@ -624,6 +1239,134 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: CourseSelectorUniqueInput
 ) : CourseMutationOutput
+
+  # Mutation for creating new Professor documents
+  createProfessor(
+  input: CreateProfessorInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateProfessorDataInput
+) : ProfessorMutationOutput
+
+  # Mutation for updating a Professor document
+  updateProfessor(
+  input: UpdateProfessorInput,
+  "Deprecated (use 'input' field instead)."
+  selector: ProfessorSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateProfessorDataInput 
+) : ProfessorMutationOutput
+
+  # Mutation for upserting a Professor document
+  upsertProfessor(
+  input: UpsertProfessorInput,
+  "Deprecated (use 'input' field instead)."
+  selector: ProfessorSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateProfessorDataInput
+) : ProfessorMutationOutput
+
+  # Mutation for deleting a Professor document
+  deleteProfessor(
+  input: DeleteProfessorInput,
+  "Deprecated (use 'input' field instead)."
+  selector: ProfessorSelectorUniqueInput
+) : ProfessorMutationOutput
+
+  # Mutation for creating new Folder documents
+  createFolder(
+  input: CreateFolderInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateFolderDataInput
+) : FolderMutationOutput
+
+  # Mutation for updating a Folder document
+  updateFolder(
+  input: UpdateFolderInput,
+  "Deprecated (use 'input' field instead)."
+  selector: FolderSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateFolderDataInput 
+) : FolderMutationOutput
+
+  # Mutation for upserting a Folder document
+  upsertFolder(
+  input: UpsertFolderInput,
+  "Deprecated (use 'input' field instead)."
+  selector: FolderSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateFolderDataInput
+) : FolderMutationOutput
+
+  # Mutation for deleting a Folder document
+  deleteFolder(
+  input: DeleteFolderInput,
+  "Deprecated (use 'input' field instead)."
+  selector: FolderSelectorUniqueInput
+) : FolderMutationOutput
+
+  # Mutation for creating new NoteItem documents
+  createNoteItem(
+  input: CreateNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateNoteItemDataInput
+) : NoteItemMutationOutput
+
+  # Mutation for updating a NoteItem document
+  updateNoteItem(
+  input: UpdateNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteItemSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateNoteItemDataInput 
+) : NoteItemMutationOutput
+
+  # Mutation for upserting a NoteItem document
+  upsertNoteItem(
+  input: UpsertNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteItemSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateNoteItemDataInput
+) : NoteItemMutationOutput
+
+  # Mutation for deleting a NoteItem document
+  deleteNoteItem(
+  input: DeleteNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteItemSelectorUniqueInput
+) : NoteItemMutationOutput
+
+  # Mutation for creating new Note documents
+  createNote(
+  input: CreateNoteInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateNoteDataInput
+) : NoteMutationOutput
+
+  # Mutation for updating a Note document
+  updateNote(
+  input: UpdateNoteInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateNoteDataInput 
+) : NoteMutationOutput
+
+  # Mutation for upserting a Note document
+  upsertNote(
+  input: UpsertNoteInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateNoteDataInput
+) : NoteMutationOutput
+
+  # Mutation for deleting a Note document
+  deleteNote(
+  input: DeleteNoteInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteSelectorUniqueInput
+) : NoteMutationOutput
 
 }
 

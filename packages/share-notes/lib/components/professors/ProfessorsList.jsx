@@ -1,15 +1,15 @@
 import React from 'react';
 import { Components, registerComponent } from 'meteor/vulcan:core';
 
-import Courses from '../../modules/courses/collection.js';
+import Professors from '../../modules/professors/collection.js';
 
-const CoursesList = () => {
+const ProfessorsList = () => {
     //Do something here
 
     return (
-        <div className="courses-list">
+        <div className="professors-list">
             <Components.Datatable
-                collection={Courses}
+                collection={Professors}
             showNew={true}
             showEdit={true}
             showSearch={true}/>
@@ -17,6 +17,6 @@ const CoursesList = () => {
     );
 };
 
-registerComponent({ name: 'CoursesList', component: CoursesList });
+registerComponent({ name: 'ProfessorsList', component: ProfessorsList });
 
-export default CoursesList;
+export default ProfessorsList;

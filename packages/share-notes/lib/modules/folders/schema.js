@@ -6,7 +6,7 @@ const schema = {
         optional: true,
         canRead: ['guests']
     },
-    courseName: {
+    folderName: {
         type: String,
         optional: false,
         canRead: ['guests'],
@@ -19,11 +19,11 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         onCreate: ({ data }) => {
-            return Utils.slugify(data.courseName);
+            return Utils.slugify(data.folderName);
         },
         onUpdate: ({ data }) => {
-            if (data.courseName) {
-                return Utils.slugify(data.courseName);
+            if (data.folderName) {
+                return Utils.slugify(data.folderName);
             }
         },
     },
@@ -35,6 +35,23 @@ const schema = {
         canCreate: ['members'],
         canUpdate: ['members']
     },
+    courseId: {
+        type: String,
+        optional: true,
+        canRead: ["guests"],
+        relation: {
+            fieldName: 'course',
+            typeName: 'Course',
+            kind: 'hasOne',
+        }
+    },
+    starred: {
+        type: Boolean,
+        optional: true,
+        canRead: ['guests'],
+        canCreate: ['members'],
+        canUpdate: ['members']
+    }
 };
 
 export default schema;

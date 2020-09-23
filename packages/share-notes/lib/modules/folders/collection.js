@@ -1,9 +1,9 @@
 import { createCollection } from 'meteor/vulcan:core';
 import schema from './schema.js';
 
-const Courses = createCollection({
-    collectionName: 'Courses',
-    typeName: 'Course',
+const Folders = createCollection({
+    collectionName: 'Folders',
+    typeName: 'Folder',
     schema,
     permissions: {
         canRead: ['guests'],
@@ -11,11 +11,6 @@ const Courses = createCollection({
         canUpdate: ['owners', 'admins'],
         canDelete: ['owners', 'admins'],
     },
-    defaultInput: {
-        orderBy: {
-            slug: 'asc',
-        },
-    }
 });
 
-export default Courses;
+export default Folders;
