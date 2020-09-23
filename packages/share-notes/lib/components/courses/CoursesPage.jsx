@@ -1,8 +1,9 @@
 import { Components, registerComponent, useSingle2 } from 'meteor/vulcan:core';
 import get from 'lodash/get';
-import React from 'react';
+import React, { useState } from 'react';
 import Courses from '../../modules/courses/collection.js';
 import { Link, useParams } from 'react-router-dom';
+
 
 const CoursesPage = () => {
     const { slug } = useParams();
@@ -19,9 +20,7 @@ const CoursesPage = () => {
             loading ? (<Components.Loading />) : (
             <div>
                 <h2>{document.title}</h2>
-            <div className="content">{document.content}</div>
-            <img src={document.noteUrl.url} style={{width: '100%'}}/>
-            <a href={document.noteUrl.url} download={document.noteUrl.name}>Download here!</a>
+                <a href={document.noteUrl.url} download={document.noteUrl.name}>Download here!</a>
             </div>
         ) 
     )

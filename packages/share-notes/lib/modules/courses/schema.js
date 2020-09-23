@@ -4,7 +4,7 @@ import { Components } from 'meteor/vulcan:lib';
 import once from 'lodash/once';
 import isString from 'lodash/isString';
 import { curryFileCheck } from 'meteor/origenstudio:files-helpers';
-import { generateFieldSchema, Image } from 'meteor/vulcan-files'; //meteor/origenstudio:vulcan-files
+import { generateFieldSchema, BasicFile } from 'meteor/vulcan-files'; //meteor/origenstudio:vulcan-files
 
 import NoteFiles from './fsCollection';
 
@@ -84,10 +84,10 @@ const schema = {
       canUpdate: ['members'],
       form: {
         fileCheck: once(() => curryFileCheck({
-          maxSize: 5 * 1024 * 1024, // 5Mbytes
-          fileTypeRegExp:  /png|jpg|jpeg/i,
+          maxSize: 10 * 1024 * 1024, // 5Mbytes
+          fileTypeRegExp:  /pdf/i,
         })),
-        FileRender: once(() => Image),
+        FileRender: once(() => BasicFile), //Use BasicFile for rendering preview
         previewFromValue: once(() => (value, index, props) => {
           if (isString(value)) {
             // is stored value
