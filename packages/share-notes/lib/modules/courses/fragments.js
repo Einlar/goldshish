@@ -16,6 +16,10 @@ registerFragment(`
         title
         content
         slug
-        noteUrl
+        noteUrl {
+            name
+            type
+            url
+        }
     }
 `);

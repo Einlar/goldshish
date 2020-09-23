@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Components, useMulti2, registerComponent, useCurrentUser } from 'meteor/vulcan:core';
+import { getFragment } from 'meteor/vulcan:lib';
 import { Link } from 'react-router-dom';
 
 import CoursesUsers from './CoursesUsers.jsx';
@@ -10,7 +11,7 @@ import CoursesNew from './CoursesNew.jsx';
 import Courses from '../../modules/courses/collection.js';
 
 const CoursesList = () => {
-    const { results = [], data, loading } = useMulti2({ collection: Courses });
+    const { results = [], data, loading } = useMulti2({ collection: Courses, fragment: getFragment('CoursesNotes') });
     return (
         <div className="courses">
 

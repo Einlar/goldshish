@@ -11,7 +11,7 @@ const CoursesPage = () => {
     const {document, loading, error} = useSingle2({
         collection: Courses,
         input: { filter: {slug: {_eq: slug} } },
-        //fragmentName: 'CoursesNotes',
+        fragmentName: 'CoursesNotes',
         //fragmentName, input, pollInterval, queryOptions
     });
 
@@ -20,6 +20,8 @@ const CoursesPage = () => {
             <div>
                 <h2>{document.title}</h2>
             <div className="content">{document.content}</div>
+            <img src={document.noteUrl.url} style={{width: '100%'}}/>
+            <a href={document.noteUrl.url} download={document.noteUrl.name}>Download here!</a>
             </div>
         ) 
     )
