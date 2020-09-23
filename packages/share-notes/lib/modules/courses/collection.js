@@ -14,7 +14,7 @@ const Courses = createCollection({
     },
     defaultInput: {
         orderBy: {
-            createdAt: 'desc',
+            slug: 'asc',
         },
     },
 });

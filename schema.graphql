@@ -208,7 +208,6 @@ type User {
   pageUrl: String 
   pagePath: String 
   editUrl: String 
-  uploadedFiles(collectionName: String): [UploadedFile] 
   createdAtFormatted(format: String = "YYYY/MM/DD"): String 
 }
 
@@ -289,7 +288,6 @@ input CreateUserDataInput {
   displayName: String 
   email: String 
   groups: [String] 
-  uploadedFiles: [JSON] 
 }
 
 input UpdateUserInput{
@@ -315,7 +313,6 @@ input UpdateUserDataInput {
   displayName: String 
   email: String 
   groups: [String] 
-  uploadedFiles: [JSON] 
 }
 
 input UserFilterInput {
@@ -340,7 +337,6 @@ input UserFilterInput {
   pageUrl: String_Selector
   pagePath: String_Selector
   editUrl: String_Selector
-
 }
 
 input UserSortInput {
@@ -360,7 +356,6 @@ input UserSortInput {
   pageUrl: SortOptions
   pagePath: SortOptions
   editUrl: SortOptions
-  uploadedFiles: SortOptions
 }
 
 input UserSelectorInput {
@@ -370,194 +365,6 @@ input UserSelectorInput {
 }
 
 input UserSelectorUniqueInput {
-  _id: String
-  documentId: String # OpenCRUD backwards compatibility
-  slug: String
-
-}
-
-
-# Type for UploadedFiles
-type UploadedFile {
-  _id: String 
-  createdAt: Date 
-  userId: String 
-  user: User 
-  documentId: String 
-  collectionName: String 
-  name: String 
-  size: Float 
-  type: String 
-  duration: Float 
-  videoHeight: Float 
-  videoWidth: Float 
-  height: Float 
-  width: Float 
-  previewUrl: String 
-  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
-}
-
-
-input DeleteUploadedFileInput{
-  filter: UploadedFileFilterInput
-  id: String
-}
-
-input SingleUploadedFileInput {
-  # filtering
-  filter: UploadedFileFilterInput
-  sort: UploadedFileSortInput
-  search: String
-  id: String
-
-  # backwards-compatibility
-  "Deprecated (use 'filter/id' fields instead)."
-  selector: UploadedFileSelectorUniqueInput
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Return null instead of throwing MissingDocumentError
-  allowNull: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-}
-
-input MultiUploadedFileInput {
-
-  # filtering
-  filter: UploadedFileFilterInput
-  sort: UploadedFileSortInput
-  search: String
-  offset: Int
-  limit: Int
-
-  # backwards-compatibility
-  # A JSON object that contains the query terms used to fetch data
-  "Deprecated (use 'filter/id' fields instead)."
-  terms: JSON
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Whether to calculate totalCount for this query
-  enableTotal: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-  
-}
-
-type SingleUploadedFileOutput{
-  result: UploadedFile
-}
-
-type  MultiUploadedFileOutput{
-  results: [UploadedFile]
-  totalCount: Int
-}
-
-type UploadedFileMutationOutput{
-  data: UploadedFile
-}
-
-input CreateUploadedFileInput {
-  data: CreateUploadedFileDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input CreateUploadedFileDataInput {
-  userId: String 
-  documentId: String 
-  collectionName: String 
-  name: String 
-  size: Float 
-  type: String 
-  duration: Float 
-  videoHeight: Float 
-  videoWidth: Float 
-  height: Float 
-  width: Float 
-  previewUrl: String 
-}
-
-input UpdateUploadedFileInput{
-  filter: UploadedFileFilterInput
-  id: String
-  data: UpdateUploadedFileDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpsertUploadedFileInput{
-  filter: UploadedFileFilterInput
-  id: String
-  data: UpdateUploadedFileDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpdateUploadedFileDataInput {
-  userId: String 
-  documentId: String 
-  collectionName: String 
-  name: String 
-  size: Float 
-  type: String 
-  duration: Float 
-  videoHeight: Float 
-  videoWidth: Float 
-  height: Float 
-  width: Float 
-  previewUrl: String 
-}
-
-input UploadedFileFilterInput {
-  _and: [UploadedFileFilterInput]
-  _not: UploadedFileFilterInput
-  _or: [UploadedFileFilterInput]
-
-
-  _id: String_Selector
-  createdAt: Date_Selector
-  userId: String_Selector
-  documentId: String_Selector
-  collectionName: String_Selector
-  name: String_Selector
-  size: Float_Selector
-  type: String_Selector
-  duration: Float_Selector
-  videoHeight: Float_Selector
-  videoWidth: Float_Selector
-  height: Float_Selector
-  width: Float_Selector
-  previewUrl: String_Selector
-}
-
-input UploadedFileSortInput {
-  _id: SortOptions
-  createdAt: SortOptions
-  userId: SortOptions
-  documentId: SortOptions
-  collectionName: SortOptions
-  name: SortOptions
-  size: SortOptions
-  type: SortOptions
-  duration: SortOptions
-  videoHeight: SortOptions
-  videoWidth: SortOptions
-  height: SortOptions
-  width: SortOptions
-  previewUrl: SortOptions
-}
-
-input UploadedFileSelectorInput {
-  _and: [UploadedFileSelectorInput]
-  _or: [UploadedFileSelectorInput]
-
-}
-
-input UploadedFileSelectorUniqueInput {
   _id: String
   documentId: String # OpenCRUD backwards compatibility
   slug: String
@@ -728,12 +535,6 @@ type Query {
   # A list of User documents matching a set of query terms
   users(input: MultiUserInput):  MultiUserOutput
   
-  # A single UploadedFile document fetched by ID or slug
-  uploadedFile(input: SingleUploadedFileInput!): SingleUploadedFileOutput
-  
-  # A list of UploadedFile documents matching a set of query terms
-  uploadedFiles(input: MultiUploadedFileInput):  MultiUploadedFileOutput
-  
   # A single Course document fetched by ID or slug
   course(input: SingleCourseInput!): SingleCourseOutput
   
@@ -791,38 +592,6 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: UserSelectorUniqueInput
 ) : UserMutationOutput
-
-  # Mutation for creating new UploadedFile documents
-  createUploadedFile(
-  input: CreateUploadedFileInput,
-  "Deprecated (use 'input' field instead)."
-  data: CreateUploadedFileDataInput
-) : UploadedFileMutationOutput
-
-  # Mutation for updating a UploadedFile document
-  updateUploadedFile(
-  input: UpdateUploadedFileInput,
-  "Deprecated (use 'input' field instead)."
-  selector: UploadedFileSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateUploadedFileDataInput 
-) : UploadedFileMutationOutput
-
-  # Mutation for upserting a UploadedFile document
-  upsertUploadedFile(
-  input: UpsertUploadedFileInput,
-  "Deprecated (use 'input' field instead)."
-  selector: UploadedFileSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateUploadedFileDataInput
-) : UploadedFileMutationOutput
-
-  # Mutation for deleting a UploadedFile document
-  deleteUploadedFile(
-  input: DeleteUploadedFileInput,
-  "Deprecated (use 'input' field instead)."
-  selector: UploadedFileSelectorUniqueInput
-) : UploadedFileMutationOutput
 
   # Mutation for creating new Course documents
   createCourse(

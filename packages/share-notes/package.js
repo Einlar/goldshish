@@ -13,11 +13,8 @@ Package.describe({
       // vulcan packages
       'vulcan:forms@=1.16.0',
       'vulcan:accounts@=1.16.0',
-      //'vulcan:forms-upload@=1.16.0',
       'vulcan:ui-bootstrap@=1.16.0',
 
-      //'origenstudio:vulcan-files@=0.0.4', //Use previous version
-  
     ]);
   
     api.addFiles("lib/stylesheets/style.css");
