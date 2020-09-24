@@ -13,22 +13,5 @@ registerFragment(
     }
 `);
 
-registerFragment(
-    `fragment CourseFolders on Course {
-        _id
-        courseName
-        folders {
-            _id
-            folderName
-            starred
-            slug
-        }
-        notes {
-            _id
-            noteName
-            starred
-            slug
-        }
-    }
-`);
+
 

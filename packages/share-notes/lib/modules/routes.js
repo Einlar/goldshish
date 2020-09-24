@@ -9,7 +9,8 @@ const routes = [
     {name: 'home', path: '/', componentName: 'CoursesHome'},
     {name: 'courses', path: '/courses', componentName: 'CoursesList'},
     {name: 'newnote', path: '/share', componentName: 'NoteItemsNew'},
-    {name: 'note.page', path: '/notes/:slug', componentName: 'NoteItemsPage'},
+    {name: 'note.page', path: '/notes/:course_slug/:slug', componentName: 'NoteItemsPage'},
+    {name: 'folder.page', path: '/folders/:course_slug/:slug', componentName: 'FoldersPage'},
    // {name: 'courses.page', path: '/course/:slug', componentName: 'CoursesPage'}, //Course page
    // {name: 'courses.submit', path: '/share', componentName: 'CoursesNew'},
     {name: 'courses.users', path: '/log-in', componentName: 'CoursesUsers'},

@@ -13,25 +13,3 @@ registerFragment(`
         }
     }
 `);
-
-registerFragment(
-    `fragment NoteFiles on Note {
-        _id
-        noteName
-        files {
-            _id
-            createdAt
-            user {
-                _id
-                username
-            }
-            version
-            description
-            noteUrl {
-                name
-                type
-                url
-            }
-        }
-    }
-`);

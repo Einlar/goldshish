@@ -19,11 +19,15 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         onCreate: ({ data }) => {
-            return Utils.slugify(data.folderName);
+            //if no slug has been provided, generate one
+            const slug = data.slug || Utils.slugify(data.folderName);
+            return Utils.getUnusedSlugByCollectionName('Folders', slug);
         },
-        onUpdate: ({ data }) => {
-            if (data.folderName) {
-                return Utils.slugify(data.folderName);
+        onUpdate: ({ data, document: folder }) => {
+            //console.log("updating folder:", folder);
+            if (data.slug && data.slug !== folder.slug) { //if slug has changed
+                const slug = data.slug;
+                return Utils.getUnusedSlugByCollectionName('Folders', slug);
             }
         },
     },
