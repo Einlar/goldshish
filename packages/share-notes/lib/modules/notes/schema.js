@@ -38,19 +38,35 @@ const schema = {
     },
     courseId: {
         type: String,
+        control: 'select',
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['members'],
+        query: `query CoursesQuery {
+                courses {
+                    results {
+                    _id
+                    courseName
+                    }
+                }
+            }
+        `,
         relation: {
-            fieldName: 'course',
+            fieldName: 'courseName',
             typeName: 'Course',
             kind: 'hasOne',
         },
+        options: ({ data }) => 
+        data.courses.results.map(course => ({
+            value: course._id,
+            label: course.courseName,
+        })),
     },
     folderId: {
         type: String,
         optional: true,
+        control: 'select',
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['members'],
@@ -59,18 +75,54 @@ const schema = {
             typeName: 'Folder',
             kind: 'hasOne',
         },
+        options: ({ data }) =>
+        data.folders.results.map(folder => ({
+            value: folder._id,
+            label: folder.courseName.courseName + '/' + folder.folderName,
+            slug: folder.slug,
+        })),
+        query: `
+        query FolderCoursesQuery {
+            folders {
+                results{
+                    _id
+                    courseName {
+                        courseName
+                    }
+                    folderName
+                    slug
+                }
+            }
+        }
+        `,
+        
     },
     professorId: {
         type: String,
+        control: 'select',
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['members'],
+        query: `query ProfessorsQuery {
+                professors {
+                    results {
+                    _id
+                    professorName
+                    }
+                }
+            }
+        `,
         relation: {
-            fieldName: 'professor',
+            fieldName: 'professorName',
             typeName: 'Professor',
             kind: 'hasOne',
         },
+        options: ({ data }) => 
+        data.professors.results.map(professor => ({
+            value: professor._id,
+            label: professor.professorName,
+        })),
     },
     latest_verId: {
         type: String,

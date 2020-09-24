@@ -6,8 +6,8 @@ import { Helmet } from 'react-helmet';
 
 
 const Layout = ({ children }) => (
-    <div style={{maxWidth: '500px', margin: '20px auto'}}>
-        <div className="header"> 
+    <div className="page">
+        <div className="helmet"> 
             <Helmet>
                     <link 
                         name="bootstrap"
@@ -17,11 +17,13 @@ const Layout = ({ children }) => (
                     /> 
             </Helmet>  {/* Basic CSS */}
         </div>
-
-        <div className="sidebar">
-            <Nav /> 
+        <div className="top">
+            <Nav />
         </div>
-        
+        <div className="header red">
+            <h1 className="title">Goldshish.it</h1>
+            <h2 className="subtitle">Sharing is Strength</h2>
+        </div>
         <div className="main-content">
             {children}
         </div>

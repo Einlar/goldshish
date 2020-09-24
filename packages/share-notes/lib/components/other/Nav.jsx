@@ -5,15 +5,18 @@ import Users from 'meteor/vulcan:users';
 
 //links in the navbar
 const nav = [
-    { name: 'Courses', to: '/' },
+    { name: 'Home', to: '/' },
+    { name: 'Courses', to: '/courses' },
     { name: 'Professors', to: '/profs' },
+    { name: 'Folders', to: '/folders' },
+    { name: 'Notes', to: '/notes' },
     //{ name: 'Share Note', to: '/share' },
 ];
 
 const Nav = () => {
     const { currentUser } = useCurrentUser();
     return (
-        <div className="nav">
+        <div className="nav red">
             {nav.map((item) => (
                 <NavItem key={item.name} item={item} />
             ))}

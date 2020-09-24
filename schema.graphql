@@ -378,6 +378,8 @@ type Course {
   courseName: String 
   slug: String 
   description: String 
+  folders: [Folder] 
+  notes: [Note] 
 }
 
 
@@ -649,7 +651,7 @@ type Folder {
   slug: String 
   description: String 
   courseId: String 
-  course: Course 
+  courseName: Course 
   starred: Boolean 
 }
 
@@ -725,6 +727,7 @@ input CreateFolderInput {
 input CreateFolderDataInput {
   folderName: String 
   description: String 
+  courseId: String 
   starred: Boolean 
 }
 
@@ -747,6 +750,7 @@ input UpsertFolderInput{
 input UpdateFolderDataInput {
   folderName: String 
   description: String 
+  courseId: String 
   starred: Boolean 
 }
 
@@ -787,156 +791,6 @@ input FolderSelectorUniqueInput {
 }
 
 
-# Type for NoteItems
-type NoteItem {
-  _id: String 
-  createdAt: Date 
-  userId: String 
-  user: User 
-  version: String 
-  slug: String 
-  description: String 
-  noteId: JSON 
-  noteUrl: FSFile 
-  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
-}
-
-
-input DeleteNoteItemInput{
-  filter: NoteItemFilterInput
-  id: String
-}
-
-input SingleNoteItemInput {
-  # filtering
-  filter: NoteItemFilterInput
-  sort: NoteItemSortInput
-  search: String
-  id: String
-
-  # backwards-compatibility
-  "Deprecated (use 'filter/id' fields instead)."
-  selector: NoteItemSelectorUniqueInput
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Return null instead of throwing MissingDocumentError
-  allowNull: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-}
-
-input MultiNoteItemInput {
-
-  # filtering
-  filter: NoteItemFilterInput
-  sort: NoteItemSortInput
-  search: String
-  offset: Int
-  limit: Int
-
-  # backwards-compatibility
-  # A JSON object that contains the query terms used to fetch data
-  "Deprecated (use 'filter/id' fields instead)."
-  terms: JSON
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Whether to calculate totalCount for this query
-  enableTotal: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-  
-}
-
-type SingleNoteItemOutput{
-  result: NoteItem
-}
-
-type  MultiNoteItemOutput{
-  results: [NoteItem]
-  totalCount: Int
-}
-
-type NoteItemMutationOutput{
-  data: NoteItem
-}
-
-input CreateNoteItemInput {
-  data: CreateNoteItemDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input CreateNoteItemDataInput {
-  version: String 
-  description: String 
-  noteId: JSON 
-}
-
-input UpdateNoteItemInput{
-  filter: NoteItemFilterInput
-  id: String
-  data: UpdateNoteItemDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpsertNoteItemInput{
-  filter: NoteItemFilterInput
-  id: String
-  data: UpdateNoteItemDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpdateNoteItemDataInput {
-  version: String 
-  description: String 
-  noteId: JSON 
-}
-
-input NoteItemFilterInput {
-  _and: [NoteItemFilterInput]
-  _not: NoteItemFilterInput
-  _or: [NoteItemFilterInput]
-
-
-  _id: String_Selector
-  createdAt: Date_Selector
-  userId: String_Selector
-  version: String_Selector
-  slug: String_Selector
-  description: String_Selector
-
-}
-
-input NoteItemSortInput {
-  _id: SortOptions
-  createdAt: SortOptions
-  userId: SortOptions
-  version: SortOptions
-  slug: SortOptions
-  description: SortOptions
-  noteId: SortOptions
-}
-
-input NoteItemSelectorInput {
-  _and: [NoteItemSelectorInput]
-  _or: [NoteItemSelectorInput]
-
-}
-
-input NoteItemSelectorUniqueInput {
-  _id: String
-  documentId: String # OpenCRUD backwards compatibility
-  slug: String
-
-}
-
-
 # Type for Notes
 type Note {
   _id: String 
@@ -944,16 +798,17 @@ type Note {
   slug: String 
   description: String 
   courseId: String 
-  course: Course 
+  courseName: Course 
   folderId: String 
   folder: Folder 
   professorId: String 
-  professor: Professor 
+  professorName: Professor 
   latest_verId: String 
   latest_ver: NoteItem 
   starred: Boolean 
   years: Float 
   date: Date 
+  files: [NoteItem] 
   dateFormatted(format: String = "YYYY/MM/DD"): String 
 }
 
@@ -1113,6 +968,159 @@ input NoteSelectorUniqueInput {
 }
 
 
+# Type for NoteItems
+type NoteItem {
+  _id: String 
+  createdAt: Date 
+  userId: String 
+  user: User 
+  version: Float 
+  description: String 
+  parentNote: String 
+  noteName: Note 
+  noteId: JSON 
+  noteUrl: FSFile 
+  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
+}
+
+
+input DeleteNoteItemInput{
+  filter: NoteItemFilterInput
+  id: String
+}
+
+input SingleNoteItemInput {
+  # filtering
+  filter: NoteItemFilterInput
+  sort: NoteItemSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: NoteItemSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiNoteItemInput {
+
+  # filtering
+  filter: NoteItemFilterInput
+  sort: NoteItemSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleNoteItemOutput{
+  result: NoteItem
+}
+
+type  MultiNoteItemOutput{
+  results: [NoteItem]
+  totalCount: Int
+}
+
+type NoteItemMutationOutput{
+  data: NoteItem
+}
+
+input CreateNoteItemInput {
+  data: CreateNoteItemDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateNoteItemDataInput {
+  version: Float 
+  description: String 
+  parentNote: String 
+  noteId: JSON 
+}
+
+input UpdateNoteItemInput{
+  filter: NoteItemFilterInput
+  id: String
+  data: UpdateNoteItemDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertNoteItemInput{
+  filter: NoteItemFilterInput
+  id: String
+  data: UpdateNoteItemDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateNoteItemDataInput {
+  version: Float 
+  description: String 
+  parentNote: String 
+  noteId: JSON 
+}
+
+input NoteItemFilterInput {
+  _and: [NoteItemFilterInput]
+  _not: NoteItemFilterInput
+  _or: [NoteItemFilterInput]
+
+
+  _id: String_Selector
+  createdAt: Date_Selector
+  userId: String_Selector
+  version: Float_Selector
+  description: String_Selector
+  parentNote: String_Selector
+
+}
+
+input NoteItemSortInput {
+  _id: SortOptions
+  createdAt: SortOptions
+  userId: SortOptions
+  version: SortOptions
+  description: SortOptions
+  parentNote: SortOptions
+  noteId: SortOptions
+}
+
+input NoteItemSelectorInput {
+  _and: [NoteItemSelectorInput]
+  _or: [NoteItemSelectorInput]
+
+}
+
+input NoteItemSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
 
 
 type Query {
@@ -1144,17 +1152,17 @@ type Query {
   # A list of Folder documents matching a set of query terms
   folders(input: MultiFolderInput):  MultiFolderOutput
   
-  # A single NoteItem document fetched by ID or slug
-  noteItem(input: SingleNoteItemInput!): SingleNoteItemOutput
-  
-  # A list of NoteItem documents matching a set of query terms
-  noteItems(input: MultiNoteItemInput):  MultiNoteItemOutput
-  
   # A single Note document fetched by ID or slug
   note(input: SingleNoteInput!): SingleNoteOutput
   
   # A list of Note documents matching a set of query terms
   notes(input: MultiNoteInput):  MultiNoteOutput
+  
+  # A single NoteItem document fetched by ID or slug
+  noteItem(input: SingleNoteItemInput!): SingleNoteItemOutput
+  
+  # A list of NoteItem documents matching a set of query terms
+  noteItems(input: MultiNoteItemInput):  MultiNoteItemOutput
   
 }
   
@@ -1304,38 +1312,6 @@ type Mutation {
   selector: FolderSelectorUniqueInput
 ) : FolderMutationOutput
 
-  # Mutation for creating new NoteItem documents
-  createNoteItem(
-  input: CreateNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  data: CreateNoteItemDataInput
-) : NoteItemMutationOutput
-
-  # Mutation for updating a NoteItem document
-  updateNoteItem(
-  input: UpdateNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  selector: NoteItemSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateNoteItemDataInput 
-) : NoteItemMutationOutput
-
-  # Mutation for upserting a NoteItem document
-  upsertNoteItem(
-  input: UpsertNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  selector: NoteItemSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateNoteItemDataInput
-) : NoteItemMutationOutput
-
-  # Mutation for deleting a NoteItem document
-  deleteNoteItem(
-  input: DeleteNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  selector: NoteItemSelectorUniqueInput
-) : NoteItemMutationOutput
-
   # Mutation for creating new Note documents
   createNote(
   input: CreateNoteInput,
@@ -1367,6 +1343,38 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: NoteSelectorUniqueInput
 ) : NoteMutationOutput
+
+  # Mutation for creating new NoteItem documents
+  createNoteItem(
+  input: CreateNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateNoteItemDataInput
+) : NoteItemMutationOutput
+
+  # Mutation for updating a NoteItem document
+  updateNoteItem(
+  input: UpdateNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteItemSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateNoteItemDataInput 
+) : NoteItemMutationOutput
+
+  # Mutation for upserting a NoteItem document
+  upsertNoteItem(
+  input: UpsertNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteItemSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateNoteItemDataInput
+) : NoteItemMutationOutput
+
+  # Mutation for deleting a NoteItem document
+  deleteNoteItem(
+  input: DeleteNoteItemInput,
+  "Deprecated (use 'input' field instead)."
+  selector: NoteItemSelectorUniqueInput
+) : NoteItemMutationOutput
 
 }
 

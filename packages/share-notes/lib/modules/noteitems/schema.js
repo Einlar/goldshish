@@ -33,26 +33,26 @@ const schema = {
             relation: 'hasOne',
         }
     },
-    version: {
-        type: String,
+    version: { //Make this increasing
+        type: Number,
         optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
         canUpdate: ['members']
     },
-    slug: {
-        type: String,
-        optional: true,
-        canRead: ["guests"],
-        onCreate: ({ data }) => {
-            return Utils.slugify(data.title);
-        },
-        onUpdate: ({ data }) => {
-            if (data.title) {
-                return Utils.slugify(data.title);
-            }
-        },
-    },
+    // slug: {
+    //     type: String,
+    //     optional: true,
+    //     canRead: ["guests"],
+    //     onCreate: ({ data }) => {
+    //         return Utils.slugify(data.title);
+    //     },
+    //     onUpdate: ({ data }) => {
+    //         if (data.title) {
+    //             return Utils.slugify(data.title);
+    //         }
+    //     },
+    // },
     description: {
         type: String,
         optional: true,
@@ -62,6 +62,33 @@ const schema = {
         canUpdate: ['members'],
         searchable: true,
     },
+    parentNote: {
+      type: String,
+      control: 'select',
+      optional: true,
+      canRead: ["guests"],
+      canCreate: ['members'],
+      canUpdate: ['members'],
+      query: `query NotesQuery {
+              notes {
+                  results {
+                  _id
+                  noteName
+                  }
+              }
+          }
+      `,
+      relation: {
+          fieldName: 'noteName',
+          typeName: 'Note',
+          kind: 'hasOne',
+      },
+      options: ({ data }) => 
+      data.notes.results.map(note => ({
+          value: note._id,
+          label: note.noteName,
+      })),
+  },
   ...generateFieldSchema({
     FSCollection: NoteFiles,
     fieldName: 'noteId',

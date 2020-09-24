@@ -35,6 +35,25 @@ const schema = {
         canCreate: ['members'],
         canUpdate: ['members']
     },
+
+    //ResolveAs method
+    // folderIds: {
+    //     type: String,
+    //     optional: true,
+    //     canRead: ['guests'],
+    //     resolveAs: {
+    //         fieldName: "folders",
+    //         type: "[Folder]",
+    //         resolver: (course, args, context) => {
+    //             const folder_list = context.Folders.find({ courseId: course._id }).fetch();
+    //             return context.Users.restrictViewableFields(
+    //                 context.currentUser,
+    //                 context.Folders,
+    //                 folder_list
+    //             );
+    //         },
+    //     }
+    // },
 };
 
 export default schema;

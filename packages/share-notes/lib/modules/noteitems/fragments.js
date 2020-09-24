@@ -1,25 +1,37 @@
 import { registerFragment } from 'meteor/vulcan:core';
 
-registerFragment(`
-    fragment CoursesPage on Course {
-        _id
-        title
-        content
-        slug
-        noteId
-    }
-`);
 
 registerFragment(`
-    fragment CoursesNotes on Course {
+    fragment NoteItemsPage on NoteItem {
         _id
-        title
-        content
-        slug
+        description
+        parentNote
         noteUrl {
             name
             type
             url
+        }
+    }
+`);
+
+registerFragment(
+    `fragment NoteFiles on Note {
+        _id
+        noteName
+        files {
+            _id
+            createdAt
+            user {
+                _id
+                username
+            }
+            version
+            description
+            noteUrl {
+                name
+                type
+                url
+            }
         }
     }
 `);

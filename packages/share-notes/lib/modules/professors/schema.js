@@ -19,11 +19,6 @@ const schema = {
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['members'],
-        // relation: {
-        //     fieldName: 'course',
-        //     typeName: 'Course',
-        //     kind: 'hasOne',
-        // },
         query: `query CoursesQuery {
                 courses {
                     results {
@@ -33,11 +28,10 @@ const schema = {
                 }
             }
         `,
-        resolveAs: {
+        relation: {
             fieldName: 'courseName',
-            type: 'Course',
-            relation: 'hasOne',
-            addOriginalField: true,
+            typeName: 'Course',
+            kind: 'hasOne',
         },
         options: ({ data }) => 
         data.courses.results.map(course => ({

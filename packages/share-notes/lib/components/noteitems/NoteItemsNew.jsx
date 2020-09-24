@@ -1,20 +1,20 @@
 import React from 'react';
-import { Components, getFragment, useCurrentUser, registerComponent } from '../../modules/folders/node_modules/meteor/vulcan:core';
+import { Components, getFragment, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
 
-import Courses from '../../modules/noteitems/collection.js';
+import NoteItems from '../../modules/noteitems/collection.js';
 import Users from 'meteor/vulcan:users';
 import { Link, useHistory } from 'react-router-dom';
 
 
-const CoursesNew = () => {
+const NoteItemsNew = () => {
     const history = useHistory(); //This is necessary for redirecting!
     const { currentUser } = useCurrentUser();
 
     return (
         <div className="share-note">
-            { Users.canCreate({ collection: Courses, user: currentUser }) ?
-            ( <div><Components.SmartForm collection={Courses}
-            mutationFragment={getFragment('CoursesPage')}
+            { Users.canCreate({ collection: NoteItems, user: currentUser }) ?
+            ( <div><Components.SmartForm collection={NoteItems}
+            mutationFragment={getFragment('NoteItemsPage')}
             successCallback = {() => {
                 history.push(`/`);
             }} /></div>
@@ -25,6 +25,6 @@ const CoursesNew = () => {
     );
 };
 
-registerComponent({ name: 'CoursesNew', component: CoursesNew });
+registerComponent({ name: 'NoteItemsNew', component: NoteItemsNew });
 
-export default CoursesNew;
+export default NoteItemsNew;

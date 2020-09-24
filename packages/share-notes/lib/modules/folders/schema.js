@@ -37,13 +37,31 @@ const schema = {
     },
     courseId: {
         type: String,
+        control: 'select',
         optional: true,
         canRead: ["guests"],
-        relation: {
-            fieldName: 'course',
-            typeName: 'Course',
-            kind: 'hasOne',
-        }
+        canCreate: ['members'],
+        canUpdate: ['members'],
+        query: `query CoursesQuery {
+                courses {
+                    results {
+                    _id
+                    courseName
+                    }
+                }
+            }
+        `,
+        resolveAs: {
+            fieldName: 'courseName',
+            type: 'Course',
+            relation: 'hasOne',
+            addOriginalField: true,
+        },
+        options: ({ data }) => 
+        data.courses.results.map(course => ({
+            value: course._id,
+            label: course.courseName,
+        })),
     },
     starred: {
         type: Boolean,
