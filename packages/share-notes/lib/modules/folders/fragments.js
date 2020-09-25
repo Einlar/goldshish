@@ -6,12 +6,25 @@ registerFragment(
         folderName
         starred
         description
-        courseName {
+        course {
             _id
             courseName
         }
     }
 `);
 
+//for datatable
+registerFragment(`
+    fragment folderFragment on Folder {
+        _id
+        folderName
+        slug
+        description
+        course {
+            courseName
+        }
+        starred
+    }
+`);
 
 

@@ -515,7 +515,7 @@ type Professor {
   _id: String 
   professorName: String 
   courseId: String 
-  courseName: Course 
+  course: Course 
 }
 
 
@@ -651,7 +651,7 @@ type Folder {
   slug: String 
   description: String 
   courseId: String 
-  courseName: Course 
+  course: Course 
   starred: Boolean 
 }
 
@@ -798,11 +798,11 @@ type Note {
   slug: String 
   description: String 
   courseId: String 
-  courseName: Course 
+  course: Course 
   folderId: String 
   folder: Folder 
   professorId: String 
-  professorName: Professor 
+  professor: Professor 
   latest_verId: String 
   latest_ver: NoteItem 
   starred: Boolean 

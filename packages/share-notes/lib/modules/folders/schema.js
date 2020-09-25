@@ -56,7 +56,7 @@ const schema = {
             }
         `,
         resolveAs: {
-            fieldName: 'courseName',
+            fieldName: 'course',
             type: 'Course',
             relation: 'hasOne',
             addOriginalField: true,

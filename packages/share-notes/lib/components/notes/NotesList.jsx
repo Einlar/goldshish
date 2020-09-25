@@ -10,6 +10,7 @@ const NotesList = () => {
         <div className="Notes-list">
             <Components.Datatable
                 collection={Notes}
+                options={{fragmentName: "noteFragment"}}
             showNew={true}
             showEdit={true}
             showSearch={true}/>

@@ -30,12 +30,12 @@ registerFragment(`
         slug
         noteName
         description
-        courseName {
+        course {
             _id
             slug
             courseName
         }
-        professorName {
+        professor {
             _id
             professorName
         }
@@ -45,9 +45,24 @@ registerFragment(`
 `);
 
 registerFragment(`
-    fragment NoteYears on Note {
+    fragment noteFragment on Note {
         _id
+        noteName
         slug
+        description
+        course {
+            courseName
+        }
+        folder {
+            folderName
+        }
+        professor {
+            professorName
+        }
+        latest_verId
+        starred
         years
+        date
     }
 `);
+//latest ver id

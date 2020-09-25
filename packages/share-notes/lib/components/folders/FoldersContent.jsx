@@ -33,7 +33,7 @@ const FoldersContent = ({ folderId }) => {
                         <h2 className="course-title">{year.years}</h2>{console.log(results)}
                         {
                             year.children.map(note => 
-                        <Link to={`/notes/${note.courseName.slug}/${note.slug}`} key={note._id}>
+                        <Link to={`/notes/${note.course.slug}/${note.slug}`} key={note._id}>
                             <div className="note">
                             {note.noteName}
                             </div>

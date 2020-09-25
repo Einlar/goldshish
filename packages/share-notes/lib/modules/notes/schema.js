@@ -53,7 +53,7 @@ const schema = {
             }
         `,
         relation: {
-            fieldName: 'courseName',
+            fieldName: 'course',
             typeName: 'Course',
             kind: 'hasOne',
         },
@@ -114,7 +114,7 @@ const schema = {
             }
         `,
         relation: {
-            fieldName: 'professorName',
+            fieldName: 'professor',
             typeName: 'Professor',
             kind: 'hasOne',
         },

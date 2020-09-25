@@ -29,7 +29,7 @@ const schema = {
             }
         `,
         relation: {
-            fieldName: 'courseName',
+            fieldName: 'course',
             typeName: 'Course',
             kind: 'hasOne',
         },

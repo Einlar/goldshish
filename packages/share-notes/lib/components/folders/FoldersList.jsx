@@ -10,6 +10,7 @@ const FoldersList = () => {
         <div className="folders-list">
             <Components.Datatable
                 collection={Folders}
+                options={{ fragmentName: "folderFragment" }}
             showNew={true}
             showEdit={true}
             showSearch={true}
