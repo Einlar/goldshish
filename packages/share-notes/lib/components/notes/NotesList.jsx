@@ -11,6 +11,8 @@ const NotesList = () => {
             <Components.Datatable
                 collection={Notes}
                 options={{fragmentName: "noteFragment"}}
+                editFormProps={{queryFragmentName: "noteEditQuery"}}
+                /* The EditForm gets a prop named "document" containing all the data of the row being edited on. Normally this uses just the basic schema, but here we want to use a custom (nested) one, and so we specify it in the queryFragmentName*/
             showNew={true}
             showEdit={true}
             showSearch={true}/>

@@ -808,7 +808,8 @@ type Note {
   starred: Boolean 
   years: Float 
   date: Date 
-  files: [NoteItem] 
+  noteFiles: [JSON] 
+  files: [FSFile] 
   dateFormatted(format: String = "YYYY/MM/DD"): String 
 }
 
@@ -891,6 +892,7 @@ input CreateNoteDataInput {
   starred: Boolean 
   years: Float 
   date: Date 
+  noteFiles: [JSON] 
 }
 
 input UpdateNoteInput{
@@ -919,6 +921,7 @@ input UpdateNoteDataInput {
   starred: Boolean 
   years: Float 
   date: Date 
+  noteFiles: [JSON] 
 }
 
 input NoteFilterInput {
@@ -938,6 +941,7 @@ input NoteFilterInput {
   starred: Boolean_Selector
   years: Float_Selector
   date: Date_Selector
+
 }
 
 input NoteByFolderFilterInput{
@@ -956,6 +960,7 @@ input NoteSortInput {
   starred: SortOptions
   years: SortOptions
   date: SortOptions
+  noteFiles: SortOptions
 }
 
 input NoteSelectorInput {

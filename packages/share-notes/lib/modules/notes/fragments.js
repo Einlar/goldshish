@@ -51,13 +51,20 @@ registerFragment(`
         slug
         description
         course {
+            _id
             courseName
         }
         folder {
+            _id
             folderName
         }
         professor {
+            _id
             professorName
+        }
+        files {
+            _id
+            name
         }
         latest_verId
         starred
@@ -65,4 +72,25 @@ registerFragment(`
         date
     }
 `);
-//latest ver id
+
+//queryFragment for editing
+registerFragment(`
+    fragment noteEditQuery on Note {
+        _id
+        noteName
+        slug
+        description
+        courseId
+        folderId
+        professorId
+        noteFiles
+        files {
+            _id
+            name
+        }
+        latest_verId
+        starred
+        years
+        date
+    }
+`);

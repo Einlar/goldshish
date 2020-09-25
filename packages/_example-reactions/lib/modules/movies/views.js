@@ -40,7 +40,7 @@ Movies.addView('userReactedMovies', (terms, apolloClient) => {
 
   */
   const queryText = `
-    query UsersSingle($documentId: documentId){
+    query UsersSingle($documentId: String){
       UsersSingle(documentId: $documentId) {
         _id
         votes(collectionName: "Movies"){

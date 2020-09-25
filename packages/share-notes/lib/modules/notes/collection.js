@@ -1,10 +1,5 @@
 import { createCollection, extendCollection } from 'meteor/vulcan:core';
 import schema from './schema.js';
-import { apiSchema } from './apischema.js';
-
-const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  }
 
 const Notes = createCollection({
     collectionName: 'Notes',
@@ -31,6 +26,5 @@ const Notes = createCollection({
     ],
 });
 
-extendCollection(Notes, { apiSchema });
 
 export default Notes;

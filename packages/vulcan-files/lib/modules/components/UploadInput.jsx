@@ -60,6 +60,7 @@ const UploadInput = (props) => {
     dropZoneProps,
     Components,
     document,
+    options, //Added (Receives options from schema)
   } = props;
 
   const {
@@ -77,6 +78,7 @@ const UploadInput = (props) => {
           {isEmpty(value) || enableMultiple ? (
             <Dropzone
               //ref="dropzone"
+              //options={{noDragEventsBubbling: "true"}} //!Test
               multiple={enableMultiple}
               onDrop={onDrop}
               // accept="image/*" // TODO also add this filtering
@@ -104,11 +106,11 @@ const UploadInput = (props) => {
             </Dropzone>
           ) : null}
 
-          {!isEmpty(value) ? (
-            <div className="upload-state">
-              {uploading ? <span>{uploadingMessage}</span> : null}
+          {!isEmpty(value) ? ( //If there is some content
+            <div className="upload-state"> 
+              {uploading ? <span>{uploadingMessage}</span> : null /* Does this even work? */} 
               <div>
-                {enableMultiple ? (
+                {enableMultiple ? ( //If multiple uploads
                   value.map((value, index) => (
                     <FileRender
                       {...props}
@@ -216,7 +218,7 @@ class UploadInputContainer extends PureComponent {
 
     if (isEmpty(errors)) {
       this.props.updateCurrentValues({
-        [this.props.name]: this.enableMultiple()
+        [this.props.path]: this.enableMultiple() //this.props.name
           ? [...this.getValue(), ...files]
           : files[0],
       });
@@ -276,7 +278,7 @@ class UploadInputContainer extends PureComponent {
     }
 
     this.props.updateCurrentValues({
-      [this.props.name]: this.enableMultiple()
+      [this.props.path]: this.enableMultiple() //this.props.name
         ? removeNthItem(this.props.value, index)
         : null,
     });
@@ -299,6 +301,7 @@ class UploadInputContainer extends PureComponent {
       label,
       Components,
       document,
+      options //added custom options
     } = this.props;
 
     const { uploading, errorMessage } = this.state;
@@ -320,6 +323,7 @@ class UploadInputContainer extends PureComponent {
         clearFile={this.clearFile}
         dropZoneProps={dropZoneProps}
         label={label}
+        options={options}
       />
     );
   }

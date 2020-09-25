@@ -17,8 +17,6 @@ const uploadFromField = async (
   fieldValue,
   fileDocument
 ) => {
-  //console.log("Test")
-  //console.log(fileDocument)
   const file = await fieldValue;
   file.userId = fileDocument.userId; //Add user ownership
   //console.log("Test 2")
@@ -70,6 +68,7 @@ export default function createUploadHandlers(options) {
   const curryOnUpdate = multiple ? updateHandlerMultiple : updateHandler;
   const curryOnDelete = multiple ? deleteHandlerMultiple : deleteHandler;
 
+
   return {
     onCreate: curryOnCreate(fieldName, FSCollection, getValue),
     onUpdate: curryOnUpdate(fieldName, FSCollection, getValue),
@@ -89,7 +88,8 @@ export const createHandler = (fieldName, FSCollection, getValue) =>
 export const createHandlerMultiple = (fieldName, FSCollection, getValue) =>
   async function vulcanOnCreateHandlerMultiple({ newDocument, currentUser }) {
     const fieldValues = newDocument[fieldName];
-    if (Array.isArray(fieldValue)) {
+    console.log("fieldValues", fieldValues);
+    if (Array.isArray(fieldValues)) { //was fieldValue
       return uploadFromFields(getValue, FSCollection, fieldValues, newDocument);
     }
     return fieldValues;
@@ -105,6 +105,7 @@ const uploadFromFields = async (
   fieldValues,
   fileDocument
 ) => {
+  console.log("uploadFromFields visited");
   return Promise.all(
     fieldValues
       .filter((fieldValue) => !!fieldValue) // filter out non defined values
@@ -124,6 +125,7 @@ export const updateHandler = (fieldName, FSCollection, getValue) =>
     data,
     oldDocument /*, document,currentUser */,
   }) {
+
     const fieldValue = data[fieldName];
     // null => file has been deleted or never existed in the first place
     // fieldValue.then is defined => field is a Promise, a new file has been added
@@ -141,7 +143,7 @@ export const updateHandler = (fieldName, FSCollection, getValue) =>
     return undefined;
   };
 
-export const updateHandlerMultiple = (fieldName, FSCollection, getValue) =>
+export const updateHandlerMultiple = (fieldName, FSCollection, getValue) => //! TO BE FIXED
   // TODO: not tested, not sure about the structure of "fieldValues" and how to detect deletion
   // Implementation considers that if one file of the list is modified, then
   // fieldValues will list all files
@@ -149,30 +151,55 @@ export const updateHandlerMultiple = (fieldName, FSCollection, getValue) =>
     data,
     oldDocument /*, currentUser*/,
   }) {
+    console.log("I'm in updateHandlerMultiple");
     const fieldValues = data[fieldName];
-    if (
-      !(
-        isEmpty(fieldValues) ||
-        _any(fieldValues, (fieldValue) => hasUploadedFile(fieldValue))
-      )
-    )
-      return undefined; // no change or deletion
-    // remove old files
-    if (oldDocument[fieldName]) {
-      const oldFileIds = oldDocument[fieldName];
-      await Promise.all(
-        oldFileIds.map((deletedFileId) => {
+    console.log("data:", data);
+    console.log("oldDocument:", oldDocument);
+
+    // if (
+    //   !(
+    //     isEmpty(fieldValues) || //if there are no files attached
+    //     _.some(fieldValues, (fieldValue) => hasUploadedFile(fieldValue)) //nor new promises
+    //   )
+    // ) {
+    //   return undefined; // no change or deletion
+    // }
+
+    //files to be removed
+    const old_uploaded_ids = oldDocument[fieldName];
+    const new_uploaded_ids = _.filter(fieldValues, (fieldValue) => !hasUploadedFile(fieldValue));
+    const to_be_removed = _.difference(old_uploaded_ids, new_uploaded_ids);
+    console.log("Files to be removed: ", to_be_removed);
+  
+    if (to_be_removed) {
+        await Promise.all(
+        to_be_removed.map((deletedFileId) => {
           const deletedFilePath = deletedFileId; // Meteor files uses fileId, while Webdav uses filePath
-          FSCollection.remove(deletedFileId, deletedFilePath);
+          console.log("Removing", deletedFileId);
+          FSCollection.remove({_id: deletedFileId}); //, deletedFilePath); //! Edited
         })
       );
     }
-    // create files
+
+    console.log("Now uploading");
+    
+    //Get files to be uploaded first
+    const to_be_uploaded = _.filter(fieldValues, (fieldValue) => hasUploadedFile(fieldValue));
+
     if (fieldValues) {
       if (Array.isArray(fieldValues)) {
         return uploadFromFields(getValue, FSCollection, fieldValues, data);
       }
     }
+
+    // if (oldDocument[fieldName]) { 
+    //   const oldFileIds = oldDocument[fieldName]; //should be the set difference between oldFileIds and New ones
+    //   console.log("oldFileIds", oldFileIds);
+    
+
+
+    // create files
+    
     return undefined;
   };
 
@@ -190,10 +217,7 @@ export const deleteHandler = (fieldName, FSCollection) =>
     return undefined;
   };
 
-export const deleteHandlerMultiple = (fieldName, FSCollection, getValue) =>
-  // TODO: not tested, not sure about the structure of "fieldValues" and how to detect deletion
-  // Implementation considers that if one file of the list is modified, then
-  // fieldValues will list all files
+export const deleteHandlerMultiple = (fieldName, FSCollection, getValue) => //should be ok
   async function vulcanOnDeleteHandler({ document /*, currentUser*/ }) {
     const fieldValues = document[fieldName];
     if (isEmpty(fieldValues)) return undefined; // no change or deletion
@@ -203,7 +227,7 @@ export const deleteHandlerMultiple = (fieldName, FSCollection, getValue) =>
       await Promise.all(
         deletedFilesIds.map((deletedFileId) => {
           const deletedFilePath = deletedFileId;
-          FSCollection.remove(deletedFileId, deletedFilePath);
+          FSCollection.remove({_id: deletedFileId}); //edited
         })
       );
     }

@@ -20,10 +20,8 @@ export default async function addFileFromReadable(
   const readable = file.createReadStream();
   // For custom collections that support addFileFromReadable
   if (!!FSCollection.addFileFromReadable) {
-    //console.log("First if")
     return await FSCollection.addFileFromReadable(readable, file, fileDocument);
   } else if (!!FSCollection.addFileFromBuffer) {
-    //console.log("Second if")
     const data = await streamToBuffer(readable); // We have to get the whole file, no way to stream to FS
     return await FSCollection.addFileFromBuffer(data, file, fileDocument);
   } else {
