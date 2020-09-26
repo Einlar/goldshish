@@ -167,7 +167,8 @@
     "storybook-react-router": "^1.0.5",
     "style-loader": "^0.23.1",
     "vulcan-loader": "0.0.1",
-    "webpack": "4.28.4"
+    "webpack": "4.28.4",
+    "worker-loader": "3.0.3"
   },
   "optionalDependencies": {
     "fsevents": "^2.1.2"

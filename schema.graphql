@@ -811,6 +811,7 @@ type Note {
   date: Date 
   noteFiles: [JSON] 
   files: [FSFile] 
+  highlights: [NoteHighlights] 
   createdAtFormatted(format: String = "YYYY/MM/DD"): String 
   dateFormatted(format: String = "YYYY/MM/DD"): String 
 }
@@ -894,6 +895,7 @@ input CreateNoteDataInput {
   years: Float 
   date: Date 
   noteFiles: [JSON] 
+  highlights: [CreateNoteHighlightsDataInput] 
 }
 
 input UpdateNoteInput{
@@ -922,6 +924,7 @@ input UpdateNoteDataInput {
   years: Float 
   date: Date 
   noteFiles: [JSON] 
+  highlights: [UpdateNoteHighlightsDataInput] 
 }
 
 input NoteFilterInput {
@@ -943,6 +946,7 @@ input NoteFilterInput {
   years: Float_Selector
   date: Date_Selector
 
+
 }
 
 input NoteByFolderFilterInput{
@@ -963,6 +967,7 @@ input NoteSortInput {
   years: SortOptions
   date: SortOptions
   noteFiles: SortOptions
+  highlights: SortOptions
 }
 
 input NoteSelectorInput {
@@ -972,6 +977,194 @@ input NoteSelectorInput {
 }
 
 input NoteSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
+type NoteHighlights {
+  _id: String 
+  fileId: String 
+  content: String 
+}
+
+
+input CreateNoteHighlightsInput {
+  data: CreateNoteHighlightsDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateNoteHighlightsDataInput {
+  fileId: String 
+  content: String 
+}
+
+input UpdateNoteHighlightsInput{
+  filter: NoteHighlightsFilterInput
+  id: String
+  data: UpdateNoteHighlightsDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertNoteHighlightsInput{
+  filter: NoteHighlightsFilterInput
+  id: String
+  data: UpdateNoteHighlightsDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateNoteHighlightsDataInput {
+  fileId: String 
+  content: String 
+}
+
+input NoteHighlightsFilterInput {
+  _and: [NoteHighlightsFilterInput]
+  _not: NoteHighlightsFilterInput
+  _or: [NoteHighlightsFilterInput]
+
+
+  _id: String_Selector
+  fileId: String_Selector
+  content: String_Selector
+}
+
+input NoteHighlightsSortInput {
+  _id: SortOptions
+  fileId: SortOptions
+  content: SortOptions
+}
+
+
+# Type for Highlights
+type Highlight {
+  _id: String 
+  userId: String 
+  content: String 
+}
+
+
+input DeleteHighlightInput{
+  filter: HighlightFilterInput
+  id: String
+}
+
+input SingleHighlightInput {
+  # filtering
+  filter: HighlightFilterInput
+  sort: HighlightSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: HighlightSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiHighlightInput {
+
+  # filtering
+  filter: HighlightFilterInput
+  sort: HighlightSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleHighlightOutput{
+  result: Highlight
+}
+
+type  MultiHighlightOutput{
+  results: [Highlight]
+  totalCount: Int
+}
+
+type HighlightMutationOutput{
+  data: Highlight
+}
+
+input CreateHighlightInput {
+  data: CreateHighlightDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateHighlightDataInput {
+  content: String 
+}
+
+input UpdateHighlightInput{
+  filter: HighlightFilterInput
+  id: String
+  data: UpdateHighlightDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertHighlightInput{
+  filter: HighlightFilterInput
+  id: String
+  data: UpdateHighlightDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateHighlightDataInput {
+  content: String 
+}
+
+input HighlightFilterInput {
+  _and: [HighlightFilterInput]
+  _not: HighlightFilterInput
+  _or: [HighlightFilterInput]
+
+
+  _id: String_Selector
+  userId: String_Selector
+  content: String_Selector
+}
+
+input HighlightSortInput {
+  _id: SortOptions
+  userId: SortOptions
+  content: SortOptions
+}
+
+input HighlightSelectorInput {
+  _and: [HighlightSelectorInput]
+  _or: [HighlightSelectorInput]
+
+}
+
+input HighlightSelectorUniqueInput {
   _id: String
   documentId: String # OpenCRUD backwards compatibility
   slug: String
@@ -1015,6 +1208,12 @@ type Query {
   
   # A list of Note documents matching a set of query terms
   notes(input: MultiNoteInput):  MultiNoteOutput
+  
+  # A single Highlight document fetched by ID or slug
+  highlight(input: SingleHighlightInput!): SingleHighlightOutput
+  
+  # A list of Highlight documents matching a set of query terms
+  highlights(input: MultiHighlightInput):  MultiHighlightOutput
   
 }
   
@@ -1195,6 +1394,38 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: NoteSelectorUniqueInput
 ) : NoteMutationOutput
+
+  # Mutation for creating new Highlight documents
+  createHighlight(
+  input: CreateHighlightInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateHighlightDataInput
+) : HighlightMutationOutput
+
+  # Mutation for updating a Highlight document
+  updateHighlight(
+  input: UpdateHighlightInput,
+  "Deprecated (use 'input' field instead)."
+  selector: HighlightSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateHighlightDataInput 
+) : HighlightMutationOutput
+
+  # Mutation for upserting a Highlight document
+  upsertHighlight(
+  input: UpsertHighlightInput,
+  "Deprecated (use 'input' field instead)."
+  selector: HighlightSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateHighlightDataInput
+) : HighlightMutationOutput
+
+  # Mutation for deleting a Highlight document
+  deleteHighlight(
+  input: DeleteHighlightInput,
+  "Deprecated (use 'input' field instead)."
+  selector: HighlightSelectorUniqueInput
+) : HighlightMutationOutput
 
 }
 

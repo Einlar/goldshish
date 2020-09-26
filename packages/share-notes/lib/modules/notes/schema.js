@@ -8,6 +8,8 @@ import { generateFieldSchema, BasicFile } from 'meteor/vulcan-files';
 
 import NoteFiles from './fsCollection.js';
 
+import highlightSchema from './highlightSchema.js';
+
 const filesGroup = {
     name: 'attachedFiles',
     label: 'Files',
@@ -255,6 +257,20 @@ const schema = {
           : null,
       }),
 
+      highlights: {
+          type: Array,
+          optional: true,
+          arrayItem: {
+              type: highlightSchema,
+              optional: true,
+          },
+          canRead: ['guests'],
+          canUpdate: ['members'],
+          canCreate: ['members'],
+          onCreate: () => {
+            return []; //Initialize as null
+        }
+      }
 };
 
 export default schema;

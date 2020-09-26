@@ -52,9 +52,26 @@ registerFragment(`
             name
             url
         }
+        highlights {
+            fileId
+            content
+        }
+        noteFiles
         starred
         years
         date
+    }
+`);
+
+//Highlights edit
+registerFragment(`
+    fragment noteHighlights on Note {
+        slug
+        noteFiles
+        highlights {
+            fileId
+            content
+        }
     }
 `);
 
