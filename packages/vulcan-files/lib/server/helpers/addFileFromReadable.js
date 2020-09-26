@@ -29,10 +29,12 @@ export default async function addFileFromReadable(
     // (for big files we could store on disk but that won't work well)
     //console.log("I'm in the else part")
     const data = await streamToBuffer(readable); // We have to get the whole file, no way to stream to FS
-    //console.log("data", data)
-    //console.log("file", file)
+    console.log("data", data)
+    console.log("file", file)
+    console.log("fileDocument", fileDocument)//fileDocument contains the form's data, so the version for each file can be extracted from here
+    //Make a button "load new version"
     return new Promise((resolve, reject) =>
-      FSCollection.write(data, {fileName: file.filename, type: file.mimetype, userId: file.userId}, (err, res) => { //(data, file, (err, res))
+      FSCollection.write(data, {fileName: file.filename, type: file.mimetype, userId: file.userId, meta: {display: true, versionNumber: 1}}, (err, res) => { //(data, file, (err, res))
         if (err) {
           reject(err);
         } else {

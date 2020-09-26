@@ -794,6 +794,9 @@ input FolderSelectorUniqueInput {
 # Type for Notes
 type Note {
   _id: String 
+  createdAt: Date 
+  userId: String 
+  user: User 
   noteName: String 
   slug: String 
   description: String 
@@ -803,13 +806,12 @@ type Note {
   folder: Folder 
   professorId: String 
   professor: Professor 
-  latest_verId: String 
-  latest_ver: NoteItem 
   starred: Boolean 
   years: Float 
   date: Date 
   noteFiles: [JSON] 
   files: [FSFile] 
+  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
   dateFormatted(format: String = "YYYY/MM/DD"): String 
 }
 
@@ -888,7 +890,6 @@ input CreateNoteDataInput {
   courseId: String 
   folderId: String 
   professorId: String 
-  latest_verId: String 
   starred: Boolean 
   years: Float 
   date: Date 
@@ -917,7 +918,6 @@ input UpdateNoteDataInput {
   courseId: String 
   folderId: String 
   professorId: String 
-  latest_verId: String 
   starred: Boolean 
   years: Float 
   date: Date 
@@ -931,13 +931,14 @@ input NoteFilterInput {
   _byFolder: NoteByFolderFilterInput
 
   _id: String_Selector
+  createdAt: Date_Selector
+  userId: String_Selector
   noteName: String_Selector
   slug: String_Selector
   description: String_Selector
   courseId: String_Selector
   folderId: String_Selector
   professorId: String_Selector
-  latest_verId: String_Selector
   starred: Boolean_Selector
   years: Float_Selector
   date: Date_Selector
@@ -950,13 +951,14 @@ input NoteByFolderFilterInput{
 
 input NoteSortInput {
   _id: SortOptions
+  createdAt: SortOptions
+  userId: SortOptions
   noteName: SortOptions
   slug: SortOptions
   description: SortOptions
   courseId: SortOptions
   folderId: SortOptions
   professorId: SortOptions
-  latest_verId: SortOptions
   starred: SortOptions
   years: SortOptions
   date: SortOptions
@@ -970,159 +972,6 @@ input NoteSelectorInput {
 }
 
 input NoteSelectorUniqueInput {
-  _id: String
-  documentId: String # OpenCRUD backwards compatibility
-  slug: String
-
-}
-
-
-# Type for NoteItems
-type NoteItem {
-  _id: String 
-  createdAt: Date 
-  userId: String 
-  user: User 
-  version: Float 
-  description: String 
-  parentNote: String 
-  noteName: Note 
-  noteId: JSON 
-  noteUrl: FSFile 
-  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
-}
-
-
-input DeleteNoteItemInput{
-  filter: NoteItemFilterInput
-  id: String
-}
-
-input SingleNoteItemInput {
-  # filtering
-  filter: NoteItemFilterInput
-  sort: NoteItemSortInput
-  search: String
-  id: String
-
-  # backwards-compatibility
-  "Deprecated (use 'filter/id' fields instead)."
-  selector: NoteItemSelectorUniqueInput
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Return null instead of throwing MissingDocumentError
-  allowNull: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-}
-
-input MultiNoteItemInput {
-
-  # filtering
-  filter: NoteItemFilterInput
-  sort: NoteItemSortInput
-  search: String
-  offset: Int
-  limit: Int
-
-  # backwards-compatibility
-  # A JSON object that contains the query terms used to fetch data
-  "Deprecated (use 'filter/id' fields instead)."
-  terms: JSON
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Whether to calculate totalCount for this query
-  enableTotal: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-  
-}
-
-type SingleNoteItemOutput{
-  result: NoteItem
-}
-
-type  MultiNoteItemOutput{
-  results: [NoteItem]
-  totalCount: Int
-}
-
-type NoteItemMutationOutput{
-  data: NoteItem
-}
-
-input CreateNoteItemInput {
-  data: CreateNoteItemDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input CreateNoteItemDataInput {
-  version: Float 
-  description: String 
-  parentNote: String 
-  noteId: JSON 
-}
-
-input UpdateNoteItemInput{
-  filter: NoteItemFilterInput
-  id: String
-  data: UpdateNoteItemDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpsertNoteItemInput{
-  filter: NoteItemFilterInput
-  id: String
-  data: UpdateNoteItemDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpdateNoteItemDataInput {
-  version: Float 
-  description: String 
-  parentNote: String 
-  noteId: JSON 
-}
-
-input NoteItemFilterInput {
-  _and: [NoteItemFilterInput]
-  _not: NoteItemFilterInput
-  _or: [NoteItemFilterInput]
-
-
-  _id: String_Selector
-  createdAt: Date_Selector
-  userId: String_Selector
-  version: Float_Selector
-  description: String_Selector
-  parentNote: String_Selector
-
-}
-
-input NoteItemSortInput {
-  _id: SortOptions
-  createdAt: SortOptions
-  userId: SortOptions
-  version: SortOptions
-  description: SortOptions
-  parentNote: SortOptions
-  noteId: SortOptions
-}
-
-input NoteItemSelectorInput {
-  _and: [NoteItemSelectorInput]
-  _or: [NoteItemSelectorInput]
-
-}
-
-input NoteItemSelectorUniqueInput {
   _id: String
   documentId: String # OpenCRUD backwards compatibility
   slug: String
@@ -1166,12 +1015,6 @@ type Query {
   
   # A list of Note documents matching a set of query terms
   notes(input: MultiNoteInput):  MultiNoteOutput
-  
-  # A single NoteItem document fetched by ID or slug
-  noteItem(input: SingleNoteItemInput!): SingleNoteItemOutput
-  
-  # A list of NoteItem documents matching a set of query terms
-  noteItems(input: MultiNoteItemInput):  MultiNoteItemOutput
   
 }
   
@@ -1352,38 +1195,6 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: NoteSelectorUniqueInput
 ) : NoteMutationOutput
-
-  # Mutation for creating new NoteItem documents
-  createNoteItem(
-  input: CreateNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  data: CreateNoteItemDataInput
-) : NoteItemMutationOutput
-
-  # Mutation for updating a NoteItem document
-  updateNoteItem(
-  input: UpdateNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  selector: NoteItemSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateNoteItemDataInput 
-) : NoteItemMutationOutput
-
-  # Mutation for upserting a NoteItem document
-  upsertNoteItem(
-  input: UpsertNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  selector: NoteItemSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateNoteItemDataInput
-) : NoteItemMutationOutput
-
-  # Mutation for deleting a NoteItem document
-  deleteNoteItem(
-  input: DeleteNoteItemInput,
-  "Deprecated (use 'input' field instead)."
-  selector: NoteItemSelectorUniqueInput
-) : NoteItemMutationOutput
 
 }
 

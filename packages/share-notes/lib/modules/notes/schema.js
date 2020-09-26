@@ -6,7 +6,7 @@ import isString from 'lodash/isString';
 import { curryFileCheck } from 'meteor/origenstudio:files-helpers';
 import { generateFieldSchema, BasicFile } from 'meteor/vulcan-files';
 
-import NoteFiles from '../noteitems/fsCollection';
+import NoteFiles from './fsCollection.js';
 
 const filesGroup = {
     name: 'attachedFiles',
@@ -19,6 +19,24 @@ const schema = {
         type: String,
         optional: true,
         canRead: ['guests']
+    },
+    createdAt: {
+        type: Date,
+        optional: true,
+        canRead: ['guests'],
+        onCreate: () => {
+            return new Date();
+        }
+    },
+    userId: {
+        type: String,
+        optional: true,
+        canRead: ['guests'],
+        resolveAs: {
+            fieldName: 'user',
+            type: 'User',
+            relation: 'hasOne',
+        }
     },
     noteName: {
         type: String,
@@ -33,11 +51,15 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         onCreate: ({ data }) => {
-            return Utils.slugify(data.noteName);
+            //if no slug has been provided, generate one
+            const slug = data.slug || Utils.slugify(data.noteName);
+            return Utils.getUnusedSlugByCollectionName('Notes', slug);
         },
-        onUpdate: ({ data }) => {
-            if (data.noteName) {
-                return Utils.slugify(data.noteName);
+        onUpdate: ({ data, document: note }) => {
+            //console.log("updating folder:", folder);
+            if (data.slug && data.slug !== note.slug) { //if slug has changed
+                const slug = data.slug;
+                return Utils.getUnusedSlugByCollectionName('Notes', slug);
             }
         },
     },
@@ -138,18 +160,18 @@ const schema = {
             label: professor.professorName,
         })),
     },
-    latest_verId: {
-        type: String,
-        optional: true,
-        canRead: ["guests"],
-        canCreate: ['members'],
-        canUpdate: ['members'],
-        relation: {
-            fieldName: 'latest_ver',
-            typeName: 'NoteItem',
-            kind: 'hasOne'
-        },
-    },
+    // latest_verId: {
+    //     type: String,
+    //     optional: true,
+    //     canRead: ["guests"],
+    //     canCreate: ['members'],
+    //     canUpdate: ['members'],
+    //     relation: {
+    //         fieldName: 'latest_ver',
+    //         typeName: 'NoteItem',
+    //         kind: 'hasOne'
+    //     },
+    // },
     starred: {
         type: Boolean,
         optional: true,

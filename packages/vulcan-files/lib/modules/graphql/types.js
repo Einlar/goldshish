@@ -1,5 +1,4 @@
 import { addGraphQLSchema } from 'meteor/vulcan:core';
-
 export const FILE = 'FSFile';
 if(Meteor.isServer) {
   addGraphQLSchema(`
@@ -23,5 +22,5 @@ if(Meteor.isServer) {
     isPDF: Boolean
   }
 `);
-}
+} 
 

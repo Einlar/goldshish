@@ -1,44 +1,58 @@
 import { registerFragment } from 'meteor/vulcan:core';
 
 //Returns all files attached to a note, along with their data
-registerFragment(
-    `fragment NoteFiles on Note {
-        _id
-        noteName
-        files {
-            _id
-            createdAt
-            user {
-                _id
-                username
-            }
-            version
-            description
-            noteUrl {
-                name
-                type
-                url
-            }
-        }
-    }
-`);
+// registerFragment(
+//     `fragment NoteFiles on Note {
+//         _id
+//         noteName
+//         slug
+//         createdAt
+//         files {
+//             _id
+//             createdAt
+//             user {
+//                 _id
+//                 username
+//             }
+//             version
+//             description
+//             files {
+//                 name
+//                 type
+//                 url
+//             }
+//         }
+//     }
+// `);
 
 //Returns the standard information about a Note
 registerFragment(`
     fragment NotePage on Note {
         _id
-        slug
         noteName
+        slug
         description
+        user {
+            username
+        }
         course {
             _id
-            slug
             courseName
+        }
+        folder {
+            _id
+            folderName
         }
         professor {
             _id
             professorName
         }
+        files {
+            _id
+            name
+            url
+        }
+        starred
         years
         date
     }
@@ -50,6 +64,9 @@ registerFragment(`
         noteName
         slug
         description
+        user {
+            username
+        }
         course {
             _id
             courseName
@@ -66,7 +83,6 @@ registerFragment(`
             _id
             name
         }
-        latest_verId
         starred
         years
         date
@@ -88,7 +104,6 @@ registerFragment(`
             _id
             name
         }
-        latest_verId
         starred
         years
         date

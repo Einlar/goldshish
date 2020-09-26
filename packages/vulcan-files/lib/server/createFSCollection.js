@@ -51,7 +51,7 @@ export default function createFSCollection(options = {}) {
     collectionName,
   };
 
-  if (storageProvider) {
+  if (storageProvider) { //third party services
     if (storageProvider.serve) {
       FSCollection.interceptDownload = storageProvider.serve;
     }

@@ -1,2 +1,2 @@
-export * from './NoteItemsNew.jsx';
-export * from './NoteItemsPage.jsx';
+// export * from './NoteItemsNew.jsx';
+// export * from './NoteItemsPage.jsx';
