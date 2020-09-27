@@ -798,6 +798,8 @@ type Note {
   userId: String 
   user: User 
   noteName: String 
+  author: String 
+  collaborators: [NoteCollaborators] 
   slug: String 
   description: String 
   courseId: String 
@@ -809,6 +811,7 @@ type Note {
   starred: Boolean 
   years: Float 
   date: Date 
+  language: String 
   noteFiles: [JSON] 
   files: [FSFile] 
   highlights: [NoteHighlights] 
@@ -887,6 +890,8 @@ input CreateNoteInput {
 
 input CreateNoteDataInput {
   noteName: String 
+  author: String 
+  collaborators: [CreateNoteCollaboratorsDataInput] 
   description: String 
   courseId: String 
   folderId: String 
@@ -894,6 +899,7 @@ input CreateNoteDataInput {
   starred: Boolean 
   years: Float 
   date: Date 
+  language: String 
   noteFiles: [JSON] 
   highlights: [CreateNoteHighlightsDataInput] 
 }
@@ -916,6 +922,8 @@ input UpsertNoteInput{
 
 input UpdateNoteDataInput {
   noteName: String 
+  author: String 
+  collaborators: [UpdateNoteCollaboratorsDataInput] 
   description: String 
   courseId: String 
   folderId: String 
@@ -923,6 +931,7 @@ input UpdateNoteDataInput {
   starred: Boolean 
   years: Float 
   date: Date 
+  language: String 
   noteFiles: [JSON] 
   highlights: [UpdateNoteHighlightsDataInput] 
 }
@@ -937,6 +946,8 @@ input NoteFilterInput {
   createdAt: Date_Selector
   userId: String_Selector
   noteName: String_Selector
+  author: String_Selector
+
   slug: String_Selector
   description: String_Selector
   courseId: String_Selector
@@ -945,6 +956,7 @@ input NoteFilterInput {
   starred: Boolean_Selector
   years: Float_Selector
   date: Date_Selector
+  language: String_Selector
 
 
 }
@@ -958,6 +970,8 @@ input NoteSortInput {
   createdAt: SortOptions
   userId: SortOptions
   noteName: SortOptions
+  author: SortOptions
+  collaborators: SortOptions
   slug: SortOptions
   description: SortOptions
   courseId: SortOptions
@@ -966,6 +980,7 @@ input NoteSortInput {
   starred: SortOptions
   years: SortOptions
   date: SortOptions
+  language: SortOptions
   noteFiles: SortOptions
   highlights: SortOptions
 }
@@ -984,6 +999,65 @@ input NoteSelectorUniqueInput {
 }
 
 
+type NoteCollaborators {
+  name: String 
+  email: String 
+  notes: String 
+}
+
+
+input CreateNoteCollaboratorsInput {
+  data: CreateNoteCollaboratorsDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateNoteCollaboratorsDataInput {
+  name: String 
+  email: String 
+  notes: String 
+}
+
+input UpdateNoteCollaboratorsInput{
+  filter: NoteCollaboratorsFilterInput
+  id: String
+  data: UpdateNoteCollaboratorsDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertNoteCollaboratorsInput{
+  filter: NoteCollaboratorsFilterInput
+  id: String
+  data: UpdateNoteCollaboratorsDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateNoteCollaboratorsDataInput {
+  name: String 
+  email: String 
+  notes: String 
+}
+
+input NoteCollaboratorsFilterInput {
+  _and: [NoteCollaboratorsFilterInput]
+  _not: NoteCollaboratorsFilterInput
+  _or: [NoteCollaboratorsFilterInput]
+
+
+  name: String_Selector
+  email: String_Selector
+  notes: String_Selector
+}
+
+input NoteCollaboratorsSortInput {
+  name: SortOptions
+  email: SortOptions
+  notes: SortOptions
+}
+
+
 type NoteHighlights {
   _id: String 
   fileId: String 
@@ -998,6 +1072,7 @@ input CreateNoteHighlightsInput {
 }
 
 input CreateNoteHighlightsDataInput {
+  _id: String 
   fileId: String 
   content: String 
 }
@@ -1019,6 +1094,7 @@ input UpsertNoteHighlightsInput{
 }
 
 input UpdateNoteHighlightsDataInput {
+  _id: String 
   fileId: String 
   content: String 
 }

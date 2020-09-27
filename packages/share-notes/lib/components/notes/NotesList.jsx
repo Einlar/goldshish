@@ -10,7 +10,7 @@ const NotesList = () => {
         <div className="Notes-list">
             <Components.Datatable
                 collection={Notes}
-                options={{fragmentName: "noteFragment"}}
+                options={{fragmentName: "noteFragment", mutationFragmentName: "noteFragment"}}
                 editFormProps={{queryFragmentName: "noteEditQuery"}}
                 /* The EditForm gets a prop named "document" containing all the data of the row being edited on. Normally this uses just the basic schema, but here we want to use a custom (nested) one, and so we specify it in the queryFragmentName*/
             showNew={true}

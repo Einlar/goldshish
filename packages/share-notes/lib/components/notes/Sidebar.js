@@ -1,32 +1,42 @@
 import React from "react";
 
+import sortBy from "lodash/sortBy";
 
 // const updateHash = highlight => {
 //   document.location.hash = `highlight-${highlight.id}`;
 // };
 
-const Sidebar = ({ highlights, scrollUpdater }) => {
+const Sidebar = ({ highlights, scrollUpdater, remover }) => {
   return (
     <div className="sidebar" style={{ width: "25vw" }}>
       <div className="description" style={{ padding: "1rem" }}>
-        <h2 style={{ marginBottom: "1rem" }}>react-pdf-highlighter</h2>
-
-        <p style={{ fontSize: "0.7rem" }}>
-          <a href="https://github.com/agentcooper/react-pdf-highlighter">
-            Open in GitHub
-          </a>
-        </p>
-
+        <div style={{display: "flex", alignItems: "baseline", justifyContent: "space-around"}}>
+          <h2 style={{ marginBottom: "1rem" }}>File Viewer</h2>
+          <div className="sidebar-button">
+            <div onClick={ () => window.location.reload()}>Exit</div> 
+          {/* Yes, we are exiting by reloading the page. This works fine for now*/} 
+          </div>
+        </div>
         <p>
           <small>
-            To create area highlight hold ⌥ Option key (Alt), then click and
+            To create <b>area highlight</b> hold ⌥ Option key (Alt), then click and
             drag.
+          </small>
+        </p>
+        <p>
+          <small>
+            Click on a highlight below to <b>jump</b> to its position in the pdf.
+          </small>
+        </p>
+        <p>
+          <small>
+            Highlights are <b>not</b> updated in real-time: if someone else adds a highlight while you are editing, you won't see it until you refresh the page (but your work will be saved).
           </small>
         </p>
       </div>
 
       <ul className="sidebar__highlights">
-        {highlights.map((highlight, index) => (
+        {sortBy(highlights, (h) => h.position.pageNumber ).map((highlight, index) => (
           <li
             key={index}
             className="sidebar__highlight"
@@ -52,6 +62,9 @@ const Sidebar = ({ highlights, scrollUpdater }) => {
             </div>
             <div className="highlight__location">
               Page {highlight.position.pageNumber}
+            </div>
+            <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight.id)} }>
+              Remove
             </div>
           </li>
         ))}

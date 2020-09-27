@@ -124,5 +124,10 @@ registerFragment(`
         starred
         years
         date
+        highlights {
+            _id
+            fileId
+            content
+        }
     }
 `);

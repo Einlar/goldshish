@@ -37,20 +37,37 @@ const NotesPage = () => {
         collectionName: "Notes", fragmentName: "noteHighlights",
     });
 
-    const updateHighlights = (highlights) => {
-        console.log("Received: ", highlights);
+    const updateHighlight = (highlight) => {
+        console.log("Received", highlight);
 
-        const new_highlights = highlights.map(highlight => ({fileId: url.id, content: JSON.stringify(highlight)}));
+        //Checks if highlight is being removed:
+        const new_content = (highlight.content === null) ? "" : JSON.stringify(highlight);
 
-        console.log("Sending", new_highlights);
+        const mutation_data = [{_id: highlight.id, fileId: url.id, content: new_content}];
 
-        const input = { filter: { slug: { _eq: slug } }, data: { noteFiles: result.noteFiles, highlights: new_highlights } };
-//!BUG: when editing multiple files, only the last one gets saved (since we set here the id)
-//! Also, switching from a file to another "transports" all the highlights...
-        // createHighlight({ input });
+        //? Maybe changing the fragment avoids invoking the files mutation when changing highlights?
+
+        const input = { filter: { slug: { _eq: slug } }, data: { noteFiles: result.noteFiles, highlights: mutation_data } };
 
         updateNote({ input });
-    };
+
+        //TODO manage errors and return values
+    }
+
+//     const updateHighlights = (highlights) => { 
+//         console.log("Received: ", highlights);
+
+//         const new_highlights = highlights.map(highlight => ({_id: highlight.id, fileId: url.id, content: JSON.stringify(highlight)}));
+
+//         console.log("Sending", new_highlights);
+
+//         const input = { filter: { slug: { _eq: slug } }, data: { noteFiles: result.noteFiles, highlights: new_highlights } };
+// //!BUG: when editing multiple files, only the last one gets saved (since we set here the id)
+// //! Also, switching from a file to another "transports" all the highlights...
+//         // createHighlight({ input });
+
+//         updateNote({ input });
+//     };
 
     // input UpdateNoteHighlightsDataInput {
     //     fileId: String 
@@ -62,7 +79,11 @@ const NotesPage = () => {
             import App from './myApp.jsx'; 
 
             if (!_.isEmpty(url))
-                pdfviewport = ReactDOM.render( (<App url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlights}/>), document.getElementById("root"));
+                pdfviewport = ReactDOM.render( 
+                    (<div className="viewer-container">
+                        <App url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlight}/>
+                    </div>),
+                    document.getElementById("root"));
     }, [url])
     // }
 
@@ -74,9 +95,9 @@ const NotesPage = () => {
         console.log("Got", url);
         console.log("Got also",  highlights);
 
-       const set_highlights = (typeof highlights === 'undefined') ? [] : highlights.filter((highlight) => highlight.fileId === id).map((highlight) => JSON.parse(highlight.content));
+       const set_highlights = (typeof highlights === 'undefined') ? [] : highlights.filter((highlight) => (highlight.fileId === id) && (highlight.content != "")).map((highlight) => JSON.parse(highlight.content));
         setUrl({id: id, url: url, highlights: set_highlights}); //Filter by fileId, then map + parse JSON
-        //! Make it safe! Update periodically the highlights, otherwise there is risk of losing data when sending to the database
+        //TODO Now highlights are merged, but still it could be convenient to fetch more data from the server and update in real time
     };
 
     return (
@@ -101,8 +122,7 @@ const NotesPage = () => {
                             </div>
                     )
                 }
-                <div id="root" className="pdf-content">
-                    Bananane
+                <div id="root">
                 </div>
             </div>
         )

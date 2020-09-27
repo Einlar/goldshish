@@ -11,6 +11,9 @@ import {
   } from "react-pdf-highlighter";
 
 import Sidebar from "./Sidebar";
+import Spinner from "./Spinner";
+
+import './style/App.css';
 
 
 const getNextId = () => String(Math.random()).slice(2);
@@ -73,18 +76,39 @@ class App extends React.Component {
 
     console.log("Saving highlight", highlight);
 
-    const all_highlights = [{ ...highlight, id: getNextId() }, ...highlights];
+    const new_highlight = {...highlight, id: getNextId()};
+
+    const all_highlights = [new_highlight, ...highlights];
     this.setState({
       highlights: all_highlights
     });
     
     console.log("All highlights", all_highlights);
 
-    this.props.updater(all_highlights); //Save also id
+    //return just the new highlight
+    this.props.updater(new_highlight); //Save also id
+  }
+
+  removeHighlight = (highlightId) => {
+
+    console.log("Removing highlight", highlightId);
+
+    const all_highlights = this.state.highlights.filter( (h) => h.id !== highlightId ); //Remove the highlight with that id
+
+    this.setState({ highlights: all_highlights });
+
+    const removed_highlight = {
+      id: highlightId,
+      content: null,
+    };
+
+    this.props.updater(removed_highlight); 
   }
   
   updateHighlight = (highlightId, position, content) => {
     console.log("Updating highlight", highlightId, position, content);
+
+    let edited_highlight = {};
 
     const all_highlights = this.state.highlights.map(h => {
       const {
@@ -93,14 +117,18 @@ class App extends React.Component {
         content: originalContent,
         ...rest
       } = h; //Unpack every highlight
-      return id === highlightId //for the highlight to be modified
-        ? { //return new data
-            id,
-            position: { ...originalPosition, ...position },
-            content: { ...originalContent, ...content },
-            ...rest
-          }
-        : h; //for the others, return the old data
+
+      if (id === highlightId) {
+        edited_highlight = { //return new data
+          id,
+          position: { ...originalPosition, ...position },
+          content: { ...originalContent, ...content },
+          ...rest
+        };
+        return edited_highlight;
+      } else {
+        return h;
+      }
     });
 
     this.setState({
@@ -108,7 +136,7 @@ class App extends React.Component {
       all_highlights
     });
 
-    this.props.updater(all_highlights); //Save also id
+    this.props.updater(edited_highlight); //Save also id
   }
 
 
@@ -117,9 +145,9 @@ class App extends React.Component {
 
     return (
       <div className="App" style={{ display: "flex", height: "100vh" }}>
-        <Sidebar highlights={highlights} scrollUpdater={this.scrollToHighlightFromHash}/>
+        <Sidebar highlights={highlights} scrollUpdater={this.scrollToHighlightFromHash} remover={this.removeHighlight}/>
         <div style={{height: "100vh", width: "75vw", position: "relative"}}>
-          <PdfLoader url={this.props.url}>
+          <PdfLoader url={this.props.url} beforeLoad={<Spinner/>}>
             {pdfDocument => (
               <PdfHighlighter
                 pdfDocument={pdfDocument}

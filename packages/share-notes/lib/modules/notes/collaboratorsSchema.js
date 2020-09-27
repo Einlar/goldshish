@@ -1,22 +1,21 @@
 import SimpleSchema from 'simpl-schema';
 
-//Sub schema for file highlights
-const highlightSchema = new SimpleSchema({
-    _id: {
+const collaboratorsSchema = new SimpleSchema({
+    name: {
         type: String,
         optional: true,
         canRead: ['guests'],
         canUpdate: ['members'],
         canCreate: ['members'],
     },
-    fileId: {
+    email: {
         type: String,
         optional: true,
         canRead: ['guests'],
         canUpdate: ['members'],
         canCreate: ['members'],
     },
-    content: {
+    notes: {
         type: String,
         optional: true,
         canRead: ['guests'],
@@ -25,4 +24,4 @@ const highlightSchema = new SimpleSchema({
     },
 });
 
-export default highlightSchema;
+export default collaboratorsSchema;

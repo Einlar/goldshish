@@ -9,6 +9,7 @@ import { generateFieldSchema, BasicFile } from 'meteor/vulcan-files';
 import NoteFiles from './fsCollection.js';
 
 import highlightSchema from './highlightSchema.js';
+import collaboratorsSchema from './collaboratorsSchema.js';
 
 const filesGroup = {
     name: 'attachedFiles',
@@ -48,6 +49,27 @@ const schema = {
         canUpdate: ['members'],
         searchable: true,
     },
+    author: {
+        type: String,
+        optional: true,
+        canRead: ['guests'],
+        canCreate: ['members'],
+        canUpdate: ['members'],
+        searchable: true,
+    },
+    collaborators: {
+        type: Array,
+        optional: true,
+        canRead: ['guests'],
+        canCreate: ['members'],
+        canUpdate: ['members'],
+        arrayItem: {
+            type: collaboratorsSchema,
+            optional: true,
+        },
+    },
+    //TODO Add also voting (# found that note useful)
+    //TODO Fix all the fragments
     slug: {
         type: String,
         optional: true,
@@ -195,6 +217,27 @@ const schema = {
         canCreate: ['members'],
         canUpdate: ['members'],
     },
+    language: {
+        type: String,
+        optional: true,
+        canRead: ["guests"],
+        canCreate: ["members"],
+        canUpdate: ["members"],
+        control: 'select',
+        //default: not working
+        options: () => {
+            return [
+                {
+                    value: "en",
+                    label: "English",
+                },
+                {
+                    value: "it",
+                    label: "Italian",
+                }
+            ]
+        }
+    },
 
     ...generateFieldSchema({
         FSCollection: NoteFiles,
@@ -258,18 +301,41 @@ const schema = {
       }),
 
       highlights: {
-          type: Array,
-          optional: true,
-          arrayItem: {
-              type: highlightSchema,
-              optional: true,
-          },
-          canRead: ['guests'],
-          canUpdate: ['members'],
-          canCreate: ['members'],
-          onCreate: () => {
+            type: Array,
+            optional: true,
+            arrayItem: {
+                type: highlightSchema,
+                optional: true,
+            },
+            canRead: ['guests'],
+            canUpdate: ['members'],
+            canCreate: ['members'],
+            group: {
+                name: "highlights",
+                label: "Highlights",
+                order: 100,
+                collapsible: true,
+                startCollapsed: true,
+                adminsOnly: true,
+            },
+            onCreate: () => {
             return []; //Initialize as null
-        }
+            },
+            //onUpdate edits the incoming data before it reaches the database
+            //I need a custom mutator to handle merging
+            onUpdate: ({ data, oldDocument }) => {
+                console.log("Highlights update");
+                console.log("Data: ", data);
+                console.log("Document: ", oldDocument);
+                
+                const edited_highlight = data.highlights[0]; //Extracts the modified data
+
+                const new_data = [...oldDocument.highlights.filter( (h) => h._id !== edited_highlight._id ), edited_highlight];
+
+                console.log("New data", new_data);
+                //Remove the modified 
+                return new_data;
+            },
       }
 };
 
