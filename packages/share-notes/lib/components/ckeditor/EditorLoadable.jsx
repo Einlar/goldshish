@@ -10,11 +10,12 @@ const LoadableEditor = Loadable({
     } 
 });
 
-class ContainedEditor extends React.Component {
-    render () {
-        return <LoadableEditor {...this.props}/>;
-    }
-}
+// class ContainedEditor extends React.Component {
+//     render () {
+//         return <LoadableEditor {...this.props}/>;
+//     }
+// }
 
-registerComponent({ name: 'Editor', component: ContainedEditor });
+registerComponent({ name: 'Editor', component: LoadableEditor });
 
+//TODO Maybe update to https://github.com/gregberge/loadable-components since it seems better mantained

@@ -15,6 +15,9 @@ const Layout = ({ children }) => (
                         type="text/css"
                         href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
                     /> 
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"/>
+                    <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+                    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
             </Helmet>  {/* Basic CSS */}
         </div>
         <div className="top">

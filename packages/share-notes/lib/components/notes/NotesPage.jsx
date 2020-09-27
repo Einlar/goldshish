@@ -2,16 +2,18 @@ import { Components, registerComponent, useSingle2, useUpdate2 } from 'meteor/vu
 
 import React, { useState, useEffect } from 'react';
 import ReactDOM from "react-dom";
+import Loadable from 'react-loadable';
 
-// import { onPageLoad } from 'meteor/server-render';  
-
-// import PDFWorker from "worker-loader!pdfjs-dist/lib/pdf.worker"; //Non va
 import Notes from '../../modules/notes/collection.js';
 import { Link, useParams } from 'react-router-dom';
 
-
-
-// setPdfWorker(PDFWorker);
+const LoadableApp = Loadable({
+    loader: () => import('./myApp.jsx'),
+    loading: () => <Components.Loading/>,
+    render: (loaded, props) => {
+        return <loaded.default {...props}/>
+    }
+});
 
 const NotesPage = () => {
     const { slug } = useParams();
@@ -54,41 +56,20 @@ const NotesPage = () => {
         //TODO manage errors and return values
     }
 
-//     const updateHighlights = (highlights) => { 
-//         console.log("Received: ", highlights);
+//TODO In theory now I can access the db from inside the myApp component...
 
-//         const new_highlights = highlights.map(highlight => ({_id: highlight.id, fileId: url.id, content: JSON.stringify(highlight)}));
+    //Old useEffect code
+    // useEffect( () => {
+    //         import App from './myApp.jsx'; 
 
-//         console.log("Sending", new_highlights);
+    //         if (!_.isEmpty(url))
+    //             pdfviewport = ReactDOM.render( 
+    //                 (<div className="viewer-container">
+    //                     <App url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlight}/>
+    //                 </div>),
+    //                 document.getElementById("root"));
+    // }, [url])
 
-//         const input = { filter: { slug: { _eq: slug } }, data: { noteFiles: result.noteFiles, highlights: new_highlights } };
-// //!BUG: when editing multiple files, only the last one gets saved (since we set here the id)
-// //! Also, switching from a file to another "transports" all the highlights...
-//         // createHighlight({ input });
-
-//         updateNote({ input });
-//     };
-
-    // input UpdateNoteHighlightsDataInput {
-    //     fileId: String 
-    //     content: JSON 
-    //   }
-
-
-    useEffect( () => {
-            import App from './myApp.jsx'; 
-
-            if (!_.isEmpty(url))
-                pdfviewport = ReactDOM.render( 
-                    (<div className="viewer-container">
-                        <App url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlight}/>
-                    </div>),
-                    document.getElementById("root"));
-    }, [url])
-    // }
-
-    // if (typeof window !== 'undefined')
-    //     import App from './myApp.jsx';
 
     const handleClick = (id, url, highlights) =>
     { 
@@ -123,6 +104,11 @@ const NotesPage = () => {
                     )
                 }
                 <div id="root">
+                    { ! _.isEmpty(url) ? 
+                    (<div className="viewer-container">
+                       <LoadableApp url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlight}/>
+                     </div>) : null
+                    }
                 </div>
             </div>
         )

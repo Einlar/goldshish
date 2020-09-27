@@ -15,7 +15,9 @@ class Editor extends Component {
             <div className="form-group row editor">
                 <label className="control-label col-sm-3">{this.props.label}</label>
                 <div className="col-sm-9">
-                    <CKEditor editor={ ClassicEditor }
+                    <CKEditor 
+                    editor={ ClassicEditor }
+                    data={this.props.value}
                     onChange={ (event, editor) => {
                         const data = editor.getData();
                         this.update(data);

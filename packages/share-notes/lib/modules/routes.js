@@ -8,6 +8,7 @@ const adminAccessOptions = {
 const routes = [
     {name: 'home', path: '/', componentName: 'CoursesHome'},
     {name: 'courses', path: '/courses', componentName: 'CoursesList'},
+    {name: 'courses.new', path: '/newcourse', componentName: 'CoursesNew'},
     {name: 'newnote', path: '/share', componentName: 'NotesNew'},
     {name: 'note.page', path: '/notes/:course_slug/:slug', componentName: 'NotesPage'},
     {name: 'folder.page', path: '/folders/:course_slug/:slug', componentName: 'FoldersPage'},
