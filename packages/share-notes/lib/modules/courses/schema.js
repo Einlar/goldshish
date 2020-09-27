@@ -30,7 +30,7 @@ const schema = {
     description: {
         type: String,
         optional: true,
-        input: 'textarea',
+        input: 'Editor',
         canRead: ['guests'],
         canCreate: ['members'],
         canUpdate: ['members']
