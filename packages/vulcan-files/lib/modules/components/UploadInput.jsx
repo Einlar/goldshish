@@ -78,7 +78,6 @@ const UploadInput = (props) => {
           {isEmpty(value) || enableMultiple ? (
             <Dropzone
               //ref="dropzone"
-              //options={{noDragEventsBubbling: "true"}} //!Test
               multiple={enableMultiple}
               onDrop={onDrop}
               // accept="image/*" // TODO also add this filtering

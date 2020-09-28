@@ -1,30 +1,5 @@
 import { registerFragment } from 'meteor/vulcan:core';
 
-//Returns all files attached to a note, along with their data
-// registerFragment(
-//     `fragment NoteFiles on Note {
-//         _id
-//         noteName
-//         slug
-//         createdAt
-//         files {
-//             _id
-//             createdAt
-//             user {
-//                 _id
-//                 username
-//             }
-//             version
-//             description
-//             files {
-//                 name
-//                 type
-//                 url
-//             }
-//         }
-//     }
-// `);
-
 //Returns the standard information about a Note
 registerFragment(`
     fragment NotePage on Note {
@@ -43,10 +18,7 @@ registerFragment(`
             _id
             folderName
         }
-        professor {
-            _id
-            professorName
-        }
+        professor
         files {
             _id
             name
@@ -92,10 +64,7 @@ registerFragment(`
             _id
             folderName
         }
-        professor {
-            _id
-            professorName
-        }
+        professor
         files {
             _id
             name
@@ -111,11 +80,12 @@ registerFragment(`
     fragment noteEditQuery on Note {
         _id
         noteName
+        author
         slug
         description
         courseId
         folderId
-        professorId
+        professor
         noteFiles
         files {
             _id
@@ -124,10 +94,16 @@ registerFragment(`
         starred
         years
         date
+        language
         highlights {
             _id
             fileId
             content
+        }
+        collaborators {
+            name
+            email
+            notes
         }
     }
 `);

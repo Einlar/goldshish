@@ -15,7 +15,7 @@ const routes = [
    // {name: 'courses.page', path: '/course/:slug', componentName: 'CoursesPage'}, //Course page
    // {name: 'courses.submit', path: '/share', componentName: 'CoursesNew'},
     {name: 'courses.users', path: '/log-in', componentName: 'CoursesUsers'},
-    {name: 'professors', path:'/profs', componentName: 'ProfessorsList'},
+    // {name: 'professors', path:'/profs', componentName: 'ProfessorsList'},
     {name: 'folders', path:'/folders', componentName: 'FoldersList'},
     {name: 'notes', path:'/notes', componentName: 'NotesList'},
 ];

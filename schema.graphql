@@ -510,140 +510,6 @@ input CourseSelectorUniqueInput {
 }
 
 
-# Type for Professors
-type Professor {
-  _id: String 
-  professorName: String 
-  courseId: String 
-  course: Course 
-}
-
-
-input DeleteProfessorInput{
-  filter: ProfessorFilterInput
-  id: String
-}
-
-input SingleProfessorInput {
-  # filtering
-  filter: ProfessorFilterInput
-  sort: ProfessorSortInput
-  search: String
-  id: String
-
-  # backwards-compatibility
-  "Deprecated (use 'filter/id' fields instead)."
-  selector: ProfessorSelectorUniqueInput
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Return null instead of throwing MissingDocumentError
-  allowNull: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-}
-
-input MultiProfessorInput {
-
-  # filtering
-  filter: ProfessorFilterInput
-  sort: ProfessorSortInput
-  search: String
-  offset: Int
-  limit: Int
-
-  # backwards-compatibility
-  # A JSON object that contains the query terms used to fetch data
-  "Deprecated (use 'filter/id' fields instead)."
-  terms: JSON
-
-  # options (backwards-compatibility)
-  # Whether to enable caching for this query
-  enableCache: Boolean
-  # Whether to calculate totalCount for this query
-  enableTotal: Boolean
-  # An identifier to name the query's execution context
-  contextName: String
-  
-}
-
-type SingleProfessorOutput{
-  result: Professor
-}
-
-type  MultiProfessorOutput{
-  results: [Professor]
-  totalCount: Int
-}
-
-type ProfessorMutationOutput{
-  data: Professor
-}
-
-input CreateProfessorInput {
-  data: CreateProfessorDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input CreateProfessorDataInput {
-  professorName: String 
-  courseId: String 
-}
-
-input UpdateProfessorInput{
-  filter: ProfessorFilterInput
-  id: String
-  data: UpdateProfessorDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpsertProfessorInput{
-  filter: ProfessorFilterInput
-  id: String
-  data: UpdateProfessorDataInput!
-  # An identifier to name the mutation's execution context
-  contextName: String
-}
-
-input UpdateProfessorDataInput {
-  professorName: String 
-  courseId: String 
-}
-
-input ProfessorFilterInput {
-  _and: [ProfessorFilterInput]
-  _not: ProfessorFilterInput
-  _or: [ProfessorFilterInput]
-
-
-  _id: String_Selector
-  professorName: String_Selector
-  courseId: String_Selector
-}
-
-input ProfessorSortInput {
-  _id: SortOptions
-  professorName: SortOptions
-  courseId: SortOptions
-}
-
-input ProfessorSelectorInput {
-  _and: [ProfessorSelectorInput]
-  _or: [ProfessorSelectorInput]
-
-}
-
-input ProfessorSelectorUniqueInput {
-  _id: String
-  documentId: String # OpenCRUD backwards compatibility
-  slug: String
-
-}
-
-
 # Type for Folders
 type Folder {
   _id: String 
@@ -806,8 +672,7 @@ type Note {
   course: Course 
   folderId: String 
   folder: Folder 
-  professorId: String 
-  professor: Professor 
+  professor: String 
   starred: Boolean 
   years: Float 
   date: Date 
@@ -895,7 +760,7 @@ input CreateNoteDataInput {
   description: String 
   courseId: String 
   folderId: String 
-  professorId: String 
+  professor: String 
   starred: Boolean 
   years: Float 
   date: Date 
@@ -927,7 +792,7 @@ input UpdateNoteDataInput {
   description: String 
   courseId: String 
   folderId: String 
-  professorId: String 
+  professor: String 
   starred: Boolean 
   years: Float 
   date: Date 
@@ -952,7 +817,7 @@ input NoteFilterInput {
   description: String_Selector
   courseId: String_Selector
   folderId: String_Selector
-  professorId: String_Selector
+  professor: String_Selector
   starred: Boolean_Selector
   years: Float_Selector
   date: Date_Selector
@@ -976,7 +841,7 @@ input NoteSortInput {
   description: SortOptions
   courseId: SortOptions
   folderId: SortOptions
-  professorId: SortOptions
+  professor: SortOptions
   starred: SortOptions
   years: SortOptions
   date: SortOptions
@@ -1267,12 +1132,6 @@ type Query {
   # A list of Course documents matching a set of query terms
   courses(input: MultiCourseInput):  MultiCourseOutput
   
-  # A single Professor document fetched by ID or slug
-  professor(input: SingleProfessorInput!): SingleProfessorOutput
-  
-  # A list of Professor documents matching a set of query terms
-  professors(input: MultiProfessorInput):  MultiProfessorOutput
-  
   # A single Folder document fetched by ID or slug
   folder(input: SingleFolderInput!): SingleFolderOutput
   
@@ -1374,38 +1233,6 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: CourseSelectorUniqueInput
 ) : CourseMutationOutput
-
-  # Mutation for creating new Professor documents
-  createProfessor(
-  input: CreateProfessorInput,
-  "Deprecated (use 'input' field instead)."
-  data: CreateProfessorDataInput
-) : ProfessorMutationOutput
-
-  # Mutation for updating a Professor document
-  updateProfessor(
-  input: UpdateProfessorInput,
-  "Deprecated (use 'input' field instead)."
-  selector: ProfessorSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateProfessorDataInput 
-) : ProfessorMutationOutput
-
-  # Mutation for upserting a Professor document
-  upsertProfessor(
-  input: UpsertProfessorInput,
-  "Deprecated (use 'input' field instead)."
-  selector: ProfessorSelectorUniqueInput,
-  "Deprecated (use 'input' field instead)."
-  data: UpdateProfessorDataInput
-) : ProfessorMutationOutput
-
-  # Mutation for deleting a Professor document
-  deleteProfessor(
-  input: DeleteProfessorInput,
-  "Deprecated (use 'input' field instead)."
-  selector: ProfessorSelectorUniqueInput
-) : ProfessorMutationOutput
 
   # Mutation for creating new Folder documents
   createFolder(

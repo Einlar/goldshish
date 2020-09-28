@@ -7,7 +7,7 @@ import Users from 'meteor/vulcan:users';
 const nav = [
     { name: 'Home', to: '/' },
     { name: 'Courses', to: '/courses' },
-    { name: 'Professors', to: '/profs' },
+    // { name: 'Professors', to: '/profs' },
     { name: 'Folders', to: '/folders' },
     { name: 'Notes', to: '/notes' },
     //{ name: 'Share Note', to: '/share' },

@@ -46,7 +46,7 @@ const schema = {
         optional: false,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         searchable: true,
     },
     author: {
@@ -54,7 +54,7 @@ const schema = {
         optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         searchable: true,
     },
     collaborators: {
@@ -62,10 +62,16 @@ const schema = {
         optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         arrayItem: {
             type: collaboratorsSchema,
             optional: true,
+        },
+        group: {
+            name: "collaborators",
+            label: "Collaborators",
+            collapsible: true,
+            startCollapsed: true,
         },
     },
     //TODO Add also voting (# found that note useful)
@@ -90,10 +96,10 @@ const schema = {
     description: {
         type: String,
         optional: true,
-        input: 'textarea',
+        input: 'Editor',
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         searchable: true,
     },
     courseId: {
@@ -102,7 +108,7 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         query: `query CoursesQuery {
                 courses {
                     results {
@@ -129,7 +135,7 @@ const schema = {
         control: 'select',
         canRead: ["guests"],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         relation: {
             fieldName: 'folder',
             typeName: 'Folder',
@@ -157,33 +163,39 @@ const schema = {
         `,
         
     },
-    professorId: {
+    professor: {
         type: String,
-        control: 'select',
-        optional: true,
         canRead: ["guests"],
-        canCreate: ['members'],
-        canUpdate: ['members'],
-        query: `query ProfessorsQuery {
-                professors {
-                    results {
-                    _id
-                    professorName
-                    }
-                }
-            }
-        `,
-        relation: {
-            fieldName: 'professor',
-            typeName: 'Professor',
-            kind: 'hasOne',
-        },
-        options: ({ data }) => 
-        data.professors.results.map(professor => ({
-            value: professor._id,
-            label: professor.professorName,
-        })),
+        canCreate: ["members"],
+        canUpdate: ["owners", "admins"],
     },
+    // professorId: {
+    //     type: String,
+    //     control: 'select',
+    //     optional: true,
+    //     canRead: ["guests"],
+    //     canCreate: ['members'],
+    //     canUpdate: ['members'],
+    //     query: `query ProfessorsQuery {
+    //             professors {
+    //                 results {
+    //                 _id
+    //                 professorName
+    //                 }
+    //             }
+    //         }
+    //     `,
+    //     relation: {
+    //         fieldName: 'professor',
+    //         typeName: 'Professor',
+    //         kind: 'hasOne',
+    //     },
+    //     options: ({ data }) => 
+    //     data.professors.results.map(professor => ({
+    //         value: professor._id,
+    //         label: professor.professorName,
+    //     })),
+    // },
     // latest_verId: {
     //     type: String,
     //     optional: true,
@@ -200,29 +212,29 @@ const schema = {
         type: Boolean,
         optional: true,
         canRead: ["guests"],
-        canCreate: ['members'],
-        canUpdate: ['members'],
+        canCreate: ['members'], //Should be false always, only admins can set it true!
+        canUpdate: ['admins'],
     },
     years: {
         type: Number,
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
     },
     date: {
         type: Date,
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
     },
     language: {
         type: String,
         optional: true,
         canRead: ["guests"],
         canCreate: ["members"],
-        canUpdate: ["members"],
+        canUpdate: ["owners", 'admins'],
         control: 'select',
         //default: not working
         options: () => {
@@ -260,7 +272,7 @@ const schema = {
         // { console.log("available props", props); },
           canRead: ['guests'],
           canCreate: ['members'],
-          canUpdate: ['members'],
+          canUpdate: ['owners', 'admins'],
           form: {
             fileCheck: once(() => 
             { 
@@ -308,7 +320,7 @@ const schema = {
                 optional: true,
             },
             canRead: ['guests'],
-            canUpdate: ['members'],
+            canUpdate: ['members'], //Permission should be fixed in the highlights component
             canCreate: ['members'],
             group: {
                 name: "highlights",

@@ -6,6 +6,7 @@ import Loadable from 'react-loadable';
 
 import Notes from '../../modules/notes/collection.js';
 import { Link, useParams } from 'react-router-dom';
+import ReactHtmlParser from 'react-html-parser';
 
 const LoadableApp = Loadable({
     loader: () => import('./myApp.jsx'),
@@ -86,7 +87,7 @@ const NotesPage = () => {
             <div>
                 <span>
                     <h2 className="course-title">{result.noteName}</h2>
-                    by {result.user.username}
+                    <div className="course-description">{ReactHtmlParser(result.description)}</div> by {result.user.username}
                 </span>
                 {
                     result.files.map(
