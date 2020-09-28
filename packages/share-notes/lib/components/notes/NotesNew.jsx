@@ -2,12 +2,13 @@ import React from 'react';
 import { Components, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
 
 import Users from 'meteor/vulcan:users';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 
 const NotesNew = () => {
     const history = useHistory(); //This is necessary for redirecting!
     const { currentUser } = useCurrentUser();
+    const { courseid, folderid } = useParams();
 
     return (
         <div className="share-note">
@@ -15,7 +16,9 @@ const NotesNew = () => {
             ( <div><Components.SmartForm collectionName="Notes"
             successCallback = {() => {
                 history.push(`/`);
-            }} /></div>
+            }} 
+            prefilledProps={{courseId: courseid, folderId: folderid}}
+            /></div>
             )
             : <div>Please <Link to="/log-in?redirect=/share">Log-in</Link> to submit a note.</div> 
             }

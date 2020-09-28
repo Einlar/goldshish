@@ -19,3 +19,17 @@ registerFragment(
         }
     }
 `);
+
+registerFragment(
+    `fragment CourseAllFolders on Course {
+        _id
+        courseName
+        slug
+        all_folders {
+            _id
+            folderName
+            starred
+            slug
+        }
+    }
+`);

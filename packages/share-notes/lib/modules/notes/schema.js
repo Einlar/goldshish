@@ -132,7 +132,7 @@ const schema = {
     folderId: {
         type: String,
         optional: true,
-        control: 'select',
+        control: 'FolderInCourse',
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
@@ -145,6 +145,7 @@ const schema = {
         data.folders.results.map(folder => ({
             value: folder._id,
             label: folder.course.courseName + '/' + folder.folderName,
+            courseid: folder.course._id,
             slug: folder.slug,
         })),
         query: `
@@ -153,6 +154,7 @@ const schema = {
                 results{
                     _id
                     course {
+                        _id
                         courseName
                     }
                     folderName

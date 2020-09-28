@@ -9,9 +9,10 @@ const routes = [
     {name: 'home', path: '/', componentName: 'CoursesHome'},
     {name: 'courses', path: '/courses', componentName: 'CoursesList'},
     {name: 'courses.new', path: '/newcourse', componentName: 'CoursesNew'},
-    {name: 'newnote', path: '/share', componentName: 'NotesNew'},
+    {name: 'newnote', path: '/share/:courseid/:folderid', componentName: 'NotesNew'},
     {name: 'note.page', path: '/notes/:course_slug/:slug', componentName: 'NotesPage'},
     {name: 'folder.page', path: '/folders/:course_slug/:slug', componentName: 'FoldersPage'},
+    {name: 'notes.edit', path: '/edit/notes/:slug', componentName: 'NotesEdit'},
    // {name: 'courses.page', path: '/course/:slug', componentName: 'CoursesPage'}, //Course page
    // {name: 'courses.submit', path: '/share', componentName: 'CoursesNew'},
     {name: 'courses.users', path: '/log-in', componentName: 'CoursesUsers'},

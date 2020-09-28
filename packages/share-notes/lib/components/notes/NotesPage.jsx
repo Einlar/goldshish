@@ -1,12 +1,21 @@
-import { Components, registerComponent, useSingle2, useUpdate2 } from 'meteor/vulcan:core';
+import { Components, registerComponent, useSingle2, useUpdate2, useCurrentUser } from 'meteor/vulcan:core';
 
-import React, { useState, useEffect } from 'react';
-import ReactDOM from "react-dom";
+import React, { useState } from 'react';
+
+import Users from 'meteor/vulcan:users';
+import moment from 'moment';
+import isString from 'lodash/isString';
+import isEmpty from 'lodash/isEmpty';
 import Loadable from 'react-loadable';
 
 import Notes from '../../modules/notes/collection.js';
 import { Link, useParams } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
+import { result } from 'lodash';
+
+import { IconView, IconDownload, IconEdit } from '../../components/other/Icons.jsx';
+
+import OtherFolders from './OtherFolders.jsx';
 
 const LoadableApp = Loadable({
     loader: () => import('./myApp.jsx'),
@@ -18,6 +27,8 @@ const LoadableApp = Loadable({
 
 const NotesPage = () => {
     const { slug } = useParams();
+
+    const { currentUser } = useCurrentUser();
 
     const queryObject = useSingle2({
         collection: Notes,
@@ -31,10 +42,6 @@ const NotesPage = () => {
     //error = queryObject.error;
 
     const [url, setUrl] = useState({});
-
-    // const [createHighlight, {called}] = useCreate2({
-    //     collectionName: "Highlights"
-    // });
 
     const [updateNote, {called}] = useUpdate2({
         collectionName: "Notes", fragmentName: "noteHighlights",
@@ -59,18 +66,6 @@ const NotesPage = () => {
 
 //TODO In theory now I can access the db from inside the myApp component...
 
-    //Old useEffect code
-    // useEffect( () => {
-    //         import App from './myApp.jsx'; 
-
-    //         if (!_.isEmpty(url))
-    //             pdfviewport = ReactDOM.render( 
-    //                 (<div className="viewer-container">
-    //                     <App url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlight}/>
-    //                 </div>),
-    //                 document.getElementById("root"));
-    // }, [url])
-
 
     const handleClick = (id, url, highlights) =>
     { 
@@ -82,28 +77,72 @@ const NotesPage = () => {
         //TODO Now highlights are merged, but still it could be convenient to fetch more data from the server and update in real time
     };
 
+    //Add by {result.user.username}
     return (
             loading ? (<Components.Loading/>) : (
-            <div>
-                <span>
-                    <h2 className="course-title">{result.noteName}</h2>
-                    <div className="course-description">{ReactHtmlParser(result.description)}</div> by {result.user.username}
-                </span>
+            <div className="note-page">
+                <div className="container">
+                    <h2 className="section-title">{result.noteName}
+                    { Users.canUpdate({ collectionName: "Notes", user: currentUser, document: result }) ? <Link to={`/edit/notes/${result.slug}`}><IconEdit/></Link> : null }
+                    </h2>
+                    <div className="date">created on {moment(new Date(result.createdAt)).format('DD-MM-YYYY')}</div>
+                </div>
+                <div className="note-body">
+                    <div className="left">
+                        <div className="authors">
+                            <b>Author:</b> {isString(result.author) ? result.author : <span>Unknown</span>} 
+                            { isEmpty(result.collaborators) ? null : 
+                            ' and ' + (result.collaborators.map( (c) => c.name )).join(', ')
+                            }
+                        </div>
+                        <div className="course-description">
+                            {ReactHtmlParser(result.description)}
+                        </div>
+                    </div>
+                    <div className="right">
+                        <div className="section-title">
+                            {result.course.title}
+                        </div>
+                        <div className="professor">
+                            Prof. {result.professor}
+                        </div>
+                        <div className="folder">
+                            {result.folder.folderName}
+                        </div>
+                        {
+                            result.date ? 
+                            (
+                                <div className="date date-big">{moment(new Date(result.date)).format('DD-MM-YYYY')}</div>
+                                ) : (
+                                <div className="year">
+                                    {result.years}
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+                <div className="note-files">
                 {
                     result.files.map(
                         file => 
-                            <div key={file._id}>
-                                <a href={file.url} key="download" download={file.name}>{file.name}</a>
+                            <div key={file._id} className="file">
+                                {file.name}
+                                <a href={file.url} key="download" download={file.name}><IconDownload/></a>
                                 <a href="#"
                                 onClick={
                                     e => {
                                         e.preventDefault(); handleClick(file._id,file.url, result.highlights )
                                     }
                                 }
-                                key="view">View</a>
+                                key="view"><IconView/></a>
                             </div>
                     )
                 }
+                </div>
+                <div className="decorated subtitle spacetop"><span>Other folders</span></div>
+                <div className="other-folders">
+                    <OtherFolders courseid={result.course._id}/>
+                </div>
                 <div id="root">
                     { ! _.isEmpty(url) ? 
                     (<div className="viewer-container">
@@ -115,10 +154,6 @@ const NotesPage = () => {
         )
     )};
 
-
-/*
-
-                }*/
 registerComponent("NotesPage", NotesPage);
 
 export default NotesPage;

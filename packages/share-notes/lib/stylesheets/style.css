@@ -1,7 +1,7 @@
 .top {
   position: fixed;
   width: 100%;
-  z-index: 3;
+  z-index: 2;
 }
 
 .red {
@@ -45,11 +45,18 @@ a:hover {
   font-size: 64px !important;
   font-family: "Montserrat", sans-serif;
   text-align: center !important;
+}
 
+.section-title {
+  font-family: "Montserrat", sans-serif;
+  color: #383d3f;
+  font-size: 30px;
+  font-weight: 800;
 }
 
 .subtitle {
   text-align: center !important;
+  font-size: 18px;
   font-family: "Montserrat", sans-serif;
 }
 
@@ -79,6 +86,89 @@ a:hover {
 
   border-bottom: 3px solid #bbbdbe;
   padding: 5px 16px;
+}
+
+.note-body {
+  padding: 30px 0px;
+}
+
+.container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 3px solid #bbbdbe;
+}
+
+.date {
+  font-size: small;
+  margin-bottom: 5px;
+}
+
+.note-body {
+  clear: both;
+}
+
+.left {
+  width: 70%;
+  float: left;
+}
+
+.right {
+  width: 30%;
+  float: right;
+  border-left: 3px solid #bbbdbe;
+  padding: 10px;
+  text-align: center;
+}
+
+.professor {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+
+.subtitle {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.decorated {
+  overflow: hidden;
+  text-align: center;
+}
+
+.decorated > span {
+  position: relative;
+  display: inline-block;
+}
+
+.decorated > span:before, .decorated > span:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-bottom: 3px solid #bbbdbe;
+  width: 100vw;
+  margin: 0 20px;
+}
+
+.decorated > span:before {
+  right: 100%;
+}
+
+.decorated > span:after {
+  left: 100%;
+}
+
+.other-folders {
+  display: flex;
+  justify-content: center;
+}
+
+.spacetop {
+  margin-top: 3rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  clear: both;
 }
 
 .starred-folders-container {
@@ -132,6 +222,31 @@ a:hover {
 }
 
 .starred-folder:hover {
+  border: 3px solid #383d3f;
+}
+
+.folder {
+  text-align: center;
+  padding: 10px 15px;
+  margin: 5px 8px;
+  border-radius: 3px;
+
+  font-size: 18px;
+  background-color: #bdbdbd80;
+  color: #383d3f;
+}
+
+.date-big {
+  font-size: 18px;
+}
+
+.year {
+  font-size: 20px;
+  font-weight: bold;
+  color: #383d3f;
+}
+
+.folder:hover {
   border: 3px solid #383d3f;
 }
 

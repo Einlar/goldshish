@@ -5,6 +5,8 @@ registerFragment(`
     fragment NotePage on Note {
         _id
         noteName
+        author
+        createdAt
         slug
         description
         user {
@@ -32,6 +34,12 @@ registerFragment(`
         starred
         years
         date
+        language
+        collaborators {
+            name
+            email
+            notes
+        }
     }
 `);
 

@@ -4,6 +4,19 @@
 Allows a course to return all its starred folders/notes
 */
 export const apiSchema = {
+    all_folders: {
+        typeName: "[Folder]",
+        //arguments: 'starred: String = "foo"',
+        resolver: (course, args, context) => {
+            const folder_list = context.Folders.find({ courseId: course._id }).fetch();
+            //console.log(args);
+            return context.Users.restrictViewableFields(
+                context.currentUser,
+                context.Folders,
+                folder_list
+            );
+        },
+    },
     folders: {
         typeName: "[Folder]",
         //arguments: 'starred: String = "foo"',

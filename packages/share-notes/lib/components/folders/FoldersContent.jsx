@@ -10,10 +10,11 @@ function groupAndMap(items, itemKey, childKey, predic){
     }));
 }
 
-const FoldersContent = ({ folderId }) => {
+const FoldersContent = ({ folderid, courseid }) => {
+
     const { results = [], data, loading } = useMulti2({
         collectionName: 'Notes',
-        input: { filter: { folderId: { _eq: folderId } }, sort: { years: "desc" } },
+        input: { filter: { folderId: { _eq: folderid } }, sort: { years: "desc" } },
         fragmentName: 'NotePage',
     });
 
@@ -30,7 +31,8 @@ const FoldersContent = ({ folderId }) => {
                 results.length ? 
                 grouped_results.map(year => (
                     <div className="course" key={year.years}>
-                        <h2 className="course-title">{year.years}</h2>{console.log(results)}
+                        <h2 className="course-title">{year.years}
+                        </h2>
                         {
                             year.children.map(note => 
                         <Link to={`/notes/${note.course.slug}/${note.slug}`} key={note._id}>

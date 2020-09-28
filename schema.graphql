@@ -378,6 +378,7 @@ type Course {
   courseName: String 
   slug: String 
   description: String 
+  all_folders: [Folder] 
   folders: [Folder] 
   notes: [Note] 
 }
