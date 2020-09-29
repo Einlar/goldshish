@@ -7,8 +7,6 @@ import { Link } from 'react-router-dom';
 //List all folders inside this course
 const OtherFolders = ({ courseid }) => {
 
-    console.log("Got id", courseid);
-
     const { loading, document, error } = useSingle2({
         collectionName: 'Courses',
         input: { filter: { _id: { _eq : courseid } } },

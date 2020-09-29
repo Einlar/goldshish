@@ -74,7 +74,7 @@ class App extends React.Component {
   addHighlight = (highlight) => {
     const { highlights } = this.state;
 
-    console.log("Saving highlight", highlight);
+    //console.log("Saving highlight", highlight);
 
     const new_highlight = {...highlight, id: getNextId()};
 
@@ -83,7 +83,7 @@ class App extends React.Component {
       highlights: all_highlights
     });
     
-    console.log("All highlights", all_highlights);
+    //console.log("All highlights", all_highlights);
 
     //return just the new highlight
     this.props.updater(new_highlight); //Save also id
@@ -91,7 +91,7 @@ class App extends React.Component {
 
   removeHighlight = (highlightId) => {
 
-    console.log("Removing highlight", highlightId);
+    //console.log("Removing highlight", highlightId);
 
     const all_highlights = this.state.highlights.filter( (h) => h.id !== highlightId ); //Remove the highlight with that id
 
@@ -106,7 +106,7 @@ class App extends React.Component {
   }
   
   updateHighlight = (highlightId, position, content) => {
-    console.log("Updating highlight", highlightId, position, content);
+    //console.log("Updating highlight", highlightId, position, content);
 
     let edited_highlight = {};
 

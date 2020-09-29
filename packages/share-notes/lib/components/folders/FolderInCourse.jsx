@@ -43,9 +43,6 @@ class FolderInCourse extends Component {
             this.update(""); //Reset current folder
         }
 
-        console.log("Current courseId", courseId);
-
-        console.log("gotted: ", options);
         return (
             <div className="form-group row editor">
                 <label className="control-label col-sm-3">{this.props.label}</label>

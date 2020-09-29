@@ -47,8 +47,6 @@ const NotesPage = () => {
     });
 
     const updateHighlight = (highlight) => {
-        console.log("Received", highlight);
-
         //Checks if highlight is being removed:
         const new_content = (highlight.content === null) ? "" : JSON.stringify(highlight);
 
@@ -68,8 +66,6 @@ const NotesPage = () => {
 
     const handleClick = (id, url, highlights) =>
     { 
-        console.log("Got", url);
-        console.log("Got also",  highlights);
 
        const set_highlights = (typeof highlights === 'undefined') ? [] : highlights.filter((highlight) => (highlight.fileId === id) && (highlight.content != "")).map((highlight) => JSON.parse(highlight.content));
         setUrl({id: id, url: url, highlights: set_highlights}); //Filter by fileId, then map + parse JSON

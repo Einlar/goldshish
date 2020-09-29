@@ -12,7 +12,6 @@ import { IconEdit, IconPlus } from '../other/Icons.jsx';
 
 const CoursesPage = () => {
     const { slug } = useParams();
-    console.log("Ho letto", slug)
     const { currentUser } = useCurrentUser();
 
     const { document, loading, error } = useSingle2({
