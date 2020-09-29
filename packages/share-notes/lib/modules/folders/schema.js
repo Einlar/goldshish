@@ -11,8 +11,18 @@ const schema = {
         optional: false,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         searchable: true,
+    },
+    userId: {
+        type: String,
+        optional: true,
+        canRead: ['guests'],
+        resolveAs: {
+            fieldName: 'user',
+            type: 'User',
+            relation: 'hasOne',
+        }
     },
     slug: {
         type: String,
@@ -34,10 +44,10 @@ const schema = {
     description: {
         type: String,
         optional: true,
-        input: 'textarea',
+        input: 'Editor',
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members']
+        canUpdate: ['owners', 'admins']
     },
     courseId: {
         type: String,
@@ -45,7 +55,7 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         query: `query CoursesQuery {
                 courses {
                     results {
@@ -72,7 +82,7 @@ const schema = {
         optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members']
+        canUpdate: ['owners', 'admins']
     }
 };
 

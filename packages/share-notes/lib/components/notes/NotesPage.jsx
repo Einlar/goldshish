@@ -11,7 +11,6 @@ import Loadable from 'react-loadable';
 import Notes from '../../modules/notes/collection.js';
 import { Link, useParams } from 'react-router-dom';
 import ReactHtmlParser from 'react-html-parser';
-import { result } from 'lodash';
 
 import { IconView, IconDownload, IconEdit } from '../../components/other/Icons.jsx';
 

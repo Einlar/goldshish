@@ -1,4 +1,4 @@
-import { Components, useMulti2 } from 'meteor/vulcan:core';
+import { Components, useMulti2, useCurrentUser } from 'meteor/vulcan:core';
 
 import React from 'react';
 import { Link } from 'react-router-dom';

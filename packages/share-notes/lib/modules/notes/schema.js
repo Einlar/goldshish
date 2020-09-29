@@ -105,7 +105,7 @@ const schema = {
     courseId: {
         type: String,
         control: 'select',
-        optional: true,
+        optional: false,
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
@@ -131,7 +131,7 @@ const schema = {
     },
     folderId: {
         type: String,
-        optional: true,
+        optional: false,
         control: 'FolderInCourse',
         canRead: ["guests"],
         canCreate: ['members'],
@@ -167,6 +167,7 @@ const schema = {
     },
     professor: {
         type: String,
+        optional: false,
         canRead: ["guests"],
         canCreate: ["members"],
         canUpdate: ["owners", "admins"],
@@ -219,7 +220,7 @@ const schema = {
     },
     years: {
         type: Number,
-        optional: true,
+        optional: false,
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],

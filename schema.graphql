@@ -375,6 +375,8 @@ input UserSelectorUniqueInput {
 # Type for Courses
 type Course {
   _id: String 
+  userId: String 
+  user: User 
   courseName: String 
   slug: String 
   description: String 
@@ -485,6 +487,7 @@ input CourseFilterInput {
 
 
   _id: String_Selector
+  userId: String_Selector
   courseName: String_Selector
   slug: String_Selector
   description: String_Selector
@@ -492,6 +495,7 @@ input CourseFilterInput {
 
 input CourseSortInput {
   _id: SortOptions
+  userId: SortOptions
   courseName: SortOptions
   slug: SortOptions
   description: SortOptions
@@ -515,6 +519,8 @@ input CourseSelectorUniqueInput {
 type Folder {
   _id: String 
   folderName: String 
+  userId: String 
+  user: User 
   slug: String 
   description: String 
   courseId: String 
@@ -629,6 +635,7 @@ input FolderFilterInput {
 
   _id: String_Selector
   folderName: String_Selector
+  userId: String_Selector
   slug: String_Selector
   description: String_Selector
   courseId: String_Selector
@@ -638,6 +645,7 @@ input FolderFilterInput {
 input FolderSortInput {
   _id: SortOptions
   folderName: SortOptions
+  userId: SortOptions
   slug: SortOptions
   description: SortOptions
   courseId: SortOptions

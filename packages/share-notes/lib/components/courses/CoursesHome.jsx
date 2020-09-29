@@ -18,7 +18,7 @@ const CoursesHome = () => {
                 results.map(course =>
                     (
                         <div className="course" key={course._id}>
-                            <h2 className="course-title">{course.courseName}</h2>
+                            <Link to={`/courses/${course.slug}`}><h2 className="course-title">{course.courseName}</h2></Link>
                             <div className="starred-notes-container">
                                 {
                                     course.notes.length ? 

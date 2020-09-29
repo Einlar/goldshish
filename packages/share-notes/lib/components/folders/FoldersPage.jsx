@@ -5,7 +5,9 @@ import { useParams, Link } from 'react-router-dom';
 
 import Users from 'meteor/vulcan:users';
 import FoldersContent from './FoldersContent.jsx';
-import { IconPlus } from '../other/Icons.jsx';
+import { IconPlus, IconEdit } from '../other/Icons.jsx';
+
+import ReactHtmlParser from 'react-html-parser';
 
 
 const FoldersPage = () => {
@@ -25,14 +27,18 @@ const FoldersPage = () => {
     //Add also the course name (a fragment will be necessary to extract it)
     return (
         <div className="folders-view">
-            <h1 className="course-title" key={document._id}>{document.folderName}{ 
-                Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
-                <Link to={`/share/${document.course._id}/${document._id}`}><IconPlus/></Link>
-                : null
-            }
-            </h1>
+            <div className="container">
+                <h1 className="section-title" key={document._id}>{document.folderName}
+                { Users.canUpdate({ collectionName: "Folders", user: currentUser, document: document }) ? <Link to={`/newfolder/${document._id}`}><IconEdit/></Link> : null }
+                </h1>
+                { 
+                    Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
+                    <Link to={`/share/${document.course._id}/${document._id}`}><div className="note"><IconPlus/>New Note</div></Link>
+                    : null
+                }
+            </div>
             <div className="description">
-                {document.description}
+                {ReactHtmlParser(document.description)}
             </div>
             <FoldersContent folderid={document._id} courseid={document.course._id}/>
         </div>

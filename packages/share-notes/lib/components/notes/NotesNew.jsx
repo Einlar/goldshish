@@ -15,9 +15,11 @@ const NotesNew = () => {
             { Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
             ( <div><Components.SmartForm collectionName="Notes"
             successCallback = {() => {
-                history.push(`/`);
+                history.goBack();
             }} 
             prefilledProps={{courseId: courseid, folderId: folderid}}
+            removeSuccessCallback = {() => history.push('/')}
+            cancelCallback = {() => history.goBack()}
             /></div>
             )
             : <div>Please <Link to="/log-in?redirect=/share">Log-in</Link> to submit a note.</div> 

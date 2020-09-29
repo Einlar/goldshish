@@ -4,6 +4,7 @@ registerFragment(
     `fragment FolderPage on Folder {
         _id
         folderName
+        userId
         starred
         description
         course {
@@ -18,6 +19,7 @@ registerFragment(`
     fragment folderFragment on Folder {
         _id
         folderName
+        userId
         slug
         description
         course {

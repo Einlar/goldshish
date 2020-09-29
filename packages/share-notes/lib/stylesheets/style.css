@@ -236,6 +236,16 @@ a:hover {
   color: #383d3f;
 }
 
+.folder-group {
+  border:  3px solid #383d3f;
+  border-radius: 5px;
+
+  padding: 10px 15px;
+  margin: 5px 8px;
+
+  background-color: #ececec80;
+}
+
 .date-big {
   font-size: 18px;
 }

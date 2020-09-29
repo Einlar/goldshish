@@ -9,6 +9,7 @@ registerFragment(`
         createdAt
         slug
         description
+        userId
         user {
             username
         }
@@ -59,6 +60,7 @@ registerFragment(`
     fragment noteFragment on Note {
         _id
         noteName
+        userId
         slug
         description
         user {
@@ -88,6 +90,7 @@ registerFragment(`
     fragment noteEditQuery on Note {
         _id
         noteName
+        userId
         author
         slug
         description

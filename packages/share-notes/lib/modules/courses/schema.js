@@ -6,12 +6,22 @@ const schema = {
         optional: true,
         canRead: ['guests']
     },
+    userId: {
+        type: String,
+        optional: true,
+        canRead: ['guests'],
+        resolveAs: {
+            fieldName: 'user',
+            type: 'User',
+            relation: 'hasOne',
+        }
+    },
     courseName: {
         type: String,
         optional: false,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members'],
+        canUpdate: ['owners', 'admins'],
         searchable: true,
     },
     slug: {
@@ -19,11 +29,15 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         onCreate: ({ data }) => {
-            return Utils.slugify(data.courseName);
+            //if no slug has been provided, generate one
+            const slug = data.slug || Utils.slugify(data.courseName);
+            return Utils.getUnusedSlugByCollectionName('Courses', slug);
         },
-        onUpdate: ({ data }) => {
-            if (data.courseName) {
-                return Utils.slugify(data.courseName);
+        onUpdate: ({ data, document: course }) => {
+            //console.log("updating folder:", folder);
+            if (data.slug && data.slug !== course.slug) { //if slug has changed
+                const slug = data.slug;
+                return Utils.getUnusedSlugByCollectionName('Courses', slug);
             }
         },
     },
@@ -33,7 +47,7 @@ const schema = {
         input: 'Editor',
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['members']
+        canUpdate: ['owners', 'admins']
     },
 
     //ResolveAs method
