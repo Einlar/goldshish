@@ -339,9 +339,9 @@ const schema = {
             //onUpdate edits the incoming data before it reaches the database
             //I need a custom mutator to handle merging
             onUpdate: ({ data, oldDocument }) => {
-                // console.log("Highlights update");
-                // console.log("Data: ", data);
-                // console.log("Document: ", oldDocument);
+                console.log("Highlights update");
+                console.log("Data: ", data);
+                console.log("Document: ", oldDocument);
                 
                 const edited_highlight = data.highlights[0]; //Extracts the modified data
 

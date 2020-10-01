@@ -29,8 +29,6 @@ const NotesPage = () => {
 
     const { currentUser } = useCurrentUser();
 
-    //onsole.log("Current User", currentUser);
-
     const queryObject = useSingle2({
         collection: Notes,
         input: { filter: { slug: { _eq: slug } } },
@@ -44,37 +42,11 @@ const NotesPage = () => {
 
     const [url, setUrl] = useState({});
 
-    const [updateNote, {called}] = useUpdate2({
-        collectionName: "Notes", fragmentName: "noteHighlights",
-    });
-
-    const updateHighlight = (highlight) => {
-        //Checks if highlight is being removed:
-        const new_content = (highlight.content === null) ? "" : JSON.stringify(highlight);
-
-        const mutation_data = [{_id: highlight.id, fileId: url.id, content: new_content}];
-
-        //? Maybe changing the fragment avoids invoking the files mutation when changing highlights?
-
-        const input = { filter: { slug: { _eq: slug } }, data: { /* noteFiles: result.noteFiles, */ highlights: mutation_data } };
-
-        updateNote({ input });
-
-        //TODO manage errors and return values
-    }
-
-//TODO In theory now I can access the db from inside the myApp component...
-
-
-    const handleClick = (id, url, highlights) =>
+    const handleClick = (fileId, fileUrl) =>
     { 
-
-       const set_highlights = (typeof highlights === 'undefined') ? [] : highlights.filter((highlight) => (highlight.fileId === id) && (highlight.content != "")).map((highlight) => JSON.parse(highlight.content));
-        setUrl({id: id, url: url, highlights: set_highlights}); //Filter by fileId, then map + parse JSON
-        //TODO Now highlights are merged, but still it could be convenient to fetch more data from the server and update in real time
+        setUrl({id: fileId, url: fileUrl}); 
     };
 
-    //Add by {result.user.username}
     return (
             loading ? (<Components.Loading/>) : (
             <div className="note-page">
@@ -145,7 +117,7 @@ const NotesPage = () => {
                 <div id="root">
                     { ! _.isEmpty(url) ? 
                     (<div className="viewer-container">
-                       <LoadableApp url={url.url} fileId={url.id} initialHighlights={url.highlights} updater={updateHighlight}/>
+                       <LoadableApp fileid={url.id} noteid={result._id} fileurl={url.url} />
                      </div>) : null
                     }
                 </div>

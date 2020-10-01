@@ -1,12 +1,27 @@
 import React from "react";
+import { useCurrentUser }from 'meteor/vulcan:core';
 
 import sortBy from "lodash/sortBy";
+import moment from 'moment';
+import Users from 'meteor/vulcan:users';
 
 // const updateHash = highlight => {
 //   document.location.hash = `highlight-${highlight.id}`;
 // };
 
-const Sidebar = ({ highlights, scrollUpdater, remover }) => {
+const Sidebar = ({ queryHighlights, scrollUpdater, remover }) => {
+  const { currentUser } = useCurrentUser();
+
+  if (queryHighlights.loading) {
+    return <Spinner/>
+  }
+
+  console.log("query @ sidebar", queryHighlights);
+
+  const highlights = queryHighlights.document.highlights.filter( (h) => h.hidden == false ); //remove hidden notes
+
+  console.log("extracted", highlights);
+
   return (
     <div className="sidebar" style={{ width: "25vw" }}>
       <div className="description" style={{ padding: "1rem" }}>
@@ -41,7 +56,7 @@ const Sidebar = ({ highlights, scrollUpdater, remover }) => {
             key={index}
             className="sidebar__highlight"
             onClick={() => {
-              scrollUpdater(highlight.id);
+              scrollUpdater(highlight._id);
             }}
           >
             <div>
@@ -63,9 +78,17 @@ const Sidebar = ({ highlights, scrollUpdater, remover }) => {
             <div className="highlight__location">
               Page {highlight.position.pageNumber}
             </div>
-            <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight.id)} }>
-              Remove
+            <div className="highlight__date">
+              { moment(highlight.date).fromNow() }
             </div>
+            <div className="highlight__user">
+              { highlight.userName }
+            </div>
+            { (currentUser._id === highlight.userId) || Users.isAdmin(currentUser) ?  
+            ( <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight._id)} }>
+              Remove
+            </div> ) : null} 
+            { /* Show remove button only for owners and admins. */ }
           </li>
         ))}
       </ul>

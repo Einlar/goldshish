@@ -46,11 +46,21 @@ registerFragment(`
 
 //Highlights edit
 registerFragment(`
-    fragment noteHighlights on Note {
+    fragment NoteHighlights on Note {
+        _id
         slug
         highlights {
+            _id
             fileId
+            date
+            hidden
+            userId
+            userName
+            resolved
             content
+            position
+            comment
+            answers
         }
     }
 `); //        noteFiles

@@ -935,7 +935,15 @@ input NoteCollaboratorsSortInput {
 type NoteHighlights {
   _id: String 
   fileId: String 
-  content: String 
+  date: Date 
+  content: JSON 
+  position: JSON 
+  comment: JSON 
+  hidden: Boolean 
+  resolved: Boolean 
+  userId: String 
+  userName: String 
+  answers: [JSON] 
 }
 
 
@@ -948,7 +956,15 @@ input CreateNoteHighlightsInput {
 input CreateNoteHighlightsDataInput {
   _id: String 
   fileId: String 
-  content: String 
+  date: Date 
+  content: JSON 
+  position: JSON 
+  comment: JSON 
+  hidden: Boolean 
+  resolved: Boolean 
+  userId: String 
+  userName: String 
+  answers: [JSON] 
 }
 
 input UpdateNoteHighlightsInput{
@@ -970,7 +986,15 @@ input UpsertNoteHighlightsInput{
 input UpdateNoteHighlightsDataInput {
   _id: String 
   fileId: String 
-  content: String 
+  date: Date 
+  content: JSON 
+  position: JSON 
+  comment: JSON 
+  hidden: Boolean 
+  resolved: Boolean 
+  userId: String 
+  userName: String 
+  answers: [JSON] 
 }
 
 input NoteHighlightsFilterInput {
@@ -981,13 +1005,29 @@ input NoteHighlightsFilterInput {
 
   _id: String_Selector
   fileId: String_Selector
-  content: String_Selector
+  date: Date_Selector
+
+
+
+  hidden: Boolean_Selector
+  resolved: Boolean_Selector
+  userId: String_Selector
+  userName: String_Selector
+
 }
 
 input NoteHighlightsSortInput {
   _id: SortOptions
   fileId: SortOptions
+  date: SortOptions
   content: SortOptions
+  position: SortOptions
+  comment: SortOptions
+  hidden: SortOptions
+  resolved: SortOptions
+  userId: SortOptions
+  userName: SortOptions
+  answers: SortOptions
 }
 
 
