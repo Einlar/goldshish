@@ -29,6 +29,8 @@ const NotesPage = () => {
 
     const { currentUser } = useCurrentUser();
 
+    //onsole.log("Current User", currentUser);
+
     const queryObject = useSingle2({
         collection: Notes,
         input: { filter: { slug: { _eq: slug } } },
@@ -54,7 +56,7 @@ const NotesPage = () => {
 
         //? Maybe changing the fragment avoids invoking the files mutation when changing highlights?
 
-        const input = { filter: { slug: { _eq: slug } }, data: { noteFiles: result.noteFiles, highlights: mutation_data } };
+        const input = { filter: { slug: { _eq: slug } }, data: { /* noteFiles: result.noteFiles, */ highlights: mutation_data } };
 
         updateNote({ input });
 
@@ -78,7 +80,9 @@ const NotesPage = () => {
             <div className="note-page">
                 <div className="container">
                     <h2 className="section-title">{result.noteName}
-                    { Users.canUpdate({ collectionName: "Notes", user: currentUser, document: result }) ? <Link to={`/edit/notes/${result.slug}`}><IconEdit/></Link> : null }
+                    { /* "Manual" check: access if owner or admin. Members could access, but the form would be empty */
+                   ( result.userId === currentUser._id || Users.isAdmin(currentUser) ) 
+                     ? <Link to={`/edit/notes/${result.slug}`}><IconEdit/></Link> : null }
                     </h2>
                     <div className="date">created on {moment(new Date(result.createdAt)).format('DD-MM-YYYY')}</div>
                 </div>

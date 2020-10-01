@@ -275,7 +275,7 @@ const schema = {
         // { console.log("available props", props); },
           canRead: ['guests'],
           canCreate: ['members'],
-          canUpdate: ['owners', 'admins'],
+          canUpdate: ['owners', 'admins'], //!FIX
           form: {
             fileCheck: once(() => 
             { 

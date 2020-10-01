@@ -151,6 +151,11 @@ export const updateHandlerMultiple = (fieldName, FSCollection, getValue) => //! 
     data,
     oldDocument /*, currentUser*/,
   }) {
+
+    if (typeof data[fieldName] === 'undefined') {
+      return undefined;
+    }
+    
     console.log("I'm in updateHandlerMultiple");
     const fieldValues = data[fieldName];
     console.log("data:", data);

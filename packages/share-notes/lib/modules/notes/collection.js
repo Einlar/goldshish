@@ -8,7 +8,7 @@ const Notes = createCollection({
     permissions: {
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['owners', 'admins'],
+        canUpdate: ['members', 'admins'], //Field level permission: necessary, since all members can post highlights
         canDelete: ['owners', 'admins'],
     },
     customFilters: [ //return all notes that are in the folder identified by slug

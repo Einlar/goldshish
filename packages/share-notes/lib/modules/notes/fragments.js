@@ -48,13 +48,12 @@ registerFragment(`
 registerFragment(`
     fragment noteHighlights on Note {
         slug
-        noteFiles
         highlights {
             fileId
             content
         }
     }
-`);
+`); //        noteFiles
 
 registerFragment(`
     fragment noteFragment on Note {
