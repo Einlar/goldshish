@@ -90,6 +90,18 @@ a:hover {
 
 .note-body {
   padding: 30px 0px;
+  align-items: center;
+}
+
+.no-border {
+  border: none;
+  align-items: center;
+}
+
+.slash {
+  font-size: 40px;
+  font-weight: 900;
+  color: #383d3f;
 }
 
 .container {
@@ -109,12 +121,12 @@ a:hover {
 }
 
 .left {
-  width: 70%;
+  width: 60%;
   float: left;
 }
 
 .right {
-  width: 30%;
+  width: 40%;
   float: right;
   border-left: 3px solid #bbbdbe;
   padding: 10px;
@@ -251,7 +263,7 @@ a:hover {
 }
 
 .year {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   color: #383d3f;
 }

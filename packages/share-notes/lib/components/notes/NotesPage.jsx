@@ -68,7 +68,9 @@ const NotesPage = () => {
                    ( result.userId === currentUser._id || Users.isAdmin(currentUser) ) 
                      ? <Link to={`/edit/notes/${result._id}`}><IconEdit/></Link> : null }
                     </h2>
-                    <Link to={`/edit/notes/${result._id}/newver`}>New version</Link>
+                    { version == 0 && 
+                    <Link to={`/edit/notes/${result._id}/newver`}>Upload a new version</Link>
+                    }  
                     <div className="date">created on {moment(new Date(result.createdAt)).format('DD-MM-YYYY')}</div>
                 </div>
                 <div className="note-body">
@@ -88,13 +90,23 @@ const NotesPage = () => {
                             {result.course.title}
                         </div>
                         <div className="professor">
-                            Prof. {result.professor}
+                            <strong>Prof.</strong> {result.professor}
                         </div>
-                        <Link to={`/folders/${result.course.slug}/${result.folder.slug}`}>
-                            <div className="folder">
-                                {result.folder.folderName}
+                        <div className="container no-border">
+                            <Link to={`/courses/${result.course.slug}`}>
+                                <div className="folder red">
+                                    {result.course.courseName}
+                                </div>
+                            </Link>
+                            <div className="slash">
+                                /
                             </div>
-                        </Link>
+                            <Link to={`/folders/${result.course.slug}/${result.folder.slug}`}>
+                                <div className="folder">
+                                    {result.folder.folderName}
+                                </div>
+                            </Link>
+                        </div>
                         {
                             result.date ? 
                             (

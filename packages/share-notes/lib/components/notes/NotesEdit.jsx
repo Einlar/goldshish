@@ -39,6 +39,7 @@ const NotesEdit = () => {
             date: document.date,
             years: document.years,
             language: document.language,
+            highlights: [],
             changelog: '',
             noteFiles: [],
             version: (document.version + 1)} 
