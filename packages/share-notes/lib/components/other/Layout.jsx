@@ -25,7 +25,7 @@ const Layout = ({ children }) => (
         </div>
         <div className="header red">
             <h1 className="title">Goldshish.it</h1>
-            <h2 className="subtitle">Sharing is Strength</h2>
+            <h2 className="home-subtitle">Sharing is Strength</h2>
         </div>
         <div className="main-content">
             {children}

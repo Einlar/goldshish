@@ -18,7 +18,7 @@ const NotesNew = () => {
                 history.goBack();
             }} 
             prefilledProps={{courseId: courseid, folderId: folderid}}
-            removeFields={['changelog', 'highlights', 'version']}
+            removeFields={['changelog', 'highlights', 'version', 'slug']}
             removeSuccessCallback = {() => history.push('/')}
             cancelCallback = {() => history.goBack()}
             /></div>

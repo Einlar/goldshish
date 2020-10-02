@@ -48,14 +48,20 @@ const schema = {
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
         searchable: true,
+        label: "Title",
+        description: "Title of the note. Max: 20 characters.",
+        max: 20,
+        order: 1,
     },
     author: {
         type: String,
+        label: "Author",
         optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
         searchable: true,
+        order: 10,
     },
     collaborators: {
         type: Array,
@@ -72,10 +78,12 @@ const schema = {
             label: "Collaborators",
             collapsible: true,
             startCollapsed: true,
+            order: 20, //Order not respected for some reason
+            description: "People who collaborated for this note.",
         },
     },
-    //TODO Add also voting (# found that note useful)
-    //TODO Fix all the fragments
+    //TODO Add also voting (# found that note useful) (there is a defaultValue and sortable property)
+    //TODO Fix all the fragments 
     slug: {
         type: String,
         optional: true,
@@ -107,12 +115,23 @@ const schema = {
             return (data.version) ? data.version : 0;
         },
     },
+    professor: {
+        type: String,
+        optional: false,
+        canRead: ["guests"],
+        canCreate: ["members"],
+        canUpdate: ["owners", "admins"],
+        description: "The professor who taught the course at the time this note was written.",
+        order: 25,
+    },
     changelog: {
         type: String,
         optional: true,
         canRead: ["guests"],
         canCreate: ["members"],
         canUpdate: ["owners", "admins"],
+        description: "Describe briefly the main changes from the previous version.",
+        order: 30,
     },
     description: {
         type: String,
@@ -122,6 +141,8 @@ const schema = {
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
         searchable: true,
+        description: "Describe the content of the note",
+        order: 40,
     },
     courseId: {
         type: String,
@@ -149,6 +170,8 @@ const schema = {
             value: course._id,
             label: course.courseName,
         })),
+        label: "Course",
+        order: 50,
     },
     folderId: {
         type: String,
@@ -184,60 +207,19 @@ const schema = {
             }
         }
         `,
-        
+        label: "Folder",
+        description: "Which folder will contain this note. If you are not sure, select the 'Main' one.",
+        order: 60,
     },
-    professor: {
-        type: String,
-        optional: false,
-        canRead: ["guests"],
-        canCreate: ["members"],
-        canUpdate: ["owners", "admins"],
-    },
-    // professorId: {
-    //     type: String,
-    //     control: 'select',
-    //     optional: true,
-    //     canRead: ["guests"],
-    //     canCreate: ['members'],
-    //     canUpdate: ['members'],
-    //     query: `query ProfessorsQuery {
-    //             professors {
-    //                 results {
-    //                 _id
-    //                 professorName
-    //                 }
-    //             }
-    //         }
-    //     `,
-    //     relation: {
-    //         fieldName: 'professor',
-    //         typeName: 'Professor',
-    //         kind: 'hasOne',
-    //     },
-    //     options: ({ data }) => 
-    //     data.professors.results.map(professor => ({
-    //         value: professor._id,
-    //         label: professor.professorName,
-    //     })),
-    // },
-    // latest_verId: {
-    //     type: String,
-    //     optional: true,
-    //     canRead: ["guests"],
-    //     canCreate: ['members'],
-    //     canUpdate: ['members'],
-    //     relation: {
-    //         fieldName: 'latest_ver',
-    //         typeName: 'NoteItem',
-    //         kind: 'hasOne'
-    //     },
-    // },
     starred: {
         type: Boolean,
         optional: true,
         canRead: ["guests"],
         canCreate: ['members'], //Should be false always, only admins can set it true!
         canUpdate: ['admins'],
+        label: 'Homepage?',
+        description: "Check here if you would like this note to appear directly in homepage. This option should be reserved to the most complete notes.",
+        order: 70,
     },
     years: {
         type: Number,
@@ -245,6 +227,9 @@ const schema = {
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
+        label: 'Year',
+        description: "Input the year during which most of the course was taught. For example, for a course in the first semester of A.A. 2019/20, use 2019, and 2020 for the second semester.",
+        order: 80, 
     },
     date: {
         type: Date,
@@ -252,6 +237,9 @@ const schema = {
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
+        label: "Date",
+        description: "(Only needed for a note referring to a particular day, e.g. the solution of an exam)",
+        order: 90,
     },
     language: {
         type: String,
@@ -260,7 +248,7 @@ const schema = {
         canCreate: ["members"],
         canUpdate: ["owners", 'admins'],
         control: 'select',
-        //default: not working
+        defaultValue: 'en',
         options: () => {
             return [
                 {
@@ -272,7 +260,9 @@ const schema = {
                     label: "Italian",
                 }
             ]
-        }
+        },
+        label: "Language",
+        order: 100,
     },
 
     ...generateFieldSchema({
@@ -280,7 +270,8 @@ const schema = {
         fieldName: 'noteFiles',
         multiple: true,
         fieldSchema: {
-          label: 'Note URL',
+          label: 'PDF(s)',
+          description: "Upload one or more PDF files",
         //Custom data filling
         //   query: `query FilesQuery {
         //       notes {
