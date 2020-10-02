@@ -5,6 +5,8 @@ import { useParams, Link } from 'react-router-dom';
 
 import Users from 'meteor/vulcan:users';
 import FoldersContent from './FoldersContent.jsx';
+import OtherFolders from '../notes/OtherFolders.jsx';
+
 import { IconPlus, IconEdit } from '../other/Icons.jsx';
 
 import ReactHtmlParser from 'react-html-parser';
@@ -41,6 +43,11 @@ const FoldersPage = () => {
                 {ReactHtmlParser(document.description)}
             </div>
             <FoldersContent folderid={document._id} courseid={document.course._id}/>
+
+            <div className="decorated subtitle spacetop"><span>Folders in this Course</span></div>
+            <div className="other-folders">
+                <OtherFolders courseid={document.course._id}/>
+            </div>
         </div>
     );
     //Select all Notes belonging to this folder //idk

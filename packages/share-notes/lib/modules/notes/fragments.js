@@ -15,10 +15,12 @@ registerFragment(`
         }
         course {
             _id
+            slug
             courseName
         }
         folder {
             _id
+            slug
             folderName
         }
         professor
@@ -37,6 +39,8 @@ registerFragment(`
             email
             notes
         }
+        changelog
+        version
     }
 `);
 
@@ -68,6 +72,8 @@ registerFragment(`
         userId
         slug
         description
+        version
+        changelog
         user {
             username
         }
@@ -95,6 +101,8 @@ registerFragment(`
     fragment noteEditQuery on Note {
         _id
         noteName
+        changelog
+        version
         userId
         author
         slug

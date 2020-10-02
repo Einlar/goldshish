@@ -1,4 +1,4 @@
-import { Components, registerComponent, useSingle2, useUpdate2, useCurrentUser } from 'meteor/vulcan:core';
+import { Components, registerComponent, useMulti2, useCurrentUser } from 'meteor/vulcan:core';
 
 import React, { useState } from 'react';
 
@@ -15,6 +15,7 @@ import ReactHtmlParser from 'react-html-parser';
 import { IconView, IconDownload, IconEdit } from '../../components/other/Icons.jsx';
 
 import OtherFolders from './OtherFolders.jsx';
+import FoldersContent from '../folders/FoldersContent.jsx';
 
 const LoadableApp = Loadable({
     loader: () => import('./myApp.jsx'),
@@ -29,15 +30,16 @@ const NotesPage = () => {
 
     const { currentUser } = useCurrentUser();
 
-    const queryObject = useSingle2({
+    const queryObject = useMulti2({
         collection: Notes,
         input: { filter: { slug: { _eq: slug } } },
+        sort: { version: "desc" },
         fragmentName: "NotePage"
     });
 
 
     loading = queryObject.loading;
-    result = queryObject.document;
+    results = queryObject.results;
     //error = queryObject.error;
 
     const [url, setUrl] = useState({});
@@ -47,15 +49,26 @@ const NotesPage = () => {
         setUrl({id: fileId, url: fileUrl}); 
     };
 
+    //Add check if there are no notes here
+
+    const [version, setVersion] = useState(0); //First show the latest version
+
+    let result = {};
+
+    if (!loading && version < results.length) {
+        result = results[version]; //Selected note
+    }
+
     return (
             loading ? (<Components.Loading/>) : (
-            <div className="note-page">
+            <div className="note-page" key={result._id}>
                 <div className="container">
                     <h2 className="section-title">{result.noteName}
-                    { /* "Manual" check: access if owner or admin. Members could access, but the form would be empty */
+                    {/* "Manual" check: access if owner or admin. Members could access, but the form would be empty */
                    ( result.userId === currentUser._id || Users.isAdmin(currentUser) ) 
-                     ? <Link to={`/edit/notes/${result.slug}`}><IconEdit/></Link> : null }
+                     ? <Link to={`/edit/notes/${result._id}`}><IconEdit/></Link> : null }
                     </h2>
+                    <Link to={`/edit/notes/${result._id}/newver`}>New version</Link>
                     <div className="date">created on {moment(new Date(result.createdAt)).format('DD-MM-YYYY')}</div>
                 </div>
                 <div className="note-body">
@@ -77,9 +90,11 @@ const NotesPage = () => {
                         <div className="professor">
                             Prof. {result.professor}
                         </div>
-                        <div className="folder">
-                            {result.folder.folderName}
-                        </div>
+                        <Link to={`/folders/${result.course.slug}/${result.folder.slug}`}>
+                            <div className="folder">
+                                {result.folder.folderName}
+                            </div>
+                        </Link>
                         {
                             result.date ? 
                             (
@@ -90,6 +105,21 @@ const NotesPage = () => {
                                 </div>
                             )
                         }
+                        <div className="versions">
+                            Versions <br/>
+                            {
+                                results.map(
+                                    (v, index) => (
+                                        <div className="v" key={v.version} onClick={() => setVersion(index)}>
+                                            {index == version && '>' }
+                                            {index == 0 ? 'latest' : v.version}
+                                            {index == version && '<'}
+                                            {index != 0 && moment(v.createdAt).fromNow()}
+                                        </div>
+                                    )
+                                )
+                            }
+                        </div>
                     </div>
                 </div>
                 <div className="note-files">
@@ -110,7 +140,9 @@ const NotesPage = () => {
                     )
                 }
                 </div>
-                <div className="decorated subtitle spacetop"><span>Other folders</span></div>
+                <div className="decorated subtitle spacetop"><span>Notes in this Folder</span></div>
+                <FoldersContent courseid={result.course._id} folderid={result.folder._id}/>
+                <div className="decorated subtitle spacetop"><span>Folders in this Course</span></div>
                 <div className="other-folders">
                     <OtherFolders courseid={result.course._id}/>
                 </div>
@@ -121,6 +153,7 @@ const NotesPage = () => {
                      </div>) : null
                     }
                 </div>
+                {/*TODO Add other notes in the same folder */}
             </div>
         )
     )};

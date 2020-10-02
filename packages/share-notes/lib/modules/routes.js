@@ -16,7 +16,8 @@ const routes = [
     {name: 'newnote2', path: '/share', componentName: 'NotesNew'},
     {name: 'note.page', path: '/notes/:course_slug/:slug', componentName: 'NotesPage'},
     {name: 'folder.page', path: '/folders/:course_slug/:slug', componentName: 'FoldersPage'},
-    {name: 'notes.edit', path: '/edit/notes/:slug', componentName: 'NotesEdit'},
+    {name: 'notes.edit', path: '/edit/notes/:noteid', componentName: 'NotesEdit'},
+    {name: 'notes.newver', path: '/edit/notes/:noteid/:newver', componentName: 'NotesEdit'},
    // {name: 'courses.page', path: '/course/:slug', componentName: 'CoursesPage'}, //Course page
     {name: 'courses.users', path: '/log-in', componentName: 'CoursesUsers'},
     {name: 'courses', path: '/admin/courses', componentName: 'CoursesList', access: adminAccessOptions},

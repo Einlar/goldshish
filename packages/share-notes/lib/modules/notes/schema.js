@@ -80,18 +80,39 @@ const schema = {
         type: String,
         optional: true,
         canRead: ["guests"],
+        canCreate: ["members"],
         onCreate: ({ data }) => {
-            //Generate new slug only if it has not been provided
-            const slug = data.slug || Utils.slugify(data.noteName);
-            return Utils.getUnusedSlugByCollectionName('Notes', slug);
+            //Generate new slug only if it has not been provided (duplicate slugs are now possible for versioning)
+            if (data.slug) {
+                return data.slug
+            } else {
+                const slug = Utils.slugify(data.noteName);
+                return Utils.getUnusedSlugByCollectionName('Notes', slug);
+            }
         },
         onUpdate: ({ data, document: note }) => {
-            //console.log("updating folder:", folder);
+            //console.log("updating folder:", folder); (can't change in theory)
             if (data.slug && data.slug !== note.slug) { //if slug has changed
                 const slug = data.slug;
                 return Utils.getUnusedSlugByCollectionName('Notes', slug);
             }
         },
+    },
+    version: {
+        type: Number,
+        optional: true,
+        canRead: ["guests"],
+        canCreate: ["members"],
+        onCreate: ({ data }) => {
+            return (data.version) ? data.version : 0;
+        },
+    },
+    changelog: {
+        type: String,
+        optional: true,
+        canRead: ["guests"],
+        canCreate: ["members"],
+        canUpdate: ["owners", "admins"],
     },
     description: {
         type: String,

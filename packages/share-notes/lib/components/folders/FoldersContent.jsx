@@ -10,6 +10,13 @@ function groupAndMap(items, itemKey, childKey, predic){
     }));
 }
 
+function groupAndMaps(events, groups) {
+    return _.map(_.groupBy(events, groups[0]), (array, key) => ({
+            [groups[0]]: key,
+            [groups[1] + 's']: groups[2] && groupAndMap(array, groups.slice(1)) || array
+        })); //   .values();          
+}
+
 const FoldersContent = ({ folderid, courseid }) => {
 
     const { results = [], data, loading } = useMulti2({
@@ -20,27 +27,52 @@ const FoldersContent = ({ folderid, courseid }) => {
 
     grouped_results = groupAndMap(results, "years", "children");
 
-    grouped_results.sort((a, b) => parseInt(b.years) - parseInt(a.years)); //descending sort
+    console.log("abba", results);
+
+    console.log("abbas", _.groupBy(results, 'years'));
+
+    grouped_results.sort((a, b) => parseInt(b.years) - parseInt(a.years)); //descending sort //Already sorted from the db
 
     if (loading) return (<Components.Loading/>);
 
-    //Groupby year
+    //Groupby year + slug //Fix descending order!
     return (
         <div className="courses-list">
             { 
                 results.length ? 
-                grouped_results.map(year => (
-                    <div className="course" key={year.years}>
-                        <h2 className="course-title">{year.years}
+                _.map(_.groupBy(results, 'years'), (doc, year) => (
+                    <div className="course" key={year}>
+                        <h2 className="course-title">{year}
                         </h2>
                         {
-                            year.children.map(note => 
-                        <Link to={`/notes/${note.course.slug}/${note.slug}`} key={note._id}>
-                            <div className="note">
-                            {note.noteName}
-                            </div>
-                        </Link>)
+                            _.map(_.groupBy(doc, 'slug'),
+                            (versions, slug) => 
+                                {
+                                    const latest = _.sortBy(versions, 'version').pop(); //get last element (latest)
+
+                                    return (
+                                        <Link to={`/notes/${latest.course.slug}/${slug}`} key={latest._id}>
+                                            <div className="note">
+                                            {latest.noteName}
+                                            </div>
+                                        </Link>
+                                    )
+                                }
+                            ) 
                         }
+                        { /* Example:
+                            START with arr = [{ years: 2020, slug: A, ...note1}, {years: 2020, slug: A, ...note2}, {years: 2019, slug: B, ...note3}]
+                            In this case note1 and note2 are actually different versions of the same note, since they share the same slug.
+
+                            .groupBy(arr, 'years') results in this:
+                            [2020: [{slug: A, ...note1}, {slug: A, ...note2}], 2019: [{slug: B, ...note3}]]
+
+                            Then .map(result, (doc, year) => {}) iterates {} over each year, i.e.:
+                            first run: year = 2020, doc =  [{slug: A, ...note1}, {slug: A, ...note2}]
+                            second run: year = 2019, doc = [{slug: B, ...note3}]
+
+                            Then we repeat all this for the slug in each doc, and for each of the final groups we print only the first element, which is the latest
+                        */ }
                     </div>
                 )) : (<p>No notes here</p>)
             }

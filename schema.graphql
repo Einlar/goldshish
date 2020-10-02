@@ -676,6 +676,8 @@ type Note {
   author: String 
   collaborators: [NoteCollaborators] 
   slug: String 
+  version: Float 
+  changelog: String 
   description: String 
   courseId: String 
   course: Course 
@@ -766,6 +768,9 @@ input CreateNoteDataInput {
   noteName: String 
   author: String 
   collaborators: [CreateNoteCollaboratorsDataInput] 
+  slug: String 
+  version: Float 
+  changelog: String 
   description: String 
   courseId: String 
   folderId: String 
@@ -798,6 +803,7 @@ input UpdateNoteDataInput {
   noteName: String 
   author: String 
   collaborators: [UpdateNoteCollaboratorsDataInput] 
+  changelog: String 
   description: String 
   courseId: String 
   folderId: String 
@@ -823,6 +829,8 @@ input NoteFilterInput {
   author: String_Selector
 
   slug: String_Selector
+  version: Float_Selector
+  changelog: String_Selector
   description: String_Selector
   courseId: String_Selector
   folderId: String_Selector
@@ -847,6 +855,8 @@ input NoteSortInput {
   author: SortOptions
   collaborators: SortOptions
   slug: SortOptions
+  version: SortOptions
+  changelog: SortOptions
   description: SortOptions
   courseId: SortOptions
   folderId: SortOptions
