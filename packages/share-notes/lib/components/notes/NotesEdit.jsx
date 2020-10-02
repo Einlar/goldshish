@@ -28,9 +28,10 @@ const NotesEdit = () => {
                 showRemove={true}
                 mutationFragmentName="noteFragment"
                 successCallback = {() => {
-                    history.push(`/`);
+                    history.goBack();
                 }}
-            />
+                removeFields={['noteFiles', 'highlights']} //Can't edit files, you have to publish a new version instead!
+            /> 
         ) :
             <div>You don't have the permissions necessary to edit this document.</div> 
     )

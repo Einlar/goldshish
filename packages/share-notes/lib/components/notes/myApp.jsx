@@ -72,6 +72,14 @@ const App = ({ noteid, fileid, fileurl }) =>  {
     //TODO manage errors and return values
   }
 
+  const updateAnswer = (highlightId, answer) => {
+    let highlight = getHighlightById(highlightId);
+
+    highlight.answers.push(answer);
+
+    updateDatabase(highlight);
+  }
+
   getHighlightById = (id) => {
     return result.highlights.find(highlight => highlight._id === id);
   }
@@ -107,7 +115,7 @@ const App = ({ noteid, fileid, fileurl }) =>  {
   }
 
   filterHighlights = (highlights) => {
-    return highlights.filter( (h) => h.hidden == false );
+    return highlights.filter( (h) => (h.hidden == false) && (h.fileId == fileid) );
   }
   
   updateHighlight = (highlightId, position, content) => {
@@ -132,7 +140,7 @@ const App = ({ noteid, fileid, fileurl }) =>  {
 
   return (
     <div className="App" style={{ display: "flex", height: "100vh" }}>
-      <Sidebar queryHighlights={queryHighlights} scrollUpdater={scrollToHighlightFromId} remover={removeHighlight}/>
+      <Sidebar queryHighlights={queryHighlights} scrollUpdater={scrollToHighlightFromId} remover={removeHighlight} answer={updateAnswer} fileid={fileid}/>
       <div style={{height: "100vh", width: "75vw", position: "relative"}}>
         <PdfLoader url={fileurl} beforeLoad={<Spinner/>}>
           {pdfDocument => (

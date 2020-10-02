@@ -27,10 +27,6 @@ registerFragment(`
             name
             url
         }
-        highlights {
-            fileId
-            content
-        }
         noteFiles
         starred
         years
@@ -118,7 +114,15 @@ registerFragment(`
         highlights {
             _id
             fileId
+            date
+            hidden
+            userId
+            userName
+            resolved
             content
+            position
+            comment
+            answers
         }
         collaborators {
             name

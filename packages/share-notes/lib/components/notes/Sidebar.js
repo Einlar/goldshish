@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCurrentUser }from 'meteor/vulcan:core';
 
 import sortBy from "lodash/sortBy";
 import moment from 'moment';
 import Users from 'meteor/vulcan:users';
+import Form from 'react-bootstrap/Form';
 
-// const updateHash = highlight => {
-//   document.location.hash = `highlight-${highlight.id}`;
-// };
+const getNextId = () => String(Math.random()).slice(2);
 
-const Sidebar = ({ queryHighlights, scrollUpdater, remover }) => {
+const ReplyBox = ({ highlightId, userName, addAnswer }) => {
+  const [toggle, setToggle] = useState(false);
+
+  toggleVisibility = () => {
+    setToggle(toggle => !toggle);
+  }
+
+  handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      console.log("Invio: ", e.target.value);
+      toggleVisibility();
+
+      //Create answer
+      const answer = { _id:  getNextId(), userName: userName, message: e.target.value };
+
+      addAnswer(highlightId, answer); //Send to DB
+    }
+  }
+
+  return (
+    <div className="replyform">
+      <div className="sidebar-button" onClick={toggleVisibility}>Reply</div>
+      { 
+        toggle && ( <Form.Control autoFocus type="text" size="sm" placeholder="Reply here..." onBlur={toggleVisibility} onKeyDown={handleKeyDown} /> )
+      }
+    </div>
+  )
+}
+
+const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) => {
   const { currentUser } = useCurrentUser();
+
+  const [editing, setEditing] = useState(0);
 
   if (queryHighlights.loading) {
     return <Spinner/>
@@ -18,7 +48,8 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover }) => {
 
   console.log("query @ sidebar", queryHighlights);
 
-  const highlights = queryHighlights.document.highlights.filter( (h) => h.hidden == false ); //remove hidden notes
+  const highlights = queryHighlights.document.highlights.filter( (h) => (h.hidden == false) && (h.fileId == fileid) ); //remove hidden notes
+  //This is repeated code, not very good
 
   console.log("extracted", highlights);
 
@@ -51,7 +82,7 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover }) => {
       </div>
 
       <ul className="sidebar__highlights">
-        {sortBy(highlights, (h) => h.position.pageNumber ).map((highlight, index) => (
+        {sortBy(highlights, (h) => moment().diff(moment(h.date), 'seconds') ).map((highlight, index) => (
           <li
             key={index}
             className="sidebar__highlight"
@@ -88,7 +119,19 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover }) => {
             ( <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight._id)} }>
               Remove
             </div> ) : null} 
+            <div className="answers">
+              { 
+                highlight.answers.map( (a) => 
+                  (
+                    <div className="answer" key={a._id}>
+                      <i>{a.message}</i> by {a.userName}
+                    </div>
+                  )
+                )
+              }
+            </div>
             { /* Show remove button only for owners and admins. */ }
+            <ReplyBox highlightId={highlight._id} userName={currentUser.username} onClick={() => {setEditing(highlight._id)}} addAnswer={answer} />
           </li>
         ))}
       </ul>

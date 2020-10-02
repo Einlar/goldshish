@@ -81,7 +81,7 @@ const schema = {
         optional: true,
         canRead: ["guests"],
         onCreate: ({ data }) => {
-            //if no slug has been provided, generate one
+            //Generate new slug only if it has not been provided
             const slug = data.slug || Utils.slugify(data.noteName);
             return Utils.getUnusedSlugByCollectionName('Notes', slug);
         },
