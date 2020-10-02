@@ -18,7 +18,7 @@ const highlightSchema = new SimpleSchema({
     },
     date: {
         type: Date,
-        optional: false,
+        optional: true,
         canRead: ['guests'],
         canUpdate: ['members'],
         canCreate: ['members'],
@@ -63,14 +63,14 @@ const highlightSchema = new SimpleSchema({
     },
     userId: {
         type: String,
-        optional: false,
+        optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
         canUpdate: ['members'],
     },
     userName: {
         type: String,
-        optional: false,
+        optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
         canUpdate: ['members'],

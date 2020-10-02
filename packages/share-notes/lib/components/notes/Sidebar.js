@@ -6,6 +6,10 @@ import moment from 'moment';
 import Users from 'meteor/vulcan:users';
 import Form from 'react-bootstrap/Form';
 
+function getNested(obj, ...args) {
+  return args.reduce((obj, level) => obj && obj[level], obj)
+} //TODO Collect repetitions in a common file
+
 const getNextId = () => String(Math.random()).slice(2);
 
 const ReplyBox = ({ highlightId, userName, addAnswer }) => {
@@ -17,7 +21,7 @@ const ReplyBox = ({ highlightId, userName, addAnswer }) => {
 
   handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      console.log("Invio: ", e.target.value);
+      //console.log("Invio: ", e.target.value);
       toggleVisibility();
 
       //Create answer
@@ -46,12 +50,12 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
     return <Spinner/>
   }
 
-  console.log("query @ sidebar", queryHighlights);
+  //console.log("query @ sidebar", queryHighlights);
 
-  const highlights = queryHighlights.document.highlights.filter( (h) => (h.hidden == false) && (h.fileId == fileid) ); //remove hidden notes
+  const highlights = queryHighlights.document.highlights.filter( (h) => (getNested(h, 'hidden') === false) && (getNested(h, 'fileId') === fileid) ); //remove hidden notes
   //This is repeated code, not very good
 
-  console.log("extracted", highlights);
+  //console.log("extracted", highlights);
 
   return (
     <div className="sidebar" style={{ width: "25vw" }}>
@@ -71,12 +75,12 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
         </p>
         <p>
           <small>
-            Click on a highlight below to <b>jump</b> to its position in the pdf.
+            Click on a highlight below to <b>jump</b> to its position in the pdf. You can <b>reply</b> any highlight, but you can only <b>remove</b> yours. Removed highlights are merely hidden: their data is saved somewhere, but can not be accessed by others.
           </small>
         </p>
         <p>
           <small>
-            Highlights are <b>not</b> updated in real-time: if someone else adds a highlight while you are editing, you won't see it until you refresh the page (but your work will be saved).
+            Highlights are updated in <b>real-time</b>.
           </small>
         </p>
       </div>
@@ -91,6 +95,10 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
             }}
           >
             <div>
+              { (currentUser._id === highlight.userId) || Users.isAdmin(currentUser) ?  
+              ( <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight._id)} }>
+                Remove
+              </div> ) : null} 
               <strong>{highlight.comment.text}</strong>
               {highlight.content.text ? (
                 <blockquote style={{ marginTop: "0.5rem" }}>
@@ -110,15 +118,8 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
               Page {highlight.position.pageNumber}
             </div>
             <div className="highlight__date">
-              { moment(highlight.date).fromNow() }
+              Posted by { highlight.userName },&nbsp;{ moment(highlight.date).fromNow() }
             </div>
-            <div className="highlight__user">
-              { highlight.userName }
-            </div>
-            { (currentUser._id === highlight.userId) || Users.isAdmin(currentUser) ?  
-            ( <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight._id)} }>
-              Remove
-            </div> ) : null} 
             <div className="answers">
               { 
                 highlight.answers.map( (a) => 

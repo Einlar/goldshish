@@ -3,6 +3,8 @@ import { Components, useMulti2, useCurrentUser } from 'meteor/vulcan:core';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import remove from 'lodash/remove';
+
 function groupAndMap(items, itemKey, childKey, predic){
     return _.map(_.groupBy(items,itemKey), (obj,key) => ({
         [itemKey]: key,
@@ -17,7 +19,7 @@ function groupAndMaps(events, groups) {
         })); //   .values();          
 }
 
-const FoldersContent = ({ folderid, courseid }) => {
+const FoldersContent = ({ folderid, courseid, exclude }) => {
 
     const { results = [], data, loading } = useMulti2({
         collectionName: 'Notes',
@@ -25,13 +27,9 @@ const FoldersContent = ({ folderid, courseid }) => {
         fragmentName: 'NotePage',
     });
 
-    grouped_results = groupAndMap(results, "years", "children");
-
-    console.log("abba", results);
-
-    console.log("abbas", _.groupBy(results, 'years'));
-
-    grouped_results.sort((a, b) => parseInt(b.years) - parseInt(a.years)); //descending sort //Already sorted from the db
+    if (typeof exclude !== 'undefined') {
+        remove(results, (a) => a.slug === exclude);
+    }
 
     if (loading) return (<Components.Loading/>);
 

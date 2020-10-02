@@ -691,7 +691,7 @@ type Note {
   folder: Folder 
   # Check here if you would like this note to appear directly in homepage. This option should be reserved to the most complete notes.
   starred: Boolean 
-  # Input the year during which most of the course was taught. For example, for a course in the first semester of A.A. 2019/20, use 2019, and 2020 for the second semester.
+  # Input the year during which most of the course was taught.
   years: Float 
   # (Only needed for a note referring to a particular day, e.g. the solution of an exam)
   date: Date 

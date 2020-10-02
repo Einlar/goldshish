@@ -2,6 +2,9 @@ import { Components, registerComponent, useMulti2, useCurrentUser } from 'meteor
 
 import React, { useState } from 'react';
 
+import Form from 'react-bootstrap/Form';
+import { Col, Row } from 'react-bootstrap'; 
+
 import Users from 'meteor/vulcan:users';
 import moment from 'moment';
 import isString from 'lodash/isString';
@@ -68,9 +71,6 @@ const NotesPage = () => {
                    ( result.userId === currentUser._id || Users.isAdmin(currentUser) ) 
                      ? <Link to={`/edit/notes/${result._id}`}><IconEdit/></Link> : null }
                     </h2>
-                    { version == 0 && 
-                    <Link to={`/edit/notes/${result._id}/newver`}>Upload a new version</Link>
-                    }  
                     <div className="date">created on {moment(new Date(result.createdAt)).format('DD-MM-YYYY')}</div>
                 </div>
                 <div className="note-body">
@@ -92,14 +92,14 @@ const NotesPage = () => {
                         <div className="professor">
                             <strong>Prof.</strong> {result.professor}
                         </div>
-                        <div className="container no-border">
+                        <div className="simple-container">
                             <Link to={`/courses/${result.course.slug}`}>
                                 <div className="folder red">
                                     {result.course.courseName}
                                 </div>
                             </Link>
                             <div className="slash">
-                                /
+                                &nbsp;/
                             </div>
                             <Link to={`/folders/${result.course.slug}/${result.folder.slug}`}>
                                 <div className="folder">
@@ -117,20 +117,24 @@ const NotesPage = () => {
                                 </div>
                             )
                         }
-                        <div className="versions">
-                            Versions <br/>
-                            {
-                                results.map(
-                                    (v, index) => (
-                                        <div className="v" key={v.version} onClick={() => setVersion(index)}>
-                                            {index == version && '>' }
-                                            {index == 0 ? 'latest' : v.version}
-                                            {index == version && '<'}
-                                            {index != 0 && moment(v.createdAt).fromNow()}
-                                        </div>
+                        <div className="version-form">
+                            <Form.Group as={Row} controlId="versionForm">
+                                <Form.Label column xs="auto">Version</Form.Label>
+                                <Col><Form.Control as="select" value={version} onChange={(e) => {setVersion(e.target.value); }}>
+                                {
+                                    results.map(
+                                        (v, index) => (
+                                            <option key={v.version} value={index} style={{textAlign: 'center'}}>
+                                                {v.version}&nbsp;({index == 0 ? 'latest' : moment(v.createdAt).fromNow()})
+                                            </option>
+                                        )
                                     )
-                                )
-                            }
+                                }
+                                </Form.Control></Col>
+                            </Form.Group>
+                            { version == 0 && 
+                                <Link to={`/edit/notes/${result._id}/newver`}>Upload a new version</Link>
+                            }  
                         </div>
                     </div>
                 </div>
@@ -152,12 +156,8 @@ const NotesPage = () => {
                     )
                 }
                 </div>
-                <div className="decorated subtitle spacetop"><span>Notes in this Folder</span></div>
-                <FoldersContent courseid={result.course._id} folderid={result.folder._id}/>
-                <div className="decorated subtitle spacetop"><span>Folders in this Course</span></div>
-                <div className="other-folders">
-                    <OtherFolders courseid={result.course._id}/>
-                </div>
+                <div className="decorated subtitle spacetop"><span>Other notes in this Folder</span></div>
+                <FoldersContent courseid={result.course._id} folderid={result.folder._id} exclude={result.slug}/>
                 <div id="root">
                     { ! _.isEmpty(url) ? 
                     (<div className="viewer-container">
@@ -165,6 +165,11 @@ const NotesPage = () => {
                      </div>) : null
                     }
                 </div>
+                { /* <div className="decorated subtitle spacetop"><span>Folders in this Course</span></div>
+                <div className="other-folders">
+                    <OtherFolders courseid={result.course._id}/>
+                </div>
+                 */ }
                 {/*TODO Add other notes in the same folder */}
             </div>
         )

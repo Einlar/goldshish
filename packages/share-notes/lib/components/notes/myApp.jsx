@@ -20,6 +20,9 @@ import Spinner from "./Spinner";
 
 import './style/App.css';
 
+function getNested(obj, ...args) {
+  return args.reduce((obj, level) => obj && obj[level], obj)
+}
 
 /* Generate a new id for a highlight */
 const getNextId = () => String(Math.random()).slice(2);
@@ -81,7 +84,7 @@ const App = ({ noteid, fileid, fileurl }) =>  {
   }
 
   getHighlightById = (id) => {
-    return result.highlights.find(highlight => highlight._id === id);
+    return result.highlights.filter( h => h ).find(highlight => highlight._id === id);
   }
 
   scrollToHighlightFromId = (highlightId) => {
@@ -115,8 +118,8 @@ const App = ({ noteid, fileid, fileurl }) =>  {
   }
 
   filterHighlights = (highlights) => {
-    return highlights.filter( (h) => (h.hidden == false) && (h.fileId == fileid) );
-  }
+    return highlights.filter( h => h ).filter( (h) => (getNested(h, 'hidden') === false) && (getNested(h, 'fileId') === fileid) );
+  } //collect in a single file! Repeated code is bad!
   
   updateHighlight = (highlightId, position, content) => {
     let edited_highlight = result.highlights.find( (h) => h._id == highlightId );

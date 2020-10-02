@@ -103,12 +103,21 @@ a:hover {
   font-weight: 900;
   color: #383d3f;
 }
+.answers {
+  background-color: white;
+}
 
 .container {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   border-bottom: 3px solid #bbbdbe;
+}
+
+.simple-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .date {

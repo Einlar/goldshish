@@ -227,8 +227,25 @@ const schema = {
         canRead: ["guests"],
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
-        label: 'Year',
-        description: "Input the year during which most of the course was taught. For example, for a course in the first semester of A.A. 2019/20, use 2019, and 2020 for the second semester.",
+        control: 'select',
+        label: 'A. A.',
+        description: "Input the year during which most of the course was taught.",
+
+        defaultValue: new Date().getFullYear(),
+        options: () => {
+            const minYear = 2012;
+            const currentYear = new Date().getFullYear();
+
+            var list = [];
+            for (var i = minYear; i <= currentYear; i++) {
+                list.push(i);
+            }
+
+            return list.map( year => {
+                const aa = year.toString() + '/' + (year+1).toString();
+                return { value: year, label: aa }
+            } );
+        },
         order: 80, 
     },
     date: {
@@ -346,20 +363,20 @@ const schema = {
                 adminsOnly: true,
             },
             onCreate: () => {
-            return []; //Initialize as null
+                return [{fileId: "0", hidden: true, date: new Date(), userId: "0", userName: "Zero"}]; //Initialize with a empty object
             },
             //onUpdate edits the incoming data before it reaches the database
             //I need a custom mutator to handle merging
             onUpdate: ({ data, oldDocument }) => {
-                console.log("Highlights update");
-                console.log("Data: ", data);
-                console.log("Document: ", oldDocument);
+                // console.log("Highlights update");
+                // console.log("Data: ", data);
+                // console.log("Document: ", oldDocument);
                 
                 const edited_highlight = data.highlights[0]; //Extracts the modified data
 
                 const new_data = [...oldDocument.highlights.filter( (h) => h._id !== edited_highlight._id ), edited_highlight];
 
-                console.log("New data", new_data);
+                //console.log("New data", new_data);
                 //Remove the modified 
                 return new_data;
             },

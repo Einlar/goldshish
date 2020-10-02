@@ -38,7 +38,7 @@
 
 .highlight__image {
   overflow: auto;
-  max-width: 300px;
+  max-width: inherit;
   border: 1px dashed;
 }
 
