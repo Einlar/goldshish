@@ -70,7 +70,7 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
         <p>
           <small>
             To create <b>area highlight</b> hold ⌥ Option key (Alt), then click and
-            drag.
+            drag. Only <b>logged</b> users can add/reply to highlights!
           </small>
         </p>
         <p>
@@ -95,7 +95,7 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
             }}
           >
             <div>
-              { (currentUser._id === highlight.userId) || Users.isAdmin(currentUser) ?  
+              { ((currentUser) && (currentUser._id === highlight.userId)) || Users.isAdmin(currentUser) ?  
               ( <div className="highlight__remove sidebar-button" onClick={ () => {remover(highlight._id)} }>
                 Remove
               </div> ) : null} 
@@ -132,7 +132,8 @@ const Sidebar = ({ queryHighlights, scrollUpdater, remover, answer, fileid }) =>
               }
             </div>
             { /* Show remove button only for owners and admins. */ }
-            <ReplyBox highlightId={highlight._id} userName={currentUser.username} onClick={() => {setEditing(highlight._id)}} addAnswer={answer} />
+            { currentUser ? 
+            <ReplyBox highlightId={highlight._id} userName={currentUser.username} onClick={() => {setEditing(highlight._id)}} addAnswer={answer} /> : null }
           </li>
         ))}
       </ul>

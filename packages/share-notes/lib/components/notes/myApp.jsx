@@ -98,10 +98,12 @@ const App = ({ noteid, fileid, fileurl }) =>  {
   };
   
   addHighlight = (highlight) => {
-    const new_highlight = {...highlight, _id: getNextId(), hidden: false, resolved: false, userId: currentUser._id, userName: currentUser.username, answers: [], date: new Date()};
-    console.log("Adding", highlight)
+    if (currentUser) {
+      const new_highlight = {...highlight, _id: getNextId(), hidden: false, resolved: false, userId: currentUser._id, userName: currentUser.username, answers: [], date: new Date()};
+      console.log("Adding", highlight)
 
-    updateDatabase(new_highlight);
+      updateDatabase(new_highlight);
+    } //TODO Add a reminder for login
   }
 
   removeHighlight = (highlightId) => {
@@ -110,7 +112,7 @@ const App = ({ noteid, fileid, fileurl }) =>  {
     let removed_highlight = result.highlights.find( (h) => h._id == highlightId );
 
     //Check permissions
-    if (Users.isAdmin(currentUser) || removed_highlight.userId === currentUser._id) {
+    if (Users.isAdmin(currentUser) || (currentUser && removed_highlight.userId === currentUser._id)) {
       removed_highlight.hidden = true; //Set the note to be hidden
 
       updateDatabase( removed_highlight ); //Update in the database
@@ -125,7 +127,7 @@ const App = ({ noteid, fileid, fileurl }) =>  {
     let edited_highlight = result.highlights.find( (h) => h._id == highlightId );
 
     //check permissions: owners + admins
-    if (Users.isAdmin(currentUser) || edited_highlight.userId === currentUser._id) {
+    if (Users.isAdmin(currentUser) || (currentUser && edited_highlight.userId === currentUser._id)) {
       edited_highlight.position = {...edited_highlight.position, ...position};
       edited_highlight.content = {...edited_highlight.content, ...content};
       //Apparently it is needed to preserve the other properties for some reason

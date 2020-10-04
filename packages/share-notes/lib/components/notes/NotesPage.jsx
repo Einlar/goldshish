@@ -68,7 +68,7 @@ const NotesPage = () => {
                 <div className="container">
                     <h2 className="section-title">{result.noteName}
                     {/* "Manual" check: access if owner or admin. Members could access, but the form would be empty */
-                   ( result.userId === currentUser._id || Users.isAdmin(currentUser) ) 
+                   ( (currentUser && result.userId === currentUser._id) || Users.isAdmin(currentUser) ) 
                      ? <Link to={`/edit/notes/${result._id}`}><IconEdit/></Link> : null }
                     </h2>
                     <div className="date">created on {moment(new Date(result.createdAt)).format('DD-MM-YYYY')}</div>
