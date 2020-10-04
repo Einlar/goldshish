@@ -156,10 +156,10 @@ export const updateHandlerMultiple = (fieldName, FSCollection, getValue) => //! 
       return undefined;
     }
     
-    console.log("I'm in updateHandlerMultiple");
+    //console.log("I'm in updateHandlerMultiple");
     const fieldValues = data[fieldName];
-    console.log("data:", data);
-    console.log("oldDocument:", oldDocument);
+    // console.log("data:", data);
+    // console.log("oldDocument:", oldDocument);
 
     // if (
     //   !(
