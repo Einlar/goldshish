@@ -1,6 +1,6 @@
 import { Components, registerComponent, useMulti2, useCurrentUser } from 'meteor/vulcan:core';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Form from 'react-bootstrap/Form';
 import { Col, Row } from 'react-bootstrap'; 
@@ -40,6 +40,10 @@ const NotesPage = () => {
         fragmentName: "NotePage"
     });
 
+    useEffect( () => {
+        renderMathInElement = require('../other/auto-render.js');
+        renderMathInElement(document.body);
+    });
 
     loading = queryObject.loading;
     results = queryObject.results;

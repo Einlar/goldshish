@@ -1,6 +1,6 @@
 import { Components, registerComponent, useSingle2, useCurrentUser } from 'meteor/vulcan:core';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import Users from 'meteor/vulcan:users';
@@ -17,41 +17,49 @@ const FoldersPage = () => {
 
     const { currentUser } = useCurrentUser();
 
-    const { document, data, loading } = useSingle2({
+    const queryObject = useSingle2({
         collectionName: 'Folders',
         input: { filter: { slug: { _eq : slug} } },
         fragmentName: "FolderPage",
     });
 
+    result = queryObject.document;
+    loading = queryObject.loading;
+
 
     if (loading) return (<Components.Loading/>);
+
+    useEffect( () => {
+        renderMathInElement = require('../other/auto-render.js');
+        renderMathInElement(document.body);
+    });
 
     //Add also the course name (a fragment will be necessary to extract it)
     return (
         <div className="folders-view">
             <div className="container">
-                <h1 className="section-title" key={document._id}>{document.folderName}
-                { Users.canUpdate({ collectionName: "Folders", user: currentUser, document: document }) ? <Link to={`/newfolder/${document._id}`}><IconEdit/></Link> : null }
+                <h1 className="section-title" key={result._id}>{result.folderName}
+                { Users.canUpdate({ collectionName: "Folders", user: currentUser, result: result }) ? <Link to={`/newfolder/${result._id}`}><IconEdit/></Link> : null }
                 </h1>
                 { 
                     Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
-                    <Link to={`/share/${document.course._id}/${document._id}`}><div className="note"><IconPlus/>New Note</div></Link>
+                    <Link to={`/share/${result.course._id}/${result._id}`}><div className="note"><IconPlus/>New Note</div></Link>
                     : null
                 }
             </div>
             <div className="description">
-                {ReactHtmlParser(document.description)}
+                {ReactHtmlParser(result.description)}
             </div>
-            <FoldersContent folderid={document._id} courseid={document.course._id}/>
+            <FoldersContent folderid={result._id} courseid={result.course._id}/>
 
             <div className="decorated subtitle spacetop"><span>Folders in this Course</span></div>
             <div className="other-folders">
-                <OtherFolders courseid={document.course._id}/>
+                <OtherFolders courseid={result.course._id}/>
             </div>
         </div>
     );
     //Select all Notes belonging to this folder //idk
-    //const { document, loading, error } = useSingle2
+    //const { result, loading, error } = useSingle2
 }
 
 registerComponent({ name: 'FoldersPage', component: FoldersPage });

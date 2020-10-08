@@ -59,7 +59,7 @@ const NotesEdit = () => {
                     history.goBack();
                 }}
                 removeFields={
-                    new_version ? ['highlights', 'courseId', 'folderId'] : ['noteFiles', 'highlights', 'courseId', 'folderId'] //Files can be edited only when publishing a new version
+                    new_version ? ['highlights', 'courseId', 'folderId', 'version', 'slug'] : ['noteFiles', 'highlights', 'courseId', 'folderId', 'version', 'slug'] //Files can be edited only when publishing a new version
                 }
             /> 
         ) :

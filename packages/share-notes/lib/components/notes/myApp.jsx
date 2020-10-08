@@ -48,6 +48,12 @@ const App = ({ noteid, fileid, fileurl }) =>  {
     fragmentName: "NoteHighlights"
   });
 
+  useEffect( () => {
+    renderMathInElement = require('../other/auto-render.js');
+    renderMathInElement(document.body);
+  });
+
+
   //queryObject.refetch() can be used to refetch the data!
   //For example after adding a new note
 

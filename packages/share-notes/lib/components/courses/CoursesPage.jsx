@@ -1,6 +1,6 @@
 import { Components, registerComponent, useSingle2, useCurrentUser } from 'meteor/vulcan:core';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Users from 'meteor/vulcan:users';
 import { Link, useParams } from 'react-router-dom';
@@ -10,14 +10,26 @@ import ReactHtmlParser from 'react-html-parser';
 
 import { IconEdit, IconPlus } from '../other/Icons.jsx';
 
+// import renderMathInElement from './auto-render.js';
+
 const CoursesPage = () => {
     const { slug } = useParams();
     const { currentUser } = useCurrentUser();
 
-    const { document, loading, error } = useSingle2({
+    const queryObject = useSingle2({
         collectionName: "Courses",
         input: { filter: { slug: { _eq: slug } } },
         fragmentName: "CourseAllFolders", 
+    });
+
+    result = queryObject.document;
+    loading = queryObject.loading;
+    error = queryObject.error;
+
+
+    useEffect( () => {
+        renderMathInElement = require('../other/auto-render.js');
+        renderMathInElement(document.body);
     });
 
     if (loading) return (<Components.Loading/>);
@@ -26,16 +38,16 @@ const CoursesPage = () => {
         <div className="course">
             <div className="course-title">
                 <h1>
-                    {document.courseName}
-                    { Users.canUpdate({ collectionName: "Courses", user: currentUser, document: document }) ? <Link to={`/newcourse/${document._id}`}><IconEdit/></Link> : null }
+                    {result.courseName}
+                    { Users.canUpdate({ collectionName: "Courses", user: currentUser, document: result }) ? <Link to={`/newcourse/${result._id}`}><IconEdit/></Link> : null }
                 </h1>
             </div>
-            <div className="description">
-                {ReactHtmlParser(document.description)}
+            <div className="description" id="course-desc">
+                {ReactHtmlParser(result.description)}
             </div>
             <div className="course-folders">
                 {
-                    document.all_folders.map(
+                    result.all_folders.map(
                         (folder) =>
                         (
                             <div className="folder-group" key={folder._id}>
@@ -45,20 +57,20 @@ const CoursesPage = () => {
                                     </h2>
                                     { 
                                         Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
-                                        <Link to={`/share/${document._id}/${folder._id}`}><div className="note"><IconPlus/>New Note</div></Link>
+                                        <Link to={`/share/${result._id}/${folder._id}`}><div className="note"><IconPlus/>New Note</div></Link>
                                         : null
                                     }
                                 </div>
                                 <div className="description">
                                     {ReactHtmlParser(folder.description)}
                                 </div>
-                                <FoldersContent courseid={document._id} folderid={folder._id}/>
+                                <FoldersContent courseid={result._id} folderid={folder._id}/>
                             </div>
                         )
                     )
                 }
                 <div className="folder" key="new">
-                    <Link to={`/courses/newfolder/${document._id}`}><h2>New folder</h2></Link>
+                    <Link to={`/courses/newfolder/${result._id}`}><h2>New folder</h2></Link>
                 </div>
             </div>
         </div>
