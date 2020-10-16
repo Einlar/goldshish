@@ -1181,6 +1181,150 @@ input HighlightSelectorUniqueInput {
 }
 
 
+# Type for Blog
+type Blog {
+  _id: String 
+  userId: String 
+  user: User 
+  postTitle: String 
+  slug: String 
+  createdAt: Date 
+  content: String 
+  createdAtFormatted(format: String = "YYYY/MM/DD"): String 
+}
+
+
+input DeleteBlogInput{
+  filter: BlogFilterInput
+  id: String
+}
+
+input SingleBlogInput {
+  # filtering
+  filter: BlogFilterInput
+  sort: BlogSortInput
+  search: String
+  id: String
+
+  # backwards-compatibility
+  "Deprecated (use 'filter/id' fields instead)."
+  selector: BlogSelectorUniqueInput
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Return null instead of throwing MissingDocumentError
+  allowNull: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+}
+
+input MultiBlogInput {
+
+  # filtering
+  filter: BlogFilterInput
+  sort: BlogSortInput
+  search: String
+  offset: Int
+  limit: Int
+
+  # backwards-compatibility
+  # A JSON object that contains the query terms used to fetch data
+  "Deprecated (use 'filter/id' fields instead)."
+  terms: JSON
+
+  # options (backwards-compatibility)
+  # Whether to enable caching for this query
+  enableCache: Boolean
+  # Whether to calculate totalCount for this query
+  enableTotal: Boolean
+  # An identifier to name the query's execution context
+  contextName: String
+  
+}
+
+type SingleBlogOutput{
+  result: Blog
+}
+
+type  MultiBlogOutput{
+  results: [Blog]
+  totalCount: Int
+}
+
+type BlogMutationOutput{
+  data: Blog
+}
+
+input CreateBlogInput {
+  data: CreateBlogDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input CreateBlogDataInput {
+  postTitle: String 
+  content: String 
+}
+
+input UpdateBlogInput{
+  filter: BlogFilterInput
+  id: String
+  data: UpdateBlogDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpsertBlogInput{
+  filter: BlogFilterInput
+  id: String
+  data: UpdateBlogDataInput!
+  # An identifier to name the mutation's execution context
+  contextName: String
+}
+
+input UpdateBlogDataInput {
+  postTitle: String 
+  content: String 
+}
+
+input BlogFilterInput {
+  _and: [BlogFilterInput]
+  _not: BlogFilterInput
+  _or: [BlogFilterInput]
+
+
+  _id: String_Selector
+  userId: String_Selector
+  postTitle: String_Selector
+  slug: String_Selector
+  createdAt: Date_Selector
+  content: String_Selector
+}
+
+input BlogSortInput {
+  _id: SortOptions
+  userId: SortOptions
+  postTitle: SortOptions
+  slug: SortOptions
+  createdAt: SortOptions
+  content: SortOptions
+}
+
+input BlogSelectorInput {
+  _and: [BlogSelectorInput]
+  _or: [BlogSelectorInput]
+
+}
+
+input BlogSelectorUniqueInput {
+  _id: String
+  documentId: String # OpenCRUD backwards compatibility
+  slug: String
+
+}
+
+
 
 
 type Query {
@@ -1218,6 +1362,12 @@ type Query {
   # A list of Highlight documents matching a set of query terms
   highlights(input: MultiHighlightInput):  MultiHighlightOutput
   
+  # A single Blog document fetched by ID or slug
+  blog(input: SingleBlogInput!): SingleBlogOutput
+  
+  # A list of Blog documents matching a set of query terms
+  blogs(input: MultiBlogInput):  MultiBlogOutput
+  
 }
   
 
@@ -1237,6 +1387,10 @@ type Mutation {
   sendVerificationEmail(input: AuthEmailInput): Boolean
 
   verifyEmail(input: VerifyEmailInput): VerifyEmailResult
+
+  verifyUserEmail(token: String): JSON
+
+  resendVerification(userId: String): JSON
 
   # Mutation for creating new User documents
   createUser(
@@ -1397,6 +1551,38 @@ type Mutation {
   "Deprecated (use 'input' field instead)."
   selector: HighlightSelectorUniqueInput
 ) : HighlightMutationOutput
+
+  # Mutation for creating new Blog documents
+  createBlog(
+  input: CreateBlogInput,
+  "Deprecated (use 'input' field instead)."
+  data: CreateBlogDataInput
+) : BlogMutationOutput
+
+  # Mutation for updating a Blog document
+  updateBlog(
+  input: UpdateBlogInput,
+  "Deprecated (use 'input' field instead)."
+  selector: BlogSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateBlogDataInput 
+) : BlogMutationOutput
+
+  # Mutation for upserting a Blog document
+  upsertBlog(
+  input: UpsertBlogInput,
+  "Deprecated (use 'input' field instead)."
+  selector: BlogSelectorUniqueInput,
+  "Deprecated (use 'input' field instead)."
+  data: UpdateBlogDataInput
+) : BlogMutationOutput
+
+  # Mutation for deleting a Blog document
+  deleteBlog(
+  input: DeleteBlogInput,
+  "Deprecated (use 'input' field instead)."
+  selector: BlogSelectorUniqueInput
+) : BlogMutationOutput
 
 }
 

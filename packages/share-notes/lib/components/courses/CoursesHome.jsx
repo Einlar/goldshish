@@ -1,21 +1,59 @@
-import React from 'react';
-import { Components, registerComponent, useMulti2 } from 'meteor/vulcan:core';
+import React, { useEffect, useState } from 'react';
+import { Components, registerComponent, useMulti2, useCurrentUser } from 'meteor/vulcan:core';
+import Users from 'meteor/vulcan:users';
+import Form from 'react-bootstrap/Form';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { IconStar } from '../other/Icons.jsx';
+
+handleUpdate = (value) => {
+    console.log("Got", value);
+}
 
 result = {};
 
 const CoursesHome = () => {
-    const { results = [], data, loading } = useMulti2({
+    const { results = [], data, loading, refetch } = useMulti2({
         collectionName: 'Courses', fragmentName: 'CourseFolders', //input: { filter: {_withStarred: { starred: true } } },
     })
 
+    const { currentUser } = useCurrentUser(); //Get current user
+
+    const location = useLocation();
+
+    const [filter, setFilter] = useState("");
+
+    useEffect( () => {
+        console.log('Location changed');
+        refetch(); 
+    }, [location]);
+
     return (
+    <div className="courses-home">
+        {
+            currentUser ?
+            (
+                Users.isMemberOf(currentUser, 'verifiedEmail') ? 
+                (
+                    <div className="button"><Link to={`/newcourse`}>Add a new course</Link></div>
+                ) : (
+                    <p>Please <Link to={`/verify-email/aaa`}>verify</Link> your e-mail to unlock permissions.</p>
+                )
+            ) : null
+        }
+        <div className="form-group row editor">
+            <label className="control-label col-sm-3">Search</label>
+            <div className="col-sm-9">
+                <Components.FormItem>
+                    <Form.Control type="text" onChange={(event) => setFilter(event.target.value)}/>
+                </Components.FormItem>
+            </div>
+        </div>
         <div className="courses-list">
             { loading ? (<Components.Loading/>) : 
                 results.map(course =>
+                    ( (filter == "") || course.courseName.toLowerCase().includes(filter.toLowerCase()) ) ? 
                     (
                         <div className="course" key={course._id}>
                             <Link to={`/courses/${course.slug}`}><h2 className="course-title">{course.courseName}</h2></Link>
@@ -59,10 +97,11 @@ const CoursesHome = () => {
                                 </Link>
                             </div>
                         </div>   
-                    )
-                )
+                    ) : null
+                ) 
             }
         </div>
+    </div>
     );
 };
 

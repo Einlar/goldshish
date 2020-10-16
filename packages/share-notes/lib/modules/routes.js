@@ -23,6 +23,10 @@ const routes = [
     {name: 'courses', path: '/admin/courses', componentName: 'CoursesList', access: adminAccessOptions},
     {name: 'admin.folders', path:'/admin/folders', componentName: 'FoldersList', access: adminAccessOptions},
     {name: 'admin.notes', path:'/admin/notes', componentName: 'NotesList', access: adminAccessOptions},
+    {name: 'admin.blog', path: '/admin/blog',
+    componentName: 'BlogList', access: adminAccessOptions },
+    {name: 'blog.posts', path: '/blog', componentName: 'BlogHome'},
+    {name: 'blog.new', path: '/newblog', componentName: 'BlogNew' },
 ];
 
 addRoute(routes);

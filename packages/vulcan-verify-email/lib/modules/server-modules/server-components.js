@@ -1,0 +1,2 @@
+import '../../components/VerifyEmail.jsx';
+

@@ -2,6 +2,7 @@ import React from 'react';
 import { Components, registerComponent } from 'meteor/vulcan:core';
 
 import Folders from '../../modules/folders/collection.js';
+import ReactHtmlParser from 'react-html-parser';
 
 const FoldersList = () => {
     //Do something here
@@ -14,6 +15,29 @@ const FoldersList = () => {
             showNew={true}
             showEdit={true}
             showSearch={true}
+            columns={[
+                'folderName',
+                'user',
+                {
+                    name: 'description',
+                    label: 'Description',
+                    component: ({ document }) => (
+                        <div>
+                            {ReactHtmlParser(document.description)}
+                        </div>
+                    )
+                },
+                {
+                    name: 'course',
+                    label: 'Course',
+                    component: ({ document }) => (
+                        <div>
+                            {document.course.courseName}
+                        </div>
+                    )
+                },
+                'starred'
+            ]}
             />
         </div>
     );

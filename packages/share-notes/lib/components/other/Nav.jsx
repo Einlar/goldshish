@@ -6,12 +6,14 @@ import Users from 'meteor/vulcan:users';
 //links in the navbar
 const nav = [
     { name: 'Home', to: '/' },
+    { name: 'News', to: '/blog' },
 ];
 
 const admin_nav = [
     { name: 'Courses', to: '/admin/courses' },
     { name: 'Folders', to: '/admin/folders' },
     { name: 'Notes', to: '/admin/notes' },
+    { name: 'Blog', to: '/admin/blog' },
 ];
 
 const Nav = () => {

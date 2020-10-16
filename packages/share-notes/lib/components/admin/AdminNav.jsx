@@ -3,6 +3,8 @@ import { useCurrentUser } from 'meteor/vulcan:core';
 import { Link } from 'react-router-dom';
 import Users from 'meteor/vulcan:users';
 
+//! NOT IMPLEMENTED YET
+
 //links in the navbar
 const nav = [
     { name: 'Courses', to: '/' },

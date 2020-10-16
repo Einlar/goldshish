@@ -3,7 +3,7 @@ import { Components, registerComponent, useSingle2, useCurrentUser } from 'meteo
 import React, { useEffect } from 'react';
 
 import Users from 'meteor/vulcan:users';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 
 import FoldersContent from '../folders/FoldersContent.jsx';
 import ReactHtmlParser from 'react-html-parser';
@@ -12,9 +12,11 @@ import { IconEdit, IconPlus } from '../other/Icons.jsx';
 
 // import renderMathInElement from './auto-render.js';
 
+
 const CoursesPage = () => {
     const { slug } = useParams();
     const { currentUser } = useCurrentUser();
+    const location = useLocation();
 
     const queryObject = useSingle2({
         collectionName: "Courses",
@@ -24,13 +26,16 @@ const CoursesPage = () => {
 
     result = queryObject.document;
     loading = queryObject.loading;
+    refetch = queryObject.refetch;
     error = queryObject.error;
 
 
     useEffect( () => {
         renderMathInElement = require('../other/auto-render.js');
         renderMathInElement(document.body);
-    });
+        console.log('Location changed');
+        refetch(); 
+    }, [location]);
 
     if (loading) return (<Components.Loading/>);
 
@@ -39,7 +44,7 @@ const CoursesPage = () => {
             <div className="course-title">
                 <h1>
                     {result.courseName}
-                    { Users.canUpdate({ collectionName: "Courses", user: currentUser, document: result }) ? <Link to={`/newcourse/${result._id}`}><IconEdit/></Link> : null }
+                    { currentUser && Users.isMemberOf(currentUser, 'verifiedEmail') && Users.canUpdate({ collectionName: "Courses", user: currentUser, document: result }) ? <Link to={`/newcourse/${result._id}`}><IconEdit/></Link> : null }
                 </h1>
             </div>
             <div className="description" id="course-desc">
@@ -53,10 +58,10 @@ const CoursesPage = () => {
                             <div className="folder-group" key={folder._id}>
                                 <div className="container">
                                     <h2 className="section-title">   {folder.folderName}
-                                        { Users.canUpdate({ collectionName: "Folders", user: currentUser, document: folder }) ? <Link to={`/newfolder/${folder._id}`}><IconEdit/></Link> : null }
+                                        { currentUser && Users.isMemberOf(currentUser, 'verifiedEmail') && Users.canUpdate({ collectionName: "Folders", user: currentUser, document: folder }) ? <Link to={`/newfolder/${folder._id}`}><IconEdit/></Link> : null }
                                     </h2>
                                     { 
-                                        Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
+                                        currentUser && Users.isMemberOf(currentUser, 'verifiedEmail') && Users.canCreate({ collectionName: "Notes", user: currentUser }) ?
                                         <Link to={`/share/${result._id}/${folder._id}`}><div className="note"><IconPlus/>New Note</div></Link>
                                         : null
                                     }

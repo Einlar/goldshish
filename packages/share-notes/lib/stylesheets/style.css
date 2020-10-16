@@ -220,7 +220,7 @@ a:hover {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
   background-color: transparent;
@@ -228,7 +228,13 @@ a:hover {
   font-family: "Montserrat", sans-serif;
 }
 
+hr.dashed {
+  border-top: 3px dashed #bbb;
+}
+
 .course {
+  flex-basis: 32%;
+  flex-grow: 1;
   padding: 20px;
   margin: 5px;
 }

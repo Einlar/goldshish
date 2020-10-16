@@ -14,8 +14,10 @@ accounts-password@1.6.0
 
 ############ Your Packages ############
 
+vulcan:verify-email
 vulcan-files
 share-notes
+
 
 # Uncomment to generate an admin area on /backoffice available to users of role "admin"
 # vulcan:backoffice
