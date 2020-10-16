@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 
 import { Link, useLocation } from 'react-router-dom';
 
-import { IconStar } from '../other/Icons.jsx';
+import { IconStar, IconPlus } from '../other/Icons.jsx';
 
 handleUpdate = (value) => {
     console.log("Got", value);
@@ -31,24 +31,23 @@ const CoursesHome = () => {
 
     return (
     <div className="courses-home">
-        {
-            currentUser ?
-            (
-                Users.isMemberOf(currentUser, 'verifiedEmail') ? 
-                (
-                    <div className="button"><Link to={`/newcourse`}>Add a new course</Link></div>
-                ) : (
-                    <p>Please <Link to={`/verify-email/aaa`}>verify</Link> your e-mail to unlock permissions.</p>
-                )
-            ) : null
-        }
-        <div className="form-group row editor">
-            <label className="control-label col-sm-3">Search</label>
-            <div className="col-sm-9">
+        <div className="form-group row editor" style={{justifyContent: 'center', alignItems: 'baseline'}}>
+            <div className="col-sm-4">
                 <Components.FormItem>
-                    <Form.Control type="text" onChange={(event) => setFilter(event.target.value)}/>
+                    <Form.Control type="text" placeholder="Search a course..." onChange={(event) => setFilter(event.target.value)}/>
                 </Components.FormItem>
             </div>
+            {
+                currentUser ?
+                (
+                    Users.isMemberOf(currentUser, 'verifiedEmail') ? 
+                    (
+                        <Link to={`/newcourse`}><div className="note"><IconPlus/>New course</div></Link>
+                    ) : (
+                        <p>Please <Link to={`/verify-email/aaa`}>verify</Link> your e-mail to unlock permissions.</p>
+                    )
+                ) : null
+            }
         </div>
         <div className="courses-list">
             { loading ? (<Components.Loading/>) : 

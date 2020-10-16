@@ -518,13 +518,16 @@ input CourseSelectorUniqueInput {
 # Type for Folders
 type Folder {
   _id: String 
+  # Name of the folder. Max: 20 characters.
   folderName: String 
   userId: String 
   user: User 
   slug: String 
   description: String 
+  # The folder will be created within the page of this course.
   courseId: String 
   course: Course 
+  # Check here if you would like this folder to be accessible from the homepage.
   starred: Boolean 
 }
 

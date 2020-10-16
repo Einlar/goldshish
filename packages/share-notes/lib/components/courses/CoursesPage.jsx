@@ -74,9 +74,11 @@ const CoursesPage = () => {
                         )
                     )
                 }
-                <div className="folder" key="new">
-                    <Link to={`/courses/newfolder/${result._id}`}><h2>New folder</h2></Link>
-                </div>
+                <Link to={`/courses/newfolder/${result._id}`}>
+                    <div className="folder" key="new">
+                        <h2>New folder</h2>
+                    </div>
+                </Link>
             </div>
         </div>
     )

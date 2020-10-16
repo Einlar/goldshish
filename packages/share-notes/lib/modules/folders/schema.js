@@ -13,6 +13,10 @@ const schema = {
         canCreate: ['members'],
         canUpdate: ['owners', 'admins'],
         searchable: true,
+        label: "Name",
+        description: "Name of the folder. Max: 20 characters.",
+        max: 20,
+        order: 1,
     },
     userId: {
         type: String,
@@ -47,7 +51,9 @@ const schema = {
         input: 'Editor',
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['owners', 'admins']
+        canUpdate: ['owners', 'admins'],
+        label: "Description",
+        order: 10,
     },
     courseId: {
         type: String,
@@ -76,13 +82,19 @@ const schema = {
             value: course._id,
             label: course.courseName,
         })),
+        label: 'Course',
+        description: 'The folder will be created within the page of this course.',
+        order: 20,
     },
     starred: {
         type: Boolean,
         optional: true,
         canRead: ['guests'],
         canCreate: ['members'],
-        canUpdate: ['owners', 'admins']
+        canUpdate: ['owners', 'admins'],
+        label: 'Homepage?',
+        description: "Check here if you would like this folder to be accessible from the homepage.",
+        order: 30,
     }
 };
 

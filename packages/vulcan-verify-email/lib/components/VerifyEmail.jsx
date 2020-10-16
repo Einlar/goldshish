@@ -133,31 +133,38 @@ class AccountsVerifyEmail extends PureComponent {
                                             this.state.verificationSent ?
 
                                                 <div className='password-reset-form'>
-                                                    <h1 className="text-xl text-gray-800">Please check your email</h1>
-                                                    <h2 className="text-m text-gray-700 mt-3" style={{ maxWidth: "42rem" }}>
-                                                        A confirmation email has been sent to <span className="font-semibold">{this.props.currentUser.email}</span>.<br />Please click the confirmation link in the email to activate your account.
-                                            </h2>
+                                                    <h2>Please check your email</h2>
+                                                    <p>
+                                                        A confirmation email has been sent to <span className="font-semibold">{this.props.currentUser.email}</span>.<br />Please click the confirmation link in the email to activate your account. 
+                                                    </p>
+                                                    <p>
+                                                        It won't arrive instantly, but it should take less than 10 minutes.
+                                                        Please check also your <strong>spam</strong> folder.
+                                                    </p>
                                                 </div>
 
                                                 : this.state.error ?
                                                     //    if there was an error
                                                     <div className="">
-                                                        <h1 className="text-xl text-gray-800">Email verification failed</h1>
-                                                        <h2 className="text-m text-gray-700 mt-3">{this.state.error.replace('GraphQL error:', '')}.</h2>
+                                                        <p>An e-mail has been sent to the address indicated during registration. It won't arrive instantly, but it should take less than 10 minutes.
+                                                            Please check also your <strong>spam</strong> folder.</p>
+                                                        <p>If, even after waiting 10 minutes, you did not receive anything, you can try resending the verification with the button below.</p>
+                                                        { /* <h2 className="text-m text-gray-700 mt-3">{this.state.error.replace('GraphQL error:', '')}.</h2> */ }
 
                                                         {/* if user is logged in, resend the email */}
-                                                        {this.props.currentUser &&
-                                                            <button
+                                                        {this.props.currentUser ?
+                                                            (<button
                                                                 onClick={this.resendVerification}
                                                                 type="submit"
-                                                                className={`mt-3 px-3 py-2 bg-green-600 ${this.state.verificationSending ? 'cursor-wait opacity-50' : this.state.verificationSent && 'cursor-not-allowed opacity-50'} hover:bg-green-800 text-white font-normal leading-tight text-sm rounded-lg focus:outline-none`}
                                                             >
                                                                 {this.state.verificationSending ?
                                                                     'Sending...' :
                                                                     this.state.verificationSent ?
                                                                         'Sent' : 'Resend Verification'}
-                                                            </button>
+                                                            </button>) : 'Please log-in before trying to resend the verification e-mail.'
                                                         }
+                                                        <p>If the problem persist, please inform the administrator by writing a mail at francesco.manzali@studenti.unipd.it</p>
+                                                        <p>(Sorry for the problem, programming ain't easy)</p>
 
                                                         {/* </Link> */}
                                                     </div> :
@@ -171,7 +178,7 @@ class AccountsVerifyEmail extends PureComponent {
                                                                 <button
                                                                     onClick={this.resendVerification}
                                                                     type="submit"
-                                                                    className={`mt-3 px-3 py-2 bg-green-600 hover:bg-green-800 text-white font-normal leading-tight text-sm rounded-lg focus:outline-none`}
+                                                                    className="button"
                                                                 >
                                                                     Continue
                                                         </button>
