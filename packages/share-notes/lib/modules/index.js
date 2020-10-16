@@ -1,4 +1,5 @@
 export * from './components.js';
+export * from './i18n.js';
 export * from './routes.js';
 
 //index.js of components

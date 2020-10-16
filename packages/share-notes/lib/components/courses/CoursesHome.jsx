@@ -18,7 +18,9 @@ const CoursesHome = () => {
         collectionName: 'Courses', fragmentName: 'CourseFolders', //input: { filter: {_withStarred: { starred: true } } },
     })
 
-    const { currentUser } = useCurrentUser(); //Get current user
+    const userObj = useCurrentUser(); //Get current user
+    const currentUser = userObj.currentUser
+    const refetchUser = userObj.refetch
 
     const location = useLocation();
 
@@ -27,6 +29,7 @@ const CoursesHome = () => {
     useEffect( () => {
         console.log('Location changed');
         refetch(); 
+        refetchUser();
     }, [location]);
 
     return (

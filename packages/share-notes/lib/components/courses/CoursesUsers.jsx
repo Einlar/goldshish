@@ -1,19 +1,11 @@
 import React from 'react';
 import { Components, useCurrentUser, registerComponent } from 'meteor/vulcan:core';
-
-// import { Accounts } from 'meteor/accounts-base';
-// import { addCallback } from 'meteor/vulcan:core';
-
-// async function sendVerificationEmail({
-//   document: user
-// }) {
-//   Accounts.sendVerificationEmail(user._id);
-// }
-
-// addCallback('user.create.async', sendVerificationEmail);
+import { useHistory } from 'react-router-dom';
 
 const CoursesUsers = () => {
   const { currentUser } = useCurrentUser();
+  const history = useHistory();
+  
   return (
     <div className="courses-users">
       <div>
@@ -22,7 +14,8 @@ const CoursesUsers = () => {
             Welcome, {currentUser.displayName} {currentUser.isAdmin && `(admin)`}
           </p>
         )}
-        { <Components.AccountsLoginForm redirect={false}/> }
+        { <Components.AccountsLoginForm redirect={false}
+           onPostSignUpHook={() => history.push('/verify-email/aaa')} /> }
       </div>
     </div>
   );

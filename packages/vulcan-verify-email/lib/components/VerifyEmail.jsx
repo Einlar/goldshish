@@ -122,7 +122,6 @@ class AccountsVerifyEmail extends PureComponent {
                                                     <button
                                                         onClick={this.resendVerification}
                                                         type="submit"
-                                                        className={`mt-3 px-3 py-2 bg-green-600 hover:bg-green-800 text-white font-normal leading-tight text-sm rounded-lg focus:outline-none`}
                                                     >
                                                         Continue
                                                     </button>
