@@ -5,7 +5,7 @@ import { Components, useSingle2 } from 'meteor/vulcan:core';
 import { Link } from 'react-router-dom';
 
 //List all folders inside this course
-const OtherFolders = ({ courseid }) => {
+const OtherFolders = ({ courseid, exclude }) => {
 
     const { loading, document, error } = useSingle2({
         collectionName: 'Courses',
@@ -17,12 +17,13 @@ const OtherFolders = ({ courseid }) => {
         <div className="starred-folders-container">
         { loading ? <Components.Loading/> : (
             document.all_folders.map( (folder) => 
-                (
-                    <Link to={`/folders/${document.slug}/${folder.slug}`} key={folder._id}>
+                (   
+                    (folder._id !== exclude) ? 
+                    (<Link to={`/folders/${document.slug}/${folder.slug}`} key={folder._id}>
                         <div key={folder._id} className="starred-folder">
                             {folder.folderName}
                         </div>
-                    </Link>
+                    </Link>) : null
                 )
             )
         ) }

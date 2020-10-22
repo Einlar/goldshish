@@ -1,7 +1,7 @@
 import { Components, useMulti2, useCurrentUser } from 'meteor/vulcan:core';
 
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import remove from 'lodash/remove';
 
@@ -21,15 +21,24 @@ function groupAndMaps(events, groups) {
 
 const FoldersContent = ({ folderid, courseid, exclude }) => {
 
-    const { results = [], data, loading } = useMulti2({
+    const { results = [], data, loading, refetch } = useMulti2({
         collectionName: 'Notes',
         input: { filter: { folderId: { _eq: folderid } }, sort: { years: "desc" } },
         fragmentName: 'NotePage',
     });
 
-    if (typeof exclude !== 'undefined') {
-        remove(results, (a) => a.slug === exclude);
-    }
+    const location = useLocation();
+
+    console.log("Got exclude: ", exclude);
+
+    useEffect( () => {
+        console.log('Location changed (FoldersContent');
+        refetch();
+    });
+    
+    // if (typeof exclude !== 'undefined') {
+    //     remove(results, (a) => a.slug === exclude);
+    // }
 
     if (loading) return (<Components.Loading/>);
 
@@ -39,7 +48,8 @@ const FoldersContent = ({ folderid, courseid, exclude }) => {
             { 
                 results.length ? 
                 _.map(_.groupBy(results, 'years'), (doc, year) => (
-                    <div className="course" key={year}>
+                    (!_.isEmpty(_.filter(doc, (note) => note.slug !== exclude))) && 
+                    (<div className="course" key={year}>
                         <h2 className="course-title">{year}
                         </h2>
                         {
@@ -49,11 +59,12 @@ const FoldersContent = ({ folderid, courseid, exclude }) => {
                                     const latest = _.sortBy(versions, 'version').pop(); //get last element (latest)
 
                                     return (
-                                        <Link to={`/notes/${latest.course.slug}/${slug}`} key={latest._id}>
+                                        slug !== exclude ?
+                                        (<Link to={`/notes/${latest.course.slug}/${slug}`} key={latest._id}>
                                             <div className="note">
                                             {latest.noteName}
                                             </div>
-                                        </Link>
+                                        </Link>) : null
                                     )
                                 }
                             ) 
@@ -71,7 +82,7 @@ const FoldersContent = ({ folderid, courseid, exclude }) => {
 
                             Then we repeat all this for the slug in each doc, and for each of the final groups we print only the first element, which is the latest
                         */ }
-                    </div>
+                    </div>)
                 )) : (<p>No notes here</p>)
             }
         </div>
