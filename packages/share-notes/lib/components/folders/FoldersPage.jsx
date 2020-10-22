@@ -31,7 +31,7 @@ const FoldersPage = () => {
     useEffect( () => {
         renderMathInElement = require('../other/auto-render.js');
         renderMathInElement(document.body);
-        console.log('Location changed');
+        //console.log('Location changed');
         refetch();
     }); //, [location] 
 
@@ -61,9 +61,9 @@ const FoldersPage = () => {
             </div>
             <FoldersContent folderid={result._id} courseid={result.course._id}/>
 
-            <div className="decorated subtitle spacetop"><span>Folders in this Course</span></div>
+            <div className="decorated subtitle spacetop"><span>Other folders in this Course</span></div>
             <div className="other-folders">
-                <OtherFolders courseid={result.course._id}/>
+                <OtherFolders courseid={result.course._id} exclude={result._id}/>
             </div>
         </div>
     );
